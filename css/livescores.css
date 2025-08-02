@@ -1,0 +1,740 @@
+﻿/* Version 1.8 from 30.4.25  */
+/* body {
+  max-width: 1200px;
+  position: absolute;
+} */
+
+#loader {
+    background-image: url('../general/cur_wait.svg');
+    background-size: 200px;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding-top: 100px;
+    margin: auto;
+    width: auto;
+    height: 40vh;
+    font-size: 12px;
+    text-align: center;
+    align-items: center;
+    line-height: 100vh;
+}
+
+#session-header {
+    display: none;
+    margin-left: 3%;
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 3%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: right;
+}
+
+    #session-header.online {
+        background-image: url(../general/online.png);
+    }
+
+    #session-header.offline {
+        background-image: url(../general/offline.png);
+    }
+
+#template {
+    display: none;
+    position: fixed;
+    bottom: 0;
+}
+
+
+.container-wide {
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+/* Tile Header */
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 2px;
+    height: inherit;
+    position: relative;
+    top: -10px;
+}
+
+    .header-content .sheet {
+        position: absolute;
+        height: inherit;
+        line-height: 21px;
+        border-top-left-radius: 8px;
+        border-bottom-right-radius: 4px;
+        left: -10px;
+        top: 0px;
+        width: 14px;
+        text-align: center;
+        font-weight: bold;
+        padding-left: 1px;
+    }
+
+    .header-content .left-text {
+        max-width: 35%;
+        font-stretch: normal;
+        margin-left: 6px;
+    }
+
+    .header-content .condensed {
+        transform: scaleX(0.75);
+        transform-origin: left;
+    }
+
+    .header-content .middle-text {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%); /* This will center it horizontally */
+        font-weight: 500;
+        text-transform: uppercase;
+    }
+
+    .header-content .right-area {
+        max-width: 35%;
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        position: absolute;
+        right: -10px;
+    }
+
+        .header-content .right-area a {
+            margin-right: 5px;
+            margin-top: -1px;
+            margin-left: 5px;
+        }
+
+.matchup-tile.ready .header-content .right-area .d-flex,
+.matchup-tile.delayed .header-content .right-area .d-flex,
+.matchup-tile.running .header-content .right-area .d-flex,
+.matchup-tile.unofficial .header-content .right-area .d-flex,
+.matchup-tile.official .header-content .right-area .d-flex,
+.matchup-tile.done .header-content .right-area .d-flex {
+    min-width: 47px;
+}
+
+.me-1 {
+    margin-right: 0.25rem !important;
+}
+
+.matchup-tile {
+    font-family: Arial, Sans-Serif;
+    border-radius: 8px;
+    padding: 0;
+    margin: 1px 0;
+    min-width: 360px;
+}
+
+
+
+/* -------------------------- */
+/* Size/Status specifications */
+/* -------------------------- */
+.container-wide.tile-l matchup-tile.ready table.scoreboard thead,
+.container-wide.tile-l matchup-tile.delayed table.scoreboard thead,
+.container-wide.tile-l matchup-tile.running table.scoreboard thead,
+.container-wide.tile-l matchup-tile.unofficial table.scoreboard thead,
+.container-wide.tile-l matchup-tile.official table.scoreboard thead,
+.container-wide.tile-l matchup-tile.done table.scoreboard thead {
+    display: table-header-group;
+}
+
+
+.container-wide.tile-m table.scoreboard thead,
+.container-wide.tile-s table.scoreboard thead,
+.matchup-tile.planned table.scoreboard thead,
+.matchup-tile.scheduled table.scoreboard thead,
+.matchup-tile.preparing table.scoreboard thead {
+    display: none;
+}
+
+.matchup-tile.running table.scoreboard,
+.matchup-tile.unofficial table.scoreboard,
+.matchup-tile.official table.scoreboard,
+.matchup-tile.unofficial table.scoreboard,
+.matchup-tile.done table.scoreboard {
+    display: table;
+}
+
+.matchup-tile.scheduled .details,
+.matchup-tile.planned .details,
+.matchup-tile.preparing .details,
+.matchup-tile.running .details,
+.matchup-tile.unofficial .details,
+.matchup-tile.official .details,
+.matchup-tile.unofficial .details,
+.matchup-tile.done .details,
+.matchup-tile.rescheduled .details,
+.matchup-tile.planned .details-content,
+.matchup-tile.scheduled .details-content,
+.matchup-tile.preparing .details-content,
+.matchup-tile.running .details-content,
+.matchup-tile.unofficial .details-content,
+.matchup-tile.official .details-content,
+.matchup-tile.unofficial .details-content,
+.matchup-tile.done .details-content,
+.matchup-tile.rescheduled .details-content {
+    display: none;
+}
+
+/* Special case - game canceled */
+
+.matchup-tile.cancelled table.scoreboard,
+.matchup-tile.cancelled .details,
+.matchup-tile.cancelled .details-content,
+.matchup-tile.cancelled span.score,
+.matchup-tile.cancelled span.team-history,
+.matchup-tile.cancelled .header-content .right-area .d-flex {
+    display: none !important;
+}
+
+.header-content span.longText {
+    transform: scaleX(1) !important;
+}
+
+
+.matchup-tile.cancelled .header-content .right-area a {
+    color: white;
+}
+
+
+.container-wide.tile-l .matchup-tile.ready .details,
+.container-wide.tile-l .matchup-tile.delayed .details {
+    display: block;
+}
+
+.container-wide.tile-m .matchup-tile.ready .details,
+.container-wide.tile-s .matchup-tile.ready .details
+.container-wide.tile-m .matchup-tile.delayed .details,
+.container-wide.tile-s .matchup-tile.delayed .details {
+    display: none;
+}
+
+.matchup-tile.ready table.scoreboard,
+.matchup-tile.delayed table.scoreboard {
+    display: none;
+}
+
+.matchup-tile.scheduled .btnStats,
+.matchup-tile.planned .btnStats,
+.matchup-tile.rescheduled .btnStats,
+.matchup-tile.delayed .btnStats,
+.matchup-tile.preparing .btnStats,
+.matchup-tile.planned .btnGraphics,
+.matchup-tile.scheduled .btnGraphics,
+.matchup-tile.rescheduled .btnGraphics,
+.matchup-tile.delayed .btnGraphics,
+.matchup-tile.preparing .btnGraphics {
+    display: none;
+}
+
+.btnStats img,
+.btnGraphics img {
+    height: 18.5px;
+}
+
+
+
+.container-wide.tile-l .matchup-tile .summary {
+    display: block;
+    height: 40px;
+    position: relative;
+}
+
+.container-wide.tile-m .matchup-tile .summary {
+    display: block;
+    height: 32px;
+    position: relative;
+}
+
+.container-wide.tile-s .matchup-tile .summary {
+    display: none;
+}
+
+.container-wide.tile-l .matchup-tile.scheduled span.team-history,
+.container-wide.tile-l .matchup-tile.planned span.team-history,
+.container-wide.tile-l .matchup-tile.preparing span.team-history,
+.container-wide.tile-l .matchup-tile.ready span.team-history,
+.container-wide.tile-l .matchup-tile.delayed span.team-history,
+.container-wide.tile-l .matchup-tile.running span.team-history {
+    display: block;
+}
+
+.container-wide.tile-l .matchup-tile.unofficial span.team-history,
+.container-wide.tile-l .matchup-tile.official span.team-history,
+.container-wide.tile-l .matchup-tile.done span.team-history {
+    display: none;
+}
+
+.container-wide.tile-m .matchup-tile span.team-history {
+    display: none;
+}
+
+.container-wide.tile-m .matchup-tile span.team-name {
+    top: 0%
+}
+
+.container-wide.tile-m .matchup-tile span.team-name {
+    top: 0%
+}
+
+.container-wide.tile-l table.details-content td.score span,
+.container-wide.tile-m table.details-content td.score span {
+    display: none;
+}
+
+.container-wide.tile-s table.details-content td.score span {
+    display: block;
+}
+
+
+.matchup-tile header {
+    background-color: #000000; /* Blue background */
+    color: white;
+    padding: 10px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    height: 21px;
+}
+
+.matchup-tile.scheduled header,
+.matchup-tile.planned header,
+.matchup-tile.preparing header {
+    background-color: #838383;
+}
+
+.matchup-tile.ready header, .matchup-tile.delayed header {
+    background-color: #c48008;
+}
+
+.matchup-tile.running header {
+    background-color: #136c1a;
+}
+
+.matchup-tile.unofficial header, .matchup-tile.official header, .matchup-tile.done header {
+    background-color: #1e207b;
+}
+
+
+
+/* Tile summary section */
+.matchup-tile .summary {
+    width: 100%;
+}
+
+.matchup-tile .home {
+    display: flex;
+    position: absolute;
+    /* justify-content: space-between; */
+    float: left;
+    width: 50%;
+    height: inherit;
+}
+
+.matchup-tile .away {
+    display: flex;
+    position: absolute;
+    justify-content: space-between;
+    float: right;
+    /* right: 0px; */
+    width: 50%;
+    left: 50%;
+    height: inherit;
+}
+
+.matchup-tile span.score {
+    display: block;
+    position: absolute;
+    font-weight: bold;
+}
+
+.matchup-tile .home span.score {
+    right: 5%
+}
+
+.container-wide.tile-l .matchup-tile span.score {
+    font-size: 1.5em;
+    top: 0;
+}
+
+.container-wide.tile-m .matchup-tile span.score {
+    font-size: 1.4em;
+    line-height: 32px;
+}
+
+.container-wide.tile-m .matchup-tile.separator {
+    line-height: 30px;
+}
+
+.matchup-tile .away span.score {
+    left: 4.5%;
+}
+
+.matchup-tile img.flag {
+    display: block;
+    position: absolute;
+    height: 100%;
+    padding: 5px;
+}
+
+.matchup-tile .home img.flag {
+    left: 1%;
+}
+
+.matchup-tile .away img.flag {
+    right: 1%;
+}
+
+.matchup-tile span.team-name {
+    display: block;
+    position: absolute;
+    font-weight: 700;
+    height: 100%;
+}
+
+.matchup-tile span.team-name .short {
+    display: block;
+}
+
+.matchup-tile span.team-name .long {
+    display: none;
+}
+
+.matchup-tile span.team-history {
+    position: absolute;
+    font-weight: lighter;
+    top: 50%;
+    font-size: 12px;
+    height: 100%;
+    letter-spacing: 2px;
+}
+
+.matchup-tile .home span.team-name, .matchup-tile .home span.team-history {
+    left: 50px;
+}
+
+.matchup-tile .away span.team-name, .matchup-tile .away span.team-history {
+    right: 50px;
+}
+
+.matchup-tile .separator {
+    display: block;
+    position: absolute;
+    text-align: center;
+    font-size: 23px;
+    left: 49%;
+    width: 2%;
+}
+
+.matchup-tile .flag {
+    height: 24px;
+}
+/* ---------- */
+/* Scoreboard */
+/* ---------- */
+.matchup-tile table.scoreboard,
+.matchup-tile table.details-content {
+    width: 100%;
+    text-align: center;
+    table-layout: fixed;
+}
+
+    .matchup-tile table.scoreboard th {
+        font-size: 13px;
+        text-align: center;
+        padding: 0;
+    }
+
+        .matchup-tile table.scoreboard th.score,
+        .matchup-tile table.scoreboard td.score,
+        .matchup-tile table.details-content td.score,
+        .matchup-tile table.details-content td.lsd {
+            width: 15%;
+            font-weight: bold;
+        }
+
+    .matchup-tile table.scoreboard td.score,
+    .matchup-tile table.details-content td.score {
+        text-align: right;
+        padding-right: 5%;
+    }
+
+    .matchup-tile table.details-content td.lsd {
+        text-align: right;
+    }
+
+    .matchup-tile table.details-content td.lsd-detail {
+        text-align: right;
+        padding-right: 5%;
+    }
+
+    .matchup-tile table.details-content td.spacer {
+        width: 11.5% !important;
+    }
+
+    .matchup-tile table.scoreboard tr,
+    .matchup-tile table.scoreboard td,
+    .matchup-tile table.details-content tr,
+    .matchup-tile table.details-content td {
+        height: 10px;
+        padding: 0;
+    }
+
+    .matchup-tile table.scoreboard th.lsfe, td.lsfe,
+    .matchup-tile table.details-content th.lsfe, td.lsfe {
+        width: 7%;
+        text-align: center;
+        padding: 1%;
+    }
+
+    .matchup-tile table.scoreboard th.lsd-lsfe, td.lsd-lsfe,
+    .matchup-tile table.scoreboard td.lsd-lsfe-center {
+        display: none;
+        margin-bottom: 0;
+        transform: scaleX(0.75);
+        transform-origin: left;
+    }
+
+    .matchup-tile table.scoreboard td.lsd-lsfe {
+        text-align: right;
+        padding-left: 12px !important;
+    }
+
+        .matchup-tile table.scoreboard td.lsd-lsfe:nth-child(4) {
+            text-align: left !important;
+        }
+
+        .matchup-tile table.scoreboard td.lsd-lsfe span {
+            font-size: 14px;
+        }
+
+
+    .matchup-tile table.scoreboard th:not(.noc):not(.lsfe):not(.lsd-lsfe):not(.score),
+    .matchup-tile table.scoreboard td:not(.noc):not(.lsfe):not(.lsd-lsfe):not(.score),
+    .matchup-tile table.details-content th:not(.noc):not(.lsfe):not(.lsd-lsfe):not(.score),
+    .matchup-tile table.details-content td:not(.noc):not(.lsfe):not(.lsd-lsfe):not(.score) {
+        width: auto;
+    }
+
+
+.tile-s .matchup-tile table.scoreboard tr:nth-child(odd) td:not(.noc):not(.lsfe):not(.score) {
+    border-bottom: 0.5px solid #dfdfdf;
+}
+
+.tile-s .matchup-tile table.scoreboard tr:nth-child(even) td:not(.noc):not(.lsfe):not(.score) {
+    border-top: 0.5px solid #dfdfdf;
+}
+
+.tile-s .matchup-tile table.scoreboard tr td:not(.noc):not(.lsfe):not(.score) {
+    border-left: 0.5px solid #dfdfdf;
+}
+
+.tile-s .matchup-tile table.scoreboard tr:nth-child(odd) td:nth-child(3),
+.tile-s .matchup-tile table.scoreboard tr:nth-child(even) td:nth-child(3) {
+    border-left: none !important;
+}
+
+.tile-s .matchup-tile table.scoreboard tr td.no-border {
+    border: none !important;
+}
+
+
+
+
+.matchup-tile table.scoreboard th.noc,
+.matchup-tile table.scoreboard td.noc,
+.matchup-tile table.details-content td.noc {
+    width: 10%;
+}
+
+.matchup-tile table.scoreboard td.noc,
+.matchup-tile table.details-content td.noc {
+    font-weight: bold;
+    text-align: right;
+    font-family: 'Anonymous Pro','Inconsolata','Consolas',monospace;
+}
+
+.matchup-tile table.scoreboard td.hammer {
+    position: relative;
+}
+
+    .matchup-tile table.scoreboard td.hammer:not(:nth-child(-n+5))::before {
+        content: '';
+        display: block;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+.matchup-tile table.scoreboard span.powerplay {
+    border-radius: 50%;
+    box-sizing: border-box;
+    width: 24px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: auto;
+}
+
+.matchup-tile table.scoreboard tr:nth-child(odd) td span.powerplay {
+    background-color: #ff4c4c;
+}
+
+.matchup-tile table.scoreboard tr:nth-child(even) td span.powerplay {
+    background-color: #ecec00;
+}
+
+/* ------- */
+/* Details */
+/* ------- */
+.matchup-tile .details {
+    display: block;
+    width: 100%;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+
+/* Extra rules for the website */
+#scoreboard,
+.row {
+    max-width: 800px;
+}
+
+
+    .row,
+    .row td,
+    .matchup-tile table.scoreboard td.noc, .matchup-tile table.details-content td.noc {
+        font-size: clamp(16px, 2vw, 20px) !important;
+    }
+
+
+/* ------------------ */
+/* Media related size */
+/* Media related size */
+/* Base font size for all devices */
+.header-content span {
+    font-size: 2vw; /* TODO 1, 2 or 3 based on the viewport size*/
+}
+
+@media screen and (max-width: 840px) {
+
+    .header-content span.longText {
+        transform: scaleX(0.75);
+        transform-origin: left;
+    }
+}
+
+/* Adjust font size based on screen width */
+@media screen and (max-width: 768px) {
+    .header-content span {
+        font-size: 14px; /* Smaller font size for narrower screens (e.g., tablets, small devices) */
+    }
+
+    .header-content .right-area a {
+        margin-left: 10px;
+    }
+
+    .header-content .right-area a {
+        margin-right: 5px;
+        margin-top: -1px;
+        margin-left: 5px;
+    }
+
+    .header-content span.wideScreenText {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+
+    .header-content span.longText {
+        transform: scaleX(0.75);
+        transform-origin: left;
+        font-size: 3vw !important;
+    }
+
+    .header-content span {
+        font-size: 3vw; /* Even smaller font size for very narrow screens (e.g., phones) */
+    }
+
+    .header-content .right-area a {
+        margin-right: 5px;
+        margin-top: -1px;
+        margin-left: 0px;
+    }
+}
+
+/* Adjust font size for mobile devices in landscape mode */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+    .header-content span {
+        font-size: 13px; /* Slightly larger font size for better readability in landscape */
+    }
+
+    .container-wide.tile-m .matchup-tile .home span.score,
+    .container-wide.tile-m .matchup-tile .away span.score {
+        line-height: 100%;
+    }
+}
+
+/* Adjust font size for desktop (wide screens) */
+@media screen and (min-width: 1024px) {
+    .header-content span {
+        font-size: 15px;
+    }
+
+    .header-row {
+        width: 97%;
+    }
+
+    .matchup-tile table.scoreboard th.lsd-lsfe,
+    .matchup-tile.running table.scoreboard td.lsd-lsfe,
+    .matchup-tile.unofficial table.scoreboard td.lsd-lsfe,
+    .matchup-tile.official table.scoreboard td.lsd-lsfe,
+    .matchup-tile.done table.scoreboard td.lsd-lsfe,
+    .matchup-tile.running table.scoreboard td.lsd-lsfe-center,
+    .matchup-tile.unofficial table.scoreboard td.lsd-lsfe-center,
+    .matchup-tile.official table.scoreboard td.lsd-lsfe-center,
+    .matchup-tile.done table.scoreboard td.lsd-lsfe-center {
+        display: table-cell !important;
+    }
+
+    .matchup-tile table.scoreboard th.lsfe,
+    .matchup-tile.running table.scoreboard td.lsfe,
+    .matchup-tile.unofficial table.scoreboard td.lsfe,
+    .matchup-tile.official table.scoreboard td.lsfe,
+    .matchup-tile.done table.scoreboard td.lsfe {
+        display: none !important;
+    }
+
+    .matchup-tile span.team-history {
+        top: 60%;
+    }
+
+    .header-content .right-area a {
+        margin-right: 5px;
+        margin-top: -1px;
+        margin-left: 10px;
+    }
+
+    .matchup-tile span.team-name .short{
+        display: none !important;
+    }
+    .matchup-tile span.team-name .long {
+        display: block !important;
+    }
+}
