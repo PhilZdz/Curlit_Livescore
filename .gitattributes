@@ -1,0 +1,9 @@
+﻿###########################################################################
+# This .gitattribute lists the files and folders excluded from the release.
+###########################################################################
+
+.gitattributes						export-ignore
+.gitignore						export-ignore
+Curlit_Livescore.csproj			export-ignore
+Curlit_Livescore.csproj.user	export-ignore
+Curlit_Livescore.sln			export-ignore
