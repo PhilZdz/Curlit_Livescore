@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Curlit_Livescore": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:62715;http://localhost:62716"
+    }
+  }
+}

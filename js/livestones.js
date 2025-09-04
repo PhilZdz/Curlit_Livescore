@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    // Version 1.8 from 30.4.25
+    // Version 0.1 from 22.8.25
     //const apiUrl = "https://livescores.worldcurling.org/curlitsse";
     const apiUrl = "http://sse.curlit.local:5057";
 
@@ -9,6 +9,7 @@ $(document).ready(function () {
     var competition = params.get("Competition");
     var eventId = params.get("EventID") ?? 0;
     var sessionId = params.get("SessionID") ?? 0;
+    // TODO PZ see later how to pass the Game ID (iFrame?)
 
     if (document.getElementById('ContentMain_HiddenSeason') != null)
         season = document.getElementById('ContentMain_HiddenSeason').value;
@@ -21,11 +22,12 @@ $(document).ready(function () {
 
     // TODO PZ Remove that
     eventId = sessionId = 1;
+    gameId = 2;
 
     const competitionCode = pathSegments[1] ?? competition;
 
     // The name of the group that sign
-    const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}`;
+    const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${gameId}`;
 
     const $container = $('#scoreboard');
     const $template = $('#template');
@@ -69,8 +71,11 @@ $(document).ready(function () {
             if (sessionId != null) {
                 urlParams["sessionId"] = sessionId;
             }
+            if (gameId != null) {
+                urlParams["gameId"] = gameId;
+            }
 
-            var callUrl = `${apiUrl}/Result/LiveResults`
+            var callUrl = `${apiUrl}/Stone/LiveStones`
 
             if (Object.keys(urlParams).length > 0) {
                 const keys = Object.keys(urlParams);
