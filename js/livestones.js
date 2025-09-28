@@ -246,13 +246,17 @@ $(document).ready(function () {
       }
   
       function makeSVGResponsive($svg) {
-        const width = $svg.attr("width");
+        const width = $svg.attr("width") ;
         const height = $svg.attr("height");
         if (width && height) {
           $svg.removeAttr("width height")
             .attr("viewBox", `0 0 ${width} ${height}`)
             .attr("preserveAspectRatio", "xMidYMid meet");
         }
+
+        alert(`Adjusted width is ${width} and height is ${height}`);
+        alert($(".svg-container").first().height());
+        alert($(".svg-container").first().width())
       }
   
       $(document).ready(function () {
