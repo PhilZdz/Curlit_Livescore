@@ -42,19 +42,16 @@ $(document).ready(function () {
             .build();
 
         connection.on("ReceiveMessage", function (resultList) {
-            // Refresh the tiles
-            renderTileData(resultList);
-
-            // Refresh the tile size
+            console.log(resultList);
+            // Refresh the live viewport
             refreshContainer(resultList);
         });
 
         connection.onclose(function () {
             // Handle connection closed event
             setOnlineHeader(false);
-            console.error("Connection closed. Retrying in 5 seconds");
+            console.error("Live connection closed. Retrying in 5 seconds");
             setTimeout(startConnection, 5000);
-
         });
 
         connection.start().then(function () {
@@ -93,9 +90,6 @@ $(document).ready(function () {
                     // Hide the loader and show the session title
                     $("#loader").hide();
 
-                    // Build the scoreboard
-                    renderTileData(data);
-
                     refreshContainer(data);
 
                     setOnlineHeader(true);
@@ -112,6 +106,7 @@ $(document).ready(function () {
     }
 
     function refreshContainer(data) {
+        console.log(data);
         var nbMatchups = data.length;
         var gamesTitle = data.length > 0 ? data[0].gamesTitle : "";
 
@@ -148,204 +143,6 @@ $(document).ready(function () {
         nbGames = nbMatchups;
     }
 
-    function renderTileData(data) {
-        // Cleanup the tiles that are no longer live
-        const matchupKeys = data.map(obj => obj.matchupKey);
-
-        $('.row').each(function () {
-            const dataId = $(this).data('id');
-            if (!matchupKeys.includes(dataId)) {
-                $(this).remove();
-            }
-        });
-
-
-        data.forEach(result => {
-            let $tile = $(`[data-id='${result.matchupKey}']`); // Check if the tile already exists
-
-            if ($tile.length === 0) {
-                // If tile doesn't exist, clone the template
-                $tile = $template.clone();
-
-                // Visual updates
-                feedTileUI($tile, result);
-
-                $tile.removeAttr('id'); // Remove id to avoid duplication
-                $tile.attr('data-id', result.matchupKey); // Add the unique identifier
-                $tile.show(); // Make it visible
-                $container.append($tile); // Append it to the container
-            }
-            else {
-                // Visual updates
-                feedTileUI($tile, result);
-            }
-        });
-    }
-
-    function feedTileUI(tile, result) {
-        // Header
-        tile.find('.matchup-tile').attr('class', `matchup-tile ${result.status}`);
-
-        tile.find('span.sheet').text(result.sheet);
-
-        let $leftText = tile.find('span.left-text');
-        var leftText = result.gamesTitle;
-        $leftText.removeClass("longText");
-        $leftText.removeClass("shortSessionName");
-        // Special case - shorten the session title if it contains Women's Round Robin (only on smaller devices)
-        var sequenceToStrip = "Women's Round Robin";
-        if (leftText.length > 28 && leftText.indexOf(sequenceToStrip) != -1) {
-            leftText = leftText.replace(sequenceToStrip, "Women's <span class='wideScreenText'>Round Robin</span>");
-        }
-        else if (leftText.length > 20) {
-            $leftText.addClass("longText");
-        }
-        $leftText.html(leftText);
-
-
-        tile.find('span.middle-text').text(result.status);
-
-        let $generalComment = $('#ContentMain_SessionComment');
-        if ($generalComment.text() != result.generalComment) {
-            $generalComment.text(result.generalComment);
-        }
-
-        let $rightComment = tile.find('.right-area .me-1');
-        $rightComment.removeClass("longText");
-        $rightComment.html(result.gameComment);
-        if (result.gameComment != null && result.gameComment != '' && result.gameComment.length > 14) {
-            $rightComment.addClass("longText");
-        }
-
-        tile.find('.right-area .btnStats').attr("href", `/${competitionCode}/aspnet/currentstats.aspx?EventID=${result.eventID}&Sheet=${result.sheet}`);
-        tile.find('.right-area .btnGraphics').attr("href", `/${competitionCode}/aspnet/livegraphics.aspx?EventID=${result.eventID}&Sheet=${result.sheet}`);
-
-        if (result.doStats == true) {
-            tile.find('.right-area .btnStats img').attr("src", `../general/proc-button.svg`);
-            tile.find('.right-area .btnStats img').attr("alt", `Line-Up`);
-        }
-        else {
-            tile.find('.right-area .btnStats img').attr("src", `../general/lineup-button.svg`);
-        }
-
-        if (result.doGraphics == false) {
-            tile.find('.right-area .btnGraphics').hide();
-        }
-
-        // Home team
-        tile.find('.summary .home img.flag').attr('src', `https://livescores.worldcurling.org/flags/${result.homeTeam.noc}.svg`);
-        tile.find('.summary .home .team-name').html(`<span class='short'>${result.homeTeam.teamShortName}</span><span class='long'>${result.homeTeam.teamLongName}</span>`);
-        tile.find('.summary .home .score').text(result.homeTeam.total);
-        tile.find('.summary .home .team-history').text(result.homeTeam.history);
-        tile.find('.summary .home .team-history').attr('title', `wins - losses`);
-
-        // Away team
-        tile.find('.summary .away img.flag').attr('src', `https://livescores.worldcurling.org/flags/${result.awayTeam.noc}.svg`);
-        tile.find('.summary .away .team-name').html(`<span class='short'>${result.awayTeam.teamShortName}</span><span class='long'>${result.awayTeam.teamLongName}</span>`);
-        tile.find('.summary .away .score').text(result.awayTeam.total);
-        tile.find('.summary .away .team-history').text(result.awayTeam.history);
-        tile.find('.summary .away .team-history').attr('title', `wins - losses`);
-
-        // Scoreboard
-        var thead = tile.find('.scoreboard thead');
-        var homeRow = tile.find('.scoreboard tbody tr').eq(0);
-        var awayRow = tile.find('.scoreboard tbody tr').eq(1);
-
-        // Clear the scoreboard
-        thead.empty();
-        homeRow.find('td').remove();
-        awayRow.find('td').remove();
-
-        // NOC
-        thead.append(`<th class="noc"></th>`);
-        homeRow.append(`<td class="noc">${result.homeTeam.noc}</td>`)
-        awayRow.append(`<td class="noc">${result.awayTeam.noc}</td>`)
-
-        // LSFE
-        thead.append(`<th class="lsfe"></th>`);
-        homeRow.append(`<td class="lsfe">${result.homeTeam.lsfe == true ? "*" : ""}</td>`)
-        awayRow.append(`<td class="lsfe">${result.awayTeam.lsfe == true ? "*" : ""}</td>`)
-
-        // LSD (only on desktop)
-        if (result.homeTeam.lsd.total != null) {
-            thead.append(`<th class="lsd-lsfe" colspan=3>LSD/LSFE</th>`);
-            homeRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.homeTeam.lsd.total != null ? Number(result.homeTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.homeTeam.lsfe == true ? "*" : ""}</td>`)
-            awayRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.awayTeam.lsd.total != null ? Number(result.awayTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.awayTeam.lsfe == true ? "*" : ""}</td>`)
-        }
-        else {
-            thead.append(`<th class="lsd-lsfe" colspan=2>LSFE</th><th></th>`);
-            homeRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.homeTeam.lsfe == true ? "*" : ""}</td><td></td>`)
-            awayRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.awayTeam.lsfe == true ? "*" : ""}</td><td></td>`)
-        }
-
-        // ENDS
-        var idx = 1;
-        Object.entries(result.ends).forEach(([endName, endDetails]) => {
-            thead.append(`<th>${endName}</th>`);
-
-            var homeClass = "";
-            var awayClass = "";
-            var homeSpanClass = "";
-            var awaySpanClass = "";
-
-            // Hammer                   
-            if (result.cEnd == idx && result.homeTeam.lsce == true) {
-                homeClass = homeClass + "hammer";
-            }
-            if (result.cEnd == idx && result.awayTeam.lsce == true) {
-                awayClass = awayClass + "hammer";
-            }
-
-            // Powerplay
-            if (result.homeTeam.ppE1 == idx || result.homeTeam.ppE2 == idx) {
-                homeSpanClass = "powerplay";
-            }
-            if (result.awayTeam.ppE1 == idx || result.awayTeam.ppE2 == idx) {
-                awaySpanClass = "powerplay";
-            }
-
-            // Extra end placeholder, no border (for small displays)
-            if (endName == "") {
-                homeClass = homeClass + " no-border";
-                awayClass = awayClass + " no-border";
-            }
-
-            homeRow.append(`<td${homeClass != "" ? ` class=\"${homeClass}\"` : ""}><span${homeSpanClass != "" ? ` class=\"${homeSpanClass}\"` : ""}>${endDetails.h}</span></td>`);
-            awayRow.append(`<td${awayClass != "" ? ` class=\"${awayClass}\"` : ""}><span${awaySpanClass != "" ? ` class=\"${awaySpanClass}\"` : ""}>${endDetails.a}</span></td>`);
-
-            idx++;
-        });
-
-        // Score
-        thead.append(`<th class="score"></th>`);
-        homeRow.append(`<td class="score">${result.homeTeam.total}</td>`)
-        awayRow.append(`<td class="score">${result.awayTeam.total}</td>`)
-
-
-        // Details
-        var homeDetails = tile.find('table.details-content tr').eq(0);
-        var awayDetails = tile.find('table.details-content tr').eq(1);
-
-        // Hide the header if the LSFE is already decided
-        if ((result.homeTeam.lsd.total == null && result.homeTeam.lsfe == true) || (result.awayTeam.lsd.total == null && result.awayTeam.lsfe == true)) {
-            tile.find('.details').hide();
-        }
-
-        homeDetails.find('td.noc').text(result.homeTeam.noc);
-        homeDetails.find('td.lsfe').text(`${result.homeTeam.lsfe == true ? "*" : ""}`);
-        homeDetails.find('td').eq(2).text(result.homeTeam.lsd.cw != null ? Number(result.homeTeam.lsd.cw).toFixed(1) : null);
-        homeDetails.find('td').eq(3).text(result.homeTeam.lsd.ccw != null ? Number(result.homeTeam.lsd.ccw).toFixed(1) : null);
-        homeDetails.find('td.lsd').text(result.homeTeam.lsd.total != null ? `${Number(result.homeTeam.lsd.total).toFixed(1)}cm` : null);
-        homeDetails.find('td.score span').text(result.homeTeam.total);
-
-        awayDetails.find('td.noc').text(result.awayTeam.noc);
-        awayDetails.find('td.lsfe').text(`${result.awayTeam.lsfe == true ? "*" : ""}`);
-        awayDetails.find('td').eq(2).text(result.awayTeam.lsd.cw != null ? Number(result.awayTeam.lsd.cw).toFixed(1) : null);
-        awayDetails.find('td').eq(3).text(result.awayTeam.lsd.ccw != null ? Number(result.awayTeam.lsd.ccw).toFixed(1) : null);
-        awayDetails.find('td.lsd').text(result.awayTeam.lsd.total != null ? `${Number(result.awayTeam.lsd.total).toFixed(1)}cm` : null);
-        awayDetails.find('td.score span').text(result.awayTeam.total);
-    }
-
     function setOnlineHeader(online) {
         var updateIcon;
         if (document.getElementById('RefreshButton') != null)
@@ -363,6 +160,166 @@ $(document).ready(function () {
                 updateIcon.src = "../general/offline.png";
         }
     }
+
+
+
+
+    const shotData = [
+        { name: "Item 1: Circle", stats: "Red: 3, Yellow: 4" },
+        { name: "Item 2: Square", stats: "Red: 1, Yellow: 7" },
+        { name: "Item 3: Triangle", stats: "Red: 2, Yellow: 6" },
+        { name: "Item 4: Star", stats: "Red: 4, Yellow: 5" },
+        { name: "Item 5: Hexagon", stats: "Red: 3, Yellow: 3" }
+      ];
+  
+      let $slider, $firstBtn, $prevBtn, $nextBtn, $lastBtn, $indexButtonsContainer;
+      let $arrowPrev, $arrowNext;
+      let totalItems, currentIndex = 0;
+  
+      let startX = 0, currentX = 0, isDragging = false;
+      const swipeThreshold = 50;
+  
+      function goTo(index) {
+        currentIndex = Math.max(0, Math.min(index, totalItems - 1));
+        $slider.css({
+          transition: "transform 0.3s ease",
+          transform: `translateX(-${currentIndex * 100}%)`
+        });
+  
+        // Update shot info
+        const shotInfo = shotData[currentIndex];
+        $("#currentShot").html(`
+        Current Shot: <strong>${shotInfo.name}</strong><br />
+        Stats: <span id="shotStats">${shotInfo.stats}</span>
+      `);
+  
+        updateButtons();
+      }
+  
+      function renderDots() {
+        $indexButtonsContainer.empty();
+  
+        const maxVisible = 3;
+        const halfWindow = Math.floor(maxVisible / 2);
+  
+        let start = Math.max(0, currentIndex - halfWindow);
+        let end = Math.min(totalItems - 1, currentIndex + halfWindow);
+  
+        // Adjust window if fewer than maxVisible
+        if (end - start + 1 < maxVisible) {
+          if (start === 0) {
+            end = Math.min(totalItems - 1, start + maxVisible - 1);
+          } else if (end === totalItems - 1) {
+            start = Math.max(0, end - (maxVisible - 1));
+          }
+        }
+  
+        // Left ellipsis
+        if (start > 0) {
+          $("<button>").addClass("ellipsis").appendTo($indexButtonsContainer);
+        }
+  
+        // Main dots
+        for (let i = start; i <= end; i++) {
+          const $btn = $("<button>");
+          if (i === currentIndex) $btn.addClass("active");
+          $btn.on("click", () => goTo(i));
+          $indexButtonsContainer.append($btn);
+        }
+  
+        // Right ellipsis
+        if (end < totalItems - 1) {
+          $("<button>").addClass("ellipsis").appendTo($indexButtonsContainer);
+        }
+      }
+  
+      function updateButtons() {
+        $firstBtn.prop("disabled", currentIndex === 0);
+        $prevBtn.prop("disabled", currentIndex === 0);
+        $nextBtn.prop("disabled", currentIndex === totalItems - 1);
+        $lastBtn.prop("disabled", currentIndex === totalItems - 1);
+  
+        $arrowPrev.prop("disabled", currentIndex === 0);
+        $arrowNext.prop("disabled", currentIndex === totalItems - 1);
+  
+        renderDots();
+      }
+  
+      function makeSVGResponsive($svg) {
+        const width = $svg.attr("width");
+        const height = $svg.attr("height");
+        if (width && height) {
+          $svg.removeAttr("width height")
+            .attr("viewBox", `0 0 ${width} ${height}`)
+            .attr("preserveAspectRatio", "xMidYMid meet");
+        }
+      }
+  
+      $(document).ready(function () {
+        $slider = $("#slider");
+        $firstBtn = $("#firstBtn");
+        $prevBtn = $("#prevBtn");
+        $nextBtn = $("#nextBtn");
+        $lastBtn = $("#lastBtn");
+        $indexButtonsContainer = $("#indexButtons");
+        $arrowPrev = $("#arrowPrev");
+        $arrowNext = $("#arrowNext");
+  
+        totalItems = $slider.children().length;
+  
+        // Button clicks
+        $firstBtn.on("click", () => goTo(0));
+        $prevBtn.on("click", () => goTo(currentIndex - 1));
+        $nextBtn.on("click", () => goTo(currentIndex + 1));
+        $lastBtn.on("click", () => goTo(totalItems - 1));
+  
+        $arrowPrev.on("click", () => goTo(currentIndex - 1));
+        $arrowNext.on("click", () => goTo(currentIndex + 1));
+  
+        // Swipe gestures
+        $slider.on("touchstart", function (e) {
+          startX = e.originalEvent.touches[0].clientX;
+          isDragging = true;
+          $slider.css("transition", "none");
+        });
+  
+        $slider.on("touchmove", function (e) {
+          if (!isDragging) return;
+          currentX = e.originalEvent.touches[0].clientX;
+          const deltaX = currentX - startX;
+          $slider.css("transform", `translateX(calc(-${currentIndex * 100}% + ${deltaX}px))`);
+        });
+  
+        $slider.on("touchend", function () {
+          isDragging = false;
+          const deltaX = currentX - startX;
+          if (Math.abs(deltaX) > swipeThreshold) {
+            if (deltaX < 0 && currentIndex < totalItems - 1) {
+              currentIndex++;
+            } else if (deltaX > 0 && currentIndex > 0) {
+              currentIndex--;
+            }
+          }
+          goTo(currentIndex);
+        });
+  
+        // Responsive SVGs
+        $("svg").each(function () {
+          makeSVGResponsive($(this));
+        });
+  
+        // Add odd/even backgrounds
+        $slider.children().each(function (i) {
+          $(this).addClass(i % 2 === 0 ? "odd" : "even");
+        });
+  
+        // Initialize
+        renderDots();
+        goTo(0);
+      });
+
+
+    
 
     startConnection();
 });
