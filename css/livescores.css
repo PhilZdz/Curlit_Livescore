@@ -544,10 +544,10 @@ td.lsfe {
 }
 
 
-
 .item {
   min-width: 100%;
   flex-shrink: 0;
+  flex-grow: 1;   /* ensures it fills the wrapper vertically */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -558,20 +558,20 @@ td.lsfe {
 
 .svg-container {
   width: 100%;
-  height: 100%;           /* fill the slide’s height */
+  height: 100%;
   display: flex;
-  flex-grow: 1;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
 
 .svg-container svg {
-  height: 100%;        /* fill container height */
-  width: auto;         /* scale width proportionally */
-  max-width: 100%;     /* don’t overflow horizontally */
+  width: 100%;      /* drive by width for Safari reliability */
+  height: auto;     /* scale proportionally */
+  max-height: 100%; /* don’t overflow vertically */
   display: block;
 }
+
 
 
 

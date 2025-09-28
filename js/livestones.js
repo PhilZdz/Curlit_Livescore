@@ -249,16 +249,26 @@ $(document).ready(function () {
         const w = $svg.attr("width");
         const h = $svg.attr("height");
       
+        // If both dimensions are present, set a viewBox
         if (w && h) {
           $svg.attr("viewBox", `0 0 ${parseFloat(w)} ${parseFloat(h)}`);
         }
       
-        // Remove hardcoded attributes so CSS can take over
+        // Strip fixed sizing attributes so CSS can control size
         $svg.removeAttr("width").removeAttr("height");
       
-        // Keep proportions
+        // Ensure proper scaling
         $svg.attr("preserveAspectRatio", "xMidYMid meet");
+      
+        // Force safe CSS defaults
+        $svg.css({
+          width: "100%",
+          height: "auto",
+          maxHeight: "100%",
+          display: "block"
+        });
       }
+      
       
       
   
