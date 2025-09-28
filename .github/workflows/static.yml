@@ -4,7 +4,7 @@ name: Deploy Livestones GH Page
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main","live_stones"]
+    branches: ["live_stones"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
