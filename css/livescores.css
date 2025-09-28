@@ -293,7 +293,7 @@
 }
 
 .matchup-tile span.score {
-  font-size: 1.5em;
+  font-size: 24px;
   display: block;
   position: absolute;
   font-weight: bold;
@@ -327,6 +327,7 @@
   position: absolute;
   font-weight: 700;
   height: 100%;
+  font-size: 16px;
 }
 
 .matchup-tile span.team-history {
@@ -490,6 +491,7 @@ td.lsfe {
   color: #333;
   border-bottom: 1px solid #ccc;
   width: 40%;
+  display: grid; /* PZ TEMP */
 }
 
 .slider-wrapper {
@@ -497,7 +499,7 @@ td.lsfe {
   height: 60%;
   overflow: hidden;
   position: relative;
-  border-radius: 12px;
+  border-radius: 3px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
   background: white;
 }
