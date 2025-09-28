@@ -499,7 +499,6 @@ td.lsfe {
   height: 60%;
   overflow: hidden;
   position: relative;
-  border-radius: 3px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
   background: white;
 }

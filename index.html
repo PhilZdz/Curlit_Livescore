@@ -24,7 +24,6 @@
       padding: 1px 1px 1px 1px;
     }
   </style>
-
 </head>
 
 <body>
@@ -115,12 +114,6 @@
                     </tr>
                   </tbody>
                 </table>
-                <input type="hidden" name="ctl00$ContentMain$HiddenSeason" id="ContentMain_HiddenSeason" value="2425">
-                <input type="hidden" name="ctl00$ContentMain$HiddenCompetition" id="ContentMain_HiddenCompetition"
-                  value="WJCC">
-                <input type="hidden" name="ctl00$ContentMain$HiddenEventID" id="ContentMain_HiddenEventID" value="0">
-                <input type="hidden" name="ctl00$ContentMain$HiddenSessionID" id="ContentMain_HiddenSessionID"
-                  value="0">
 
 
                 <div id="scoreboard" class="container-wide tile-l">
@@ -376,8 +369,8 @@
                                 </div>
 
                                 <!-- arrows -->
-                                <button id="arrowPrev" class="nav-arrow left">&#10094;</button>
-                                <button id="arrowNext" class="nav-arrow right">&#10095;</button>
+                                <button onclick="return false;" id="arrowPrev" class="nav-arrow left">&#10094;</button>
+                                <button onclick="return false;" id="arrowNext" class="nav-arrow right">&#10095;</button>
 
                                 <div class="index-buttons" id="indexButtons"></div>
                               </div>
@@ -403,19 +396,6 @@
           </tr>
           <tr>
             <td valign="middle" class="favTeam" style="white-space: nowrap;">
-
-              <select name="ctl00$drpLanguage"
-                onchange="javascript:setTimeout('__doPostBack(\'ctl00$drpLanguage\',\'\')', 0)" id="drpLanguage"
-                class="sdrp">
-                <option selected="selected" value="1">EN</option>
-                <option value="2">DE</option>
-                <option value="3">FR</option>
-                <option value="4">IT</option>
-                <option value="5">RU</option>
-
-              </select>
-              &nbsp;
-              <input type="submit" name="ctl00$Button6" value="✎" id="Button6" title="Preferences" class="sbtn">
             </td>
             <td valign="middle" class="favTeam" align="center" style="font-size:x-small;">
 
