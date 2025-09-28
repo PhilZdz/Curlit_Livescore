@@ -246,18 +246,21 @@ $(document).ready(function () {
       }
   
       function makeSVGResponsive($svg) {
-        const width = $svg.attr("width") ;
-        const height = $svg.attr("height");
-        if (width && height) {
-          $svg.removeAttr("width height")
-            .attr("viewBox", `0 0 ${width} ${height}`)
-            .attr("preserveAspectRatio", "xMidYMid meet");
+        const w = $svg.attr("width");
+        const h = $svg.attr("height");
+      
+        if (w && h) {
+          $svg.attr("viewBox", `0 0 ${parseFloat(w)} ${parseFloat(h)}`);
         }
-
-        alert(`Adjusted width is ${width} and height is ${height}`);
-        alert($(".svg-container").first().height());
-        alert($(".svg-container").first().width())
+      
+        // Remove hardcoded attributes so CSS can take over
+        $svg.removeAttr("width").removeAttr("height");
+      
+        // Keep proportions
+        $svg.attr("preserveAspectRatio", "xMidYMid meet");
       }
+      
+      
   
       $(document).ready(function () {
         $slider = $("#slider");
