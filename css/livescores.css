@@ -490,13 +490,13 @@ td.lsfe {
   background: #f0f0f0;
   color: #333;
   border-bottom: 1px solid #ccc;
-  width: 40%;
+  width: 45%;
   display: grid; /* PZ TEMP */
 }
 
 .slider-wrapper {
-  width: 60%;
-  height: 60%;
+  width: 55%;
+  height: 55%;
   overflow: hidden;
   position: relative;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
