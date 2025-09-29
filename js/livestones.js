@@ -165,7 +165,13 @@ $(document).ready(function () {
 
 
     const shotData = [
-        { name: "Item 1: Circle", stats: "Red: 3, Yellow: 4" },
+        { 
+          stoneId: 1, 
+          noc: "DEN", 
+          lastName:"Jurlander Boege", 
+          firstName: "Item 1: Circle", 
+          shotType: "Draw" 
+        },
         { name: "Item 2: Square", stats: "Red: 1, Yellow: 7" },
         { name: "Item 3: Triangle", stats: "Red: 2, Yellow: 6" },
         { name: "Item 4: Star", stats: "Red: 4, Yellow: 5" },
@@ -188,12 +194,24 @@ $(document).ready(function () {
   
         // Update shot info
         const shotInfo = shotData[currentIndex];
-        $("#currentShot").html(`
-        Current Shot: <strong>${shotInfo.name}</strong><br />
-        Stats: <span id="shotStats">${shotInfo.stats}</span>
-      `);
+      //   $("#currentShot").html(`
+      //   Current Shot: <strong>${shotInfo.name}</strong><br />
+      //   Stats: <span id="shotStats">${shotInfo.stats}</span>
+      // `);
   
         updateButtons();
+
+        fitCompetitorNames();
+      }
+
+      function fitCompetitorNames() {
+        $('.lastname').each(function(){
+          fitText($(this), 28);
+        });
+
+        $('.firstname').each(function(){
+          fitText($(this), 20);
+        });
       }
   
       function renderDots() {
@@ -259,8 +277,28 @@ $(document).ready(function () {
         // Keep proportions
         $svg.attr("preserveAspectRatio", "xMidYMid meet");
       }
+
+
+      function fitText($el, maxSize = 32, minSize = 12) {
+        const maxWidth = $("#currentShot").width() - $("#currentShot .flag").width();
+        let fontSize = maxSize;
+      
+        $el.css('font-size', fontSize + 'px');
+      
+        // shrink until it fits or hit minSize
+        while ($el[0].offsetWidth > maxWidth && fontSize > minSize) {
+          fontSize--;
+          $el.css('font-size', fontSize + 'px');
+        }
+      }
       
       
+      
+        $(window).on('resize', function(){
+          fitCompetitorNames();
+        });
+
+
   
       $(document).ready(function () {
         $slider = $("#slider");
@@ -319,6 +357,7 @@ $(document).ready(function () {
         $slider.children().each(function (i) {
           $(this).addClass(i % 2 === 0 ? "odd" : "even");
         });
+
   
         // Initialize
         renderDots();

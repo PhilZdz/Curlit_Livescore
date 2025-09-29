@@ -483,23 +483,13 @@ td.lsfe {
   justify-content: flex-end;
 }
 
-#currentShot {
-  padding: 1rem;
-  text-align: right;
-  font-size: 1.1rem;
-  background: #f0f0f0;
-  color: #333;
-  border-bottom: 1px solid #ccc;
-  width: 45%;
-  display: grid; /* PZ TEMP */
-}
 
 .slider-wrapper {
   width: 55%;
   height: 55%;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
   background: white;
 }
 
@@ -573,6 +563,104 @@ td.lsfe {
   box-sizing: border-box;
 }
 
+
+
+
+#currentShot {
+  padding: 1rem;
+  text-align: right;
+  font-size: 1.1rem;
+  background: #f0f0f0;
+  color: #333;
+  border-bottom: 1px solid #ccc;
+  width: 45%;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+
+#currentShot .competitor {
+  position: relative;
+}
+
+#currentShot select {
+  font-size: 1.1em;
+}
+
+#currentShot .current-stone {
+  font-weight: bold;
+  color: gray;
+  padding: 3px;
+}
+
+#currentShot table.competitor {
+  height: 10vw;
+  width: 100%;
+  margin-top: 3vw;
+}
+
+#currentShot table td{
+  padding: 0;
+  text-align: left;
+  font-size: 2em;
+  line-height: 1;
+  vertical-align: middle;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+#currentShot table.competitor td img{
+  position: inherit;
+  height: 10vw;
+}
+
+#currentShot table.competitor td span{
+  display: inline-block;
+  line-height: 1; 
+}
+
+#currentShot table.competitor td.flag{
+  width: 30%;
+}
+
+
+#currentShot table.competitor .lastname {
+  font-weight: bold;
+}
+
+
+
+#currentShot table.shot-details {
+  height: 10vw;
+  width: 100%;
+  margin-top: 5vw;
+}
+
+#currentShot table td span.handle-ccw, td span.handle-cw {
+  font-size: 8vw;
+}
+
+#currentShot table td span.handle-cw::before {
+  content: "↻";
+}
+
+#currentShot table td span.handle-ccw::before {
+   content: "↺";
+}
+
+
+#currentShot table td span.comment {
+  color: lightslategray;    
+  font-size: 3.5vw;
+}
+
+
+
+#currentShot .horizontal-line {
+  width: 100%; /* Adjust width as needed (e.g., 50%, 80%, etc.) */
+  border-bottom: 1px solid #051739; /* Creates the horizontal line */
+  margin: 20px 0; /* Adds spacing above and below the line */
+}
 
 
 /* --- Dots under the carousel --- */
