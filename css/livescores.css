@@ -560,8 +560,7 @@ td.lsfe {
   max-width: 100%;
   max-height: 100%;
   display: block;
-  box-sizing: border-box;
-  touch-action: auto;
+  pointer-events: none; 
 }
 
 
