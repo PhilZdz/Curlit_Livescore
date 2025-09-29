@@ -496,7 +496,7 @@ td.lsfe {
 
 .slider-wrapper {
   width: 60%;
-  height: 66vh;
+  height: 60%;
   overflow: hidden;
   position: relative;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
@@ -508,6 +508,17 @@ td.lsfe {
   width: 100%;
   transition: transform 0.3s ease;
   touch-action: pan-y;
+}
+
+.item {
+  min-width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 
@@ -543,36 +554,24 @@ td.lsfe {
   margin-top: 3%;
 }
 
-
-.item {
-  min-width: 100%;
-  flex-shrink: 0;
-  flex-grow: 1;   /* ensures it fills the wrapper vertically */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  box-sizing: border-box;
-}
-
 .svg-container {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: hidden; /* keep it clipped to the container */
+  box-sizing: border-box;
 }
 
 .svg-container svg {
-  width: 100%;      /* drive by width for Safari reliability */
-  height: auto;     /* scale proportionally */
-  max-height: 100%; /* don’t overflow vertically */
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   display: block;
+  box-sizing: border-box;
 }
-
-
 
 
 
