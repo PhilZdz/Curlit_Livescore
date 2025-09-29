@@ -326,42 +326,42 @@ $(document).ready(function () {
         // -------------- //
         // Swipe gestures //
         // -------------- //
-        $slider.on("touchstart", function (e) {
-          const touches = e.originalEvent.touches;
-          if (touches.length > 1) {
-            // 👆 More than one finger → allow browser to handle pinch
-            isDragging = false;
-            return;
-          }
-          startX = touches[0].clientX;
-          isDragging = true;
-          $slider.css("transition", "none");
-        });
+        // $slider.on("touchstart", function (e) {
+        //   const touches = e.originalEvent.touches;
+        //   if (touches.length > 1) {
+        //     // 👆 More than one finger → allow browser to handle pinch
+        //     isDragging = false;
+        //     return;
+        //   }
+        //   startX = touches[0].clientX;
+        //   isDragging = true;
+        //   $slider.css("transition", "none");
+        // });
         
-        $slider.on("touchmove", function (e) {
-          const touches = e.originalEvent.touches;
-          if (!isDragging || touches.length > 1) return; // ignore pinch
-          currentX = touches[0].clientX;
-          const deltaX = currentX - startX;
-          $slider.css(
-            "transform",
-            `translateX(calc(-${currentIndex * 100}% + ${deltaX}px))`
-          );
-        });
+        // $slider.on("touchmove", function (e) {
+        //   const touches = e.originalEvent.touches;
+        //   if (!isDragging || touches.length > 1) return; // ignore pinch
+        //   currentX = touches[0].clientX;
+        //   const deltaX = currentX - startX;
+        //   $slider.css(
+        //     "transform",
+        //     `translateX(calc(-${currentIndex * 100}% + ${deltaX}px))`
+        //   );
+        // });
         
-        $slider.on("touchend", function (e) {
-          if (!isDragging) return;
-          isDragging = false;
-          const deltaX = currentX - startX;
-          if (Math.abs(deltaX) > swipeThreshold) {
-            if (deltaX < 0 && currentIndex < totalItems - 1) {
-              currentIndex++;
-            } else if (deltaX > 0 && currentIndex > 0) {
-              currentIndex--;
-            }
-          }
-          goTo(currentIndex);
-        });
+        // $slider.on("touchend", function (e) {
+        //   if (!isDragging) return;
+        //   isDragging = false;
+        //   const deltaX = currentX - startX;
+        //   if (Math.abs(deltaX) > swipeThreshold) {
+        //     if (deltaX < 0 && currentIndex < totalItems - 1) {
+        //       currentIndex++;
+        //     } else if (deltaX > 0 && currentIndex > 0) {
+        //       currentIndex--;
+        //     }
+        //   }
+        //   goTo(currentIndex);
+        // });
         
 
 
