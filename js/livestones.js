@@ -167,15 +167,101 @@ $(document).ready(function () {
     const shotData = [
         { 
           stoneId: 1, 
-          noc: "DEN", 
-          lastName:"Jurlander Boege", 
-          firstName: "Item 1: Circle", 
-          shotType: "Draw" 
+          noc: "CAN", 
+          team: "Canada", 
+          homeTeam: 0,
+          lastName:"Cinnamon", 
+          firstName: "Max", 
+          task: 1,
+          task_web: "Front",
+          handle: 1,
+          handle_web: "cw",
+          points: 4,
+          points_web:100,
+          comment: null,
+          svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="35.0" cy="14.4" r="4.06" /><circle cx="35.0" cy="5.6" r="4.06" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="148.6" cy="283.8" r="8.65" class="CUR_cs" /><circle cx="148.6" cy="283.8" r="1.44" stroke-width="3" /><circle cx="265.0" cy="5.6" r="4.06" /><circle cx="275.0" cy="14.4" r="4.06" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
         },
-        { name: "Item 2: Square", stats: "Red: 1, Yellow: 7" },
-        { name: "Item 3: Triangle", stats: "Red: 2, Yellow: 6" },
-        { name: "Item 4: Star", stats: "Red: 4, Yellow: 5" },
-        { name: "Item 5: Hexagon", stats: "Red: 3, Yellow: 3" }
+        { 
+          stoneId: 2, 
+          noc: "DEN", 
+          team: "Denmark", 
+          homeTeam: 1,
+          lastName:"Goldbeck", 
+          firstName: "Liam", 
+          task: 4,
+          task_web: "Draw",
+          handle: 1,
+          handle_web: "cw",
+          points: 4,
+          points_web:100,
+          comment: null,
+          svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" class="CUR_cs" /><circle cx="149.0" cy="379.4" r="1.44" stroke-width="3" /><circle cx="35.0" cy="5.6" r="4.06" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="148.6" cy="283.8" r="8.65" /><circle cx="265.0" cy="5.6" r="4.06" /><circle cx="275.0" cy="14.4" r="4.06" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
+        },        
+        { 
+          stoneId: 3, 
+          noc: "CAN", 
+          team: "Canada", 
+          homeTeam: 0,
+          lastName:"Cinnamon", 
+          firstName: "Max", 
+          task: 1,
+          task_web: "Draw",
+          handle: 1,
+          handle_web: "cw",
+          points: 4,
+          points_web:100,
+          comment: null,
+          svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="35.0" cy="5.6" r="4.06" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="148.6" cy="283.8" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" class="CUR_cs" /><circle cx="156.2" cy="363.0" r="1.44" stroke-width="3" /><circle cx="275.0" cy="14.4" r="4.06" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
+        },        
+        { 
+          stoneId: 4, 
+          noc: "DEN", 
+          team: "Denmark", 
+          homeTeam: 1,
+          lastName:"Goldbeck", 
+          firstName: "Liam", 
+          task: 1,
+          task_web: "Draw",
+          handle: 1,
+          handle_web: "cw",
+          points: 3,
+          points_web:75,
+          comment: null,
+          svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" class="CUR_cs" /><circle cx="47.8" cy="489.0" r="1.44" stroke-width="3" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="148.6" cy="283.8" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="275.0" cy="14.4" r="4.06" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
+        },        
+        { 
+          stoneId: 5, 
+          noc: "CAN", 
+          team: "Canada", 
+          homeTeam: 0,
+          lastName:"Keenan", 
+          firstName: "Michael", 
+          task: 1,
+          task_web: "Promotion Take-out",
+          handle: 1,
+          handle_web: "cw",
+          points: 0,
+          points_web:0,
+          comment: "No tick zone violation",
+          svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#808080" stroke="#ffe600" stroke-width="0.5" fill-opacity="0" class="CUR_os"><circle cx="148.6" cy="283.8" r="8.65" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="73.6" cy="342.4" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="150.0" cy="590.0" r="8.65" class="CUR_cs" /><circle cx="150.0" cy="590.0" r="1.44" stroke-width="3" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
+
+        },
+        { 
+          stoneId: 6, 
+          noc: "DEN", 
+          team: "Denmark", 
+          homeTeam: 1,
+          lastName:"Jurlander Boege", 
+          firstName: "Kasper", 
+          task: 9,
+          task_web: "Draw",
+          handle: 1,
+          handle_web: "ccw",
+          points: 4,
+          points_web:100,
+          comment: null,
+          svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" /><circle cx="234.0" cy="442.6" r="8.65" class="CUR_cs" /><circle cx="234.0" cy="442.6" r="1.44" stroke-width="3" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="73.6" cy="342.4" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="288.2" cy="590.0" r="8.65" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
+        },
       ];
   
       let $slider, $firstBtn, $prevBtn, $nextBtn, $lastBtn, $indexButtonsContainer;
@@ -194,10 +280,29 @@ $(document).ready(function () {
   
         // Update shot info
         const shotInfo = shotData[currentIndex];
-      //   $("#currentShot").html(`
-      //   Current Shot: <strong>${shotInfo.name}</strong><br />
-      //   Stats: <span id="shotStats">${shotInfo.stats}</span>
-      // `);
+
+        // update and resize the svg
+        $(".svg-container").eq(index).html(shotInfo.svg);
+        makeSVGResponsive($(".svg-container svg").eq(index));
+
+        $("#currentShot .current-stone").html(`Stone ${shotInfo.stoneId}`)
+        $("#currentShot .competitor td.flag img").attr('src', `https://livescores.worldcurling.org/flags/${shotInfo.noc}.svg`);
+        $("#currentShot .competitor td.flag img").attr('alt', shotInfo.team);
+        $("#currentShot .competitor span.lastname").html(shotInfo.lastName);
+        $("#currentShot .competitor span.firstname").html(shotInfo.firstName);
+        $("#currentShot .shot-details span.type").html(shotInfo.task_web);
+        $("#currentShot .shot-details span.handle")
+          .removeClass("cw ccw")
+          .addClass(shotInfo.handle_web);
+        $("#currentShot .shot-details span.accuracy").html(`${shotInfo.points_web} %`);
+        $("#currentShot .shot-details span.comment").html(shotInfo.comment);
+
+
+
+        // Update wrapper shadow (odd/even by slide index)
+        $(".slider-wrapper")
+        .removeClass("odd even")
+        .addClass(shotInfo.homeTeam == 1 ? "odd" : "even");
   
         updateButtons();
 
@@ -206,7 +311,7 @@ $(document).ready(function () {
 
       function fitCompetitorNames() {
         $('.lastname').each(function(){
-          fitText($(this), 28);
+          fitText($(this), 22);
         });
 
         $('.firstname').each(function(){
@@ -326,58 +431,44 @@ $(document).ready(function () {
         // -------------- //
         // Swipe gestures //
         // -------------- //
-        // $slider.on("touchstart", function (e) {
-        //   const touches = e.originalEvent.touches;
-        //   if (touches.length > 1) {
-        //     // 👆 More than one finger → allow browser to handle pinch
-        //     isDragging = false;
-        //     return;
-        //   }
-        //   startX = touches[0].clientX;
-        //   isDragging = true;
-        //   $slider.css("transition", "none");
-        // });
-        
-        // $slider.on("touchmove", function (e) {
-        //   const touches = e.originalEvent.touches;
-        //   if (!isDragging || touches.length > 1) return; // ignore pinch
-        //   currentX = touches[0].clientX;
-        //   const deltaX = currentX - startX;
-        //   $slider.css(
-        //     "transform",
-        //     `translateX(calc(-${currentIndex * 100}% + ${deltaX}px))`
-        //   );
-        // });
-        
-        // $slider.on("touchend", function (e) {
-        //   if (!isDragging) return;
-        //   isDragging = false;
-        //   const deltaX = currentX - startX;
-        //   if (Math.abs(deltaX) > swipeThreshold) {
-        //     if (deltaX < 0 && currentIndex < totalItems - 1) {
-        //       currentIndex++;
-        //     } else if (deltaX > 0 && currentIndex > 0) {
-        //       currentIndex--;
-        //     }
-        //   }
-        //   goTo(currentIndex);
-        // });
-        
-
-
-
-
-  
-        // Responsive SVGs
-        $("svg").each(function () {
-          makeSVGResponsive($(this));
+        $slider.on("touchstart", function (e) {
+          const touches = e.originalEvent.touches;
+          if (touches.length > 1) {
+            // 👆 More than one finger → allow browser to handle pinch
+            isDragging = false;
+            return;
+          }
+          startX = touches[0].clientX;
+          isDragging = true;
+          $slider.css("transition", "none");
         });
-  
-        // Add odd/even backgrounds
-        $slider.children().each(function (i) {
-          $(this).addClass(i % 2 === 0 ? "odd" : "even");
+        
+        $slider.on("touchmove", function (e) {
+          const touches = e.originalEvent.touches;
+          if (!isDragging || touches.length > 1) return; // ignore pinch
+          currentX = touches[0].clientX;
+          const deltaX = currentX - startX;
+          $slider.css(
+            "transform",
+            `translateX(calc(-${currentIndex * 100}% + ${deltaX}px))`
+          );
         });
-
+        
+        $slider.on("touchend", function (e) {
+          if (!isDragging) return;
+          isDragging = false;
+          const deltaX = currentX - startX;
+          if (Math.abs(deltaX) > swipeThreshold) {
+            if (deltaX < 0 && currentIndex < totalItems - 1) {
+              currentIndex++;
+            } else if (deltaX > 0 && currentIndex > 0) {
+              currentIndex--;
+            }
+          }
+          goTo(currentIndex);
+        });
+        
+  
   
         // Initialize
         renderDots();

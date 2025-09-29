@@ -489,9 +489,17 @@ td.lsfe {
   height: 55%;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
   background: white;
+  border-bottom-left-radius: 5px;
 }
+
+.slider-wrapper.odd {
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+}
+.slider-wrapper.even {
+  box-shadow: 0 0 12px rgba(255, 255, 0, 0.6);
+}
+
 
 .slider {
   display: flex;
@@ -509,6 +517,7 @@ td.lsfe {
   justify-content: center;
   text-align: center;
   box-sizing: border-box;
+  padding-left: 1px;
 }
 
 
@@ -567,7 +576,7 @@ td.lsfe {
 
 
 #currentShot {
-  padding: 1rem;
+  padding: 0.75rem;
   text-align: right;
   font-size: 1.1rem;
   background: #f0f0f0;
@@ -576,6 +585,7 @@ td.lsfe {
   width: 45%;
   overflow-wrap: break-word;
   white-space: normal;
+  border-bottom-right-radius: 5px;
 }
 
 
@@ -636,15 +646,15 @@ td.lsfe {
   margin-top: 5vw;
 }
 
-#currentShot table td span.handle-ccw, td span.handle-cw {
+#currentShot table td span.handle.ccw, td span.handle.cw {
   font-size: 8vw;
 }
 
-#currentShot table td span.handle-cw::before {
+#currentShot table td span.handle.cw::before {
   content: "↻";
 }
 
-#currentShot table td span.handle-ccw::before {
+#currentShot table td span.handle.ccw::before {
    content: "↺";
 }
 
@@ -685,16 +695,6 @@ td.lsfe {
   background: #333;
 }
 
-/* --- Odd/even alternating backgrounds --- */
-.item.odd {
-  background: #ffe6e6;
-  /* light red */
-}
-
-.item.even {
-  background: #fff9cc;
-  /* light yellow */
-}
 
 
 
