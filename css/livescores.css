@@ -550,7 +550,7 @@ td.lsfe {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* keep it clipped to the container */
+  overflow: hidden;
   box-sizing: border-box;
 }
 
@@ -561,6 +561,7 @@ td.lsfe {
   max-height: 100%;
   display: block;
   box-sizing: border-box;
+  touch-action: auto;
 }
 
 

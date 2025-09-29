@@ -321,21 +321,36 @@ $(document).ready(function () {
         $arrowPrev.on("click", () => goTo(currentIndex - 1));
         $arrowNext.on("click", () => goTo(currentIndex + 1));
   
+       
+        
+        // -------------- //
+        // Swipe gestures //
+        // -------------- //
         // Swipe gestures
         $slider.on("touchstart", function (e) {
+          if (e.originalEvent.touches.length > 1) {
+            // 👆 More than one finger → let the browser handle (pinch zoom)
+            isDragging = false;
+            return;
+          }
           startX = e.originalEvent.touches[0].clientX;
           isDragging = true;
           $slider.css("transition", "none");
         });
-  
+
         $slider.on("touchmove", function (e) {
-          if (!isDragging) return;
+          if (!isDragging || e.originalEvent.touches.length > 1) return; // ignore pinch
           currentX = e.originalEvent.touches[0].clientX;
           const deltaX = currentX - startX;
-          $slider.css("transform", `translateX(calc(-${currentIndex * 100}% + ${deltaX}px))`);
+          $slider.css(
+            "transform",
+            `translateX(calc(-${currentIndex * 100}% + ${deltaX}px))`
+          );
         });
-  
-        $slider.on("touchend", function () {
+
+        $slider.on("touchend", function (e) {
+          if (e.originalEvent.touches.length > 0) return; // if still touching, ignore
+          if (!isDragging) return;
           isDragging = false;
           const deltaX = currentX - startX;
           if (Math.abs(deltaX) > swipeThreshold) {
@@ -347,6 +362,10 @@ $(document).ready(function () {
           }
           goTo(currentIndex);
         });
+
+
+
+
   
         // Responsive SVGs
         $("svg").each(function () {
