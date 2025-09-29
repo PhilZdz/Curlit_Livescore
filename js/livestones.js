@@ -326,30 +326,30 @@ $(document).ready(function () {
         // -------------- //
         // Swipe gestures //
         // -------------- //
-        // Swipe gestures
         $slider.on("touchstart", function (e) {
-          if (e.originalEvent.touches.length > 1) {
-            // 👆 More than one finger → let the browser handle (pinch zoom)
+          const touches = e.originalEvent.touches;
+          if (touches.length > 1) {
+            // 👆 More than one finger → allow browser to handle pinch
             isDragging = false;
             return;
           }
-          startX = e.originalEvent.touches[0].clientX;
+          startX = touches[0].clientX;
           isDragging = true;
           $slider.css("transition", "none");
         });
-
+        
         $slider.on("touchmove", function (e) {
-          if (!isDragging || e.originalEvent.touches.length > 1) return; // ignore pinch
-          currentX = e.originalEvent.touches[0].clientX;
+          const touches = e.originalEvent.touches;
+          if (!isDragging || touches.length > 1) return; // ignore pinch
+          currentX = touches[0].clientX;
           const deltaX = currentX - startX;
           $slider.css(
             "transform",
             `translateX(calc(-${currentIndex * 100}% + ${deltaX}px))`
           );
         });
-
+        
         $slider.on("touchend", function (e) {
-          if (e.originalEvent.touches.length > 0) return; // if still touching, ignore
           if (!isDragging) return;
           isDragging = false;
           const deltaX = currentX - startX;
@@ -362,6 +362,7 @@ $(document).ready(function () {
           }
           goTo(currentIndex);
         });
+        
 
 
 
