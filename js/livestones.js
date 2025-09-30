@@ -331,8 +331,8 @@ $(document).ready(function () {
         {
           row_index: 5,
           row_title: "Alternate",
-          row_value_red: null,
-          row_value_yellow: null 
+          row_value_red: 82,
+          row_value_yellow: 86 
         },
         {
           row_index: 6,
