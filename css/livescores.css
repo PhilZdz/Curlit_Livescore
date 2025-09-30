@@ -486,15 +486,17 @@ td.lsfe {
 
 
 #head-to-head {
-  flex: 0 0 30%;         /* fixed to 30% height */
+  display:none; /* initial state is collapsed */
+
+  flex: 0 0 30%;  
   width: 100%;
   background: rgba(255, 255, 255, 0.1);
-  min-height: 15vh;
   align-items: center; 
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   position: relative;
   overflow: hidden;
+  transition: max-height 1.3s ease-in-out;
 }
 
 #head-to-head .header {
@@ -506,6 +508,8 @@ td.lsfe {
   top: 0;
   font-size: 14px;
   font-weight: bold;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 #head-to-head .stats-container {
@@ -548,7 +552,7 @@ td.lsfe {
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
-  width: 70%;
+  width: 80%;
 }
 
 /* Label centered above bars */
@@ -888,4 +892,53 @@ td.lsfe {
 
 .nav-arrow.right {
   right: 10px;
+}
+
+
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.btn-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px; /* Rounded track */
+}
+
+.btn-slider::before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%; /* Circular knob */
+  box-shadow: 0 0 5px rgba(0,0,0,0.2); /* Subtle shadow */
+}
+
+input:checked + .btn-slider {
+  background-color: #4BD663; /* iOS green */
+}
+
+input:checked + .btn-slider::before {
+  transform: translateX(26px); /* Slide knob */
 }

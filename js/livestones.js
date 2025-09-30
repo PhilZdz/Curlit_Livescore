@@ -528,13 +528,27 @@ $(document).ready(function () {
         });
         
   
+        $('span.btn-slider').on('click', function() {
+          var h2h = $('#head-to-head')
+          $('#head-to-head').slideToggle(500);
+          if (h2h.is(':visible')) {
+            h2h.css('display', 'flex');
+          }
+          animateAllStats();
+
+          // var cbChecked = $(this).parent().find('input:checkbox').is(':checked')
+          // if (!cbChecked) {
+          //   $("#head-to-head").addClass('expanded');
+          // }
+          // else {
+          //   $("#head-to-head").removeClass('expanded');
+          // }
+        });
+
   
         // Initialize
         renderDots();
         goTo(0);
-
-
-        animateAllStats();
 
       });
 
