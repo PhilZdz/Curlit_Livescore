@@ -397,6 +397,65 @@ $(document).ready(function () {
         }
       }
       
+
+      function animateAllStats() {
+        const rows = $(".stat-row");
+        
+        // Find global max
+        let maxValue = 0;
+
+        rows.each(function() {
+          const dataLeft = parseFloat($(this).data('left'));
+          const dataRight = parseFloat($(this).data('right'));
+      
+          // Check if data-left is a valid number and update maxValue
+          if (!isNaN(dataLeft)) {
+            maxValue = Math.max(maxValue, dataLeft);
+          }
+      
+          // Check if data-right is a valid number and update maxValue
+          if (!isNaN(dataRight)) {
+            maxValue = Math.max(maxValue, dataRight);
+          }
+        });
+
+      
+        // Animate each row
+        rows.each(function() {
+          const $row = $(this);
+          const left = parseInt($row.data("left"), 10);
+          const right = parseInt($row.data("right"), 10);
+      
+          const leftPct = !isNaN(left) ? (left / maxValue) * 100 / 2 : 0;
+          const rightPct = !isNaN(right) ? (right / maxValue) * 100 / 2 : 0;
+
+          // Normalize
+          if (!isNaN(left)) {
+            $row.find(".value-left").text(left);
+          }
+          else {
+            $row.find(".value-left").text("");
+          }
+
+          if (!isNaN(right)) {
+            $row.find(".value-right").text(right);
+          }
+          else {
+            $row.find(".value-right").text("");
+          }
+          
+          // Reset bars
+          $row.find(".bar-left, .bar-right").css("width", "0");
+      
+          // Animate
+          setTimeout(() => {
+            $row.find(".bar-left").css("width", leftPct + "%");
+            $row.find(".bar-right").css("width", rightPct + "%");
+          }, 100);
+        });
+      }
+
+
       
       
         $(window).on('resize', function(){
@@ -473,6 +532,10 @@ $(document).ready(function () {
         // Initialize
         renderDots();
         goTo(0);
+
+
+        animateAllStats();
+
       });
 
 

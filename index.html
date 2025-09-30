@@ -170,96 +170,191 @@
 
                             <!-- Game center -->
                             <div id="game-center">
-                              <div class="slider-wrapper">
-                                <div class="slider" id="slider">
-                                  <div class="item">
-                                    <div class="svg-container"> </div>
-                                  </div>
-                                  <div class="item">
-                                    <div class="svg-container"> </div>
-                                  </div>
-                                  <div class="item">
-                                    <div class="svg-container"> </div>
-                                  </div>
-                                  <div class="item">
-                                    <div class="svg-container"> </div>
-                                  </div>
-                                  <div class="item">
-                                    <div class="svg-container"> </div>
-                                  </div>
-                                  <div class="item">
-                                    <div class="svg-container"> </div>
-                                  </div>
+                              <div id="head-to-head">
+                                <div class="header">
+                                  Shot success - Game
                                 </div>
 
-                                <!-- arrows -->
-                                <button onclick="return false;" id="arrowPrev" class="nav-arrow left">&#10094;</button>
-                                <button onclick="return false;" id="arrowNext" class="nav-arrow right">&#10095;</button>
 
-                                <div class="index-buttons" id="indexButtons"></div>
+                                <div class="stats-container">
+                                  <div class="stat-row" data-left="100" data-right="18">
+                                    <div class="label">Fourth</div>
+                                    <div class="bar-line">
+                                      <div class="value-left">100</div>
+                                      <div class="mirror-bar">
+                                        <div class="bar-left"></div>
+                                        <div class="bar-right"></div>
+                                      </div>
+                                      <div class="value-right">78</div>
+                                    </div>
+                                  </div>
+
+
+                                  <div class="stat-row" data-left="160" data-right="78">
+                                    <div class="label">Third</div>
+                                    <div class="bar-line">
+                                      <div class="value-left">160</div>
+                                      <div class="mirror-bar">
+                                        <div class="bar-left"></div>
+                                        <div class="bar-right"></div>
+                                      </div>
+                                      <div class="value-right">78</div>
+                                    </div>
+                                  </div>
+
+
+                                  <div class="stat-row" data-left="160" data-right="78">
+                                    <div class="label">Second</div>
+                                    <div class="bar-line">
+                                      <div class="value-left">160</div>
+                                      <div class="mirror-bar">
+                                        <div class="bar-left"></div>
+                                        <div class="bar-right"></div>
+                                      </div>
+                                      <div class="value-right">78</div>
+                                    </div>
+                                  </div>
+
+
+                                  <div class="stat-row" data-left="160" data-right="78">
+                                    <div class="label">Lead</div>
+                                    <div class="bar-line">
+                                      <div class="value-left">160</div>
+                                      <div class="mirror-bar">
+                                        <div class="bar-left"></div>
+                                        <div class="bar-right"></div>
+                                      </div>
+                                      <div class="value-right">78</div>
+                                    </div>
+                                  </div>
+
+
+                                  <div class="stat-row" data-left="" data-right="160">
+                                    <div class="label">Alternate</div>
+                                    <div class="bar-line">
+                                      <div class="value-left"></div>
+                                      <div class="mirror-bar">
+                                        <div class="bar-left"></div>
+                                        <div class="bar-right"></div>
+                                      </div>
+                                      <div class="value-right">160</div>
+                                    </div>
+                                  </div>
+
+
+                                  <div class="stat-row" data-left="160" data-right="78">
+                                    <div class="label">Team</div>
+                                    <div class="bar-line">
+                                      <div class="value-left">160</div>
+                                      <div class="mirror-bar">
+                                        <div class="bar-left"></div>
+                                        <div class="bar-right"></div>
+                                      </div>
+                                      <div class="value-right">78</div>
+                                    </div>
+                                  </div>
+
+                                </div>
                               </div>
 
-                              <div id="currentShot">
 
-                                <!-- End/Stone -->
-                                <div class="endstone">
-                                  <select title="ends" name="ends" class="current-end">
-                                    <option value="End 1">End 1</option>
-                                    <option value="End 2">End 2</option>
-                                    <option value="End 3">End 3</option>
-                                    <option value="End 4">End 4</option>
-                                    <option value="End 5">End 5</option>
-                                    <option value="End 6">End 6</option>
-                                  </select>
 
-                                  <span class="current-stone">Stone 1</span>
+                              <!-- Game content -->
+                              <div id="game-content">
+                                <div class="slider-wrapper">
+                                  <div class="slider" id="slider">
+                                    <div class="item">
+                                      <div class="svg-container"> </div>
+                                    </div>
+                                    <div class="item">
+                                      <div class="svg-container"> </div>
+                                    </div>
+                                    <div class="item">
+                                      <div class="svg-container"> </div>
+                                    </div>
+                                    <div class="item">
+                                      <div class="svg-container"> </div>
+                                    </div>
+                                    <div class="item">
+                                      <div class="svg-container"> </div>
+                                    </div>
+                                    <div class="item">
+                                      <div class="svg-container"> </div>
+                                    </div>
+                                  </div>
+
+                                  <!-- arrows -->
+                                  <button onclick="return false;" id="arrowPrev"
+                                    class="nav-arrow left">&#10094;</button>
+                                  <button onclick="return false;" id="arrowNext"
+                                    class="nav-arrow right">&#10095;</button>
+
+                                  <div class="index-buttons" id="indexButtons"></div>
                                 </div>
 
-                                <!-- Competitor -->
-                                <table class="competitor">
-                                  <tr>
-                                    <td class="flag" rowspan="2">
-                                      <img alt="" class="flag" src="">
-                                    </td>
-                                    <td>
-                                      <span class="lastname"></span>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      <span class="firstname"></span>
-                                    </td>
-                                  </tr>
-                                </table>
+                                <div id="currentShot">
 
-                                <!-- Shot details -->
-                                <table class="shot-details">
-                                  <tr>
-                                    <td>
-                                      <span class="type"></span>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      <span class="handle"></span>
-                                      <span class="accuracy">%</span>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      <span class="comment">Did not pass the hogline</span>
-                                    </td>
-                                  </tr>
-                                </table>
+                                  <!-- End/Stone -->
+                                  <div class="endstone">
+                                    <select title="ends" name="ends" class="current-end">
+                                      <option value="End 1">End 1</option>
+                                      <option value="End 2">End 2</option>
+                                      <option value="End 3">End 3</option>
+                                      <option value="End 4">End 4</option>
+                                      <option value="End 5">End 5</option>
+                                      <option value="End 6">End 6</option>
+                                    </select>
+
+                                    <span class="current-stone">Stone 1</span>
+                                  </div>
+
+                                  <!-- Competitor -->
+                                  <table class="competitor">
+                                    <tr>
+                                      <td class="flag" rowspan="2">
+                                        <img alt="" class="flag" src="">
+                                      </td>
+                                      <td>
+                                        <span class="lastname"></span>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <span class="firstname"></span>
+                                      </td>
+                                    </tr>
+                                  </table>
+
+                                  <!-- Shot details -->
+                                  <table class="shot-details">
+                                    <tr>
+                                      <td>
+                                        <span class="type"></span>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <span class="handle"></span>
+                                        <span class="accuracy">%</span>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <span class="comment">Did not pass the hogline</span>
+                                      </td>
+                                    </tr>
+                                  </table>
 
 
 
-                                <div class="horizontal-line"></div>
+                                  <div class="horizontal-line"></div>
 
-                                <!-- Competitor stats -->
+                                  <!-- Competitor stats -->
+                                </div>
+
                               </div>
-
                             </div>
+
 
                           </div>
 

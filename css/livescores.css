@@ -481,8 +481,135 @@ td.lsfe {
 #game-center {
   display: flex;
   justify-content: flex-end;
+  flex-direction: column;
 }
 
+
+#head-to-head {
+  flex: 0 0 30%;         /* fixed to 30% height */
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  min-height: 15vh;
+  align-items: center; 
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+#head-to-head .header {
+  color: #051739;
+  background: white;
+  padding: 0px 10px 0px 10px;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+#head-to-head .stats-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%; 
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+
+
+/* Each stat row stacked vertically */
+.stat-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  width: 70%;
+}
+
+/* Label centered above bars */
+.stat-row .label {
+  font-size: 3vw;
+  text-align: center;
+  z-index: 5;
+  width: 15%;
+  position: relative;
+  line-height: 0px;
+  margin-top: 5px;
+}
+
+/* Horizontal line: values + bar */
+.bar-line {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.value-left,
+.value-right {
+  width: 20px;
+  text-align: center;
+  font-size: 3vw;
+  flex-shrink: 0;
+}
+
+.value-left {
+  margin-right: 0.5rem;
+}
+
+.value-right {
+  margin-left: 0.5rem;
+}
+
+/* Mirror bar */
+.mirror-bar {
+  position: relative;
+  flex: 1;
+  height: 14px;
+  /* background: #333; */
+  overflow: hidden;
+}
+
+.bar-left,
+.bar-right {
+  position: absolute;
+  bottom: 25%;
+  height: 50%;
+  transition: width 1s ease;
+  width: 0;
+}
+
+.bar-left {
+  right: 50%;
+  background: #bb2020;
+}
+
+.bar-right {
+  left: 50%;
+  background: #b5b51e;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#game-content {
+  flex: 1;               /* take remaining 70% */
+  display: flex;         /* split horizontally */
+}
 
 .slider-wrapper {
   width: 55%;
