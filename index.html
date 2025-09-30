@@ -172,16 +172,23 @@
                             <div id="game-center">
                               <div id="top-stats">
                                 <div id="head-to-head">
-                                  <div class="header">
-                                    Shot success - Game
+                                  <div class="headers">
+                                    <div class="headers-slider">
+                                      <span class="header-item">Line-ups</span>
+                                      <span class="header-item">Last stone draw</span>
+                                      <span class="header-item">Shot success - Game</span>
+                                      <span class="header-item">Shot success - Tournament</span>
+                                    </div>
                                   </div>
+                                  <button type="button" class="header-arrow header-prev">&lt;</button>
+                                  <button type="button" class="header-arrow header-next">&gt;</button>
 
                                   <div class="team-left"></div>
                                   <div class="team-right"></div>
 
 
                                   <div class="stats-container">
-                                    <div class="stat-row" data-left="74" data-right="79">
+                                    <div class="stat-row" data-left="79" data-right="79">
                                       <div class="label">Fourth</div>
                                       <div class="bar-line">
                                         <div class="value-left"></div>
@@ -246,7 +253,7 @@
                                     </div>
 
 
-                                    <div class="stat-row" data-left="79" data-right="80">
+                                    <div class="stat-row" data-left="179" data-right="80">
                                       <div class="label">Team</div>
                                       <div class="bar-line">
                                         <div class="value-left"></div>
@@ -311,7 +318,14 @@
                                       <option value="End 6">End 6</option>
                                     </select>
 
-                                    <span class="current-stone">Stone 1</span>
+                                    <select title="stones" name="stones" class="current-stone">
+                                      <option value="Stone 1">Stone 1</option>
+                                      <option value="Stone 2">Stone 2</option>
+                                      <option value="Stone 3">Stone 3</option>
+                                      <option value="Stone 4">Stone 4</option>
+                                      <option value="Stone 5">Stone 5</option>
+                                      <option value="Stone 6">Stone 6</option>
+                                    </select>
                                   </div>
 
                                   <!-- Competitor -->
@@ -359,13 +373,22 @@
 
 
                                   <!-- Action Buttons -->
-                                  <table>
+                                  <table class="commands">
                                     <tr>
-                                      <td>Head to head stats</td>
+                                      <td>Stats</td>
                                       <td>
                                         <label class="switch">
                                           <input type="checkbox">
-                                          <span class="btn-slider round" data-target="headtohead"></span>
+                                          <span class="btn-slider round" data-target="stats"></span>
+                                        </label>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Follow Live</td>
+                                      <td>
+                                        <label class="switch">
+                                          <input type="checkbox" checked>
+                                          <span class="btn-slider round" data-target="lsd"></span>
                                         </label>
                                       </td>
                                     </tr>

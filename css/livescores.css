@@ -499,8 +499,9 @@ td.lsfe {
   transition: max-height 1.3s ease-in-out;
 }
 
-#head-to-head .header {
+#head-to-head .headers {
   color: #051739;
+  opacity: 0.8;
   background: white;
   padding: 0px 10px 0px 10px;
   text-align: center;
@@ -510,7 +511,86 @@ td.lsfe {
   font-weight: bold;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+  z-index: 3;
+  max-width: 60%;
+  min-width: 30%;
+  overflow: hidden;
 }
+
+
+
+/* Inner slider to handle swiping */
+#head-to-head .headers-slider {
+  display: flex;
+  transition: transform 0.3s ease;
+  width: 100%; /* spans take full width */
+}
+
+#head-to-head .header-item {
+  flex: 0 0 100%;     /* one item per view */
+  text-align: center;
+  opacity: 0.5;
+}
+
+#head-to-head .header-item.active {
+  opacity: 1;
+}
+
+/* Navigation buttons positioned inside headers box */
+#head-to-head .nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0.5;
+  color: black;
+}
+
+#head-to-head .nav-btn.prev { left: 5px; }
+#head-to-head .nav-btn.next { right: 5px; }
+#head-to-head .nav-btn:disabled {
+  opacity: 0.2;
+  cursor: default;
+}
+
+
+/* Arrows */
+#head-to-head .header-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 5vw;
+  font-weight: bold;
+  color: #051739;
+  opacity: 0;                  /* hidden by default */
+  transition: opacity 0.3s;
+  cursor: pointer;
+  z-index: 5;
+}
+
+#head-to-head .headers:hover .header-arrow {
+  opacity: 0.1;                 /* show faint arrows on hover */
+}
+
+#head-to-head .header-arrow:hover {
+  opacity: 0.6;                 /* brighten when hovering arrow */
+}
+
+#head-to-head .header-prev { left: 5px; }
+#head-to-head .header-next { right: 5px; }
+
+
+
+
+
+
+
 
 #head-to-head .stats-container {
   flex: 1;
@@ -520,14 +600,15 @@ td.lsfe {
   width: 100%; 
   margin-top: 2rem;
   margin-bottom: 0.5rem;
+  z-index: 2;
 }
 
 #head-to-head .team-left {
   background-image: url(https://livescores.worldcurling.org/flags/DEN.svg);
-  width: 150%;
-  height: 150%;
+  width: 125%;
+  height: 125%;
   position: absolute;
-  opacity: 0.1;
+  opacity: 0.15;
   z-index: 0;
   background-repeat: no-repeat;
   background-position-x: 0%;
@@ -536,10 +617,10 @@ td.lsfe {
 
 #head-to-head .team-right {
   background-image: url(https://livescores.worldcurling.org/flags/CAN.svg);
-  width: 150%;
-  height: 150%;
+  width: 125%;
+  height: 125%;
   position: absolute;
-  opacity: 0.1;
+  opacity: 0.15;
   z-index: 0;
   background-repeat: no-repeat;
   background-position-x: 100%;
@@ -582,11 +663,11 @@ td.lsfe {
 }
 
 .value-left {
-  margin-right: 0.5rem;
+  margin-right: 1rem;
 }
 
 .value-right {
-  margin-left: 0.5rem;
+  margin-left: 1rem;
 }
 
 /* Mirror bar */
@@ -604,16 +685,16 @@ td.lsfe {
   bottom: 25%;
   height: 50%;
   transition: width 1s ease;
-  width: 0;
+  width: 50%;
 }
 
 .bar-left {
-  right: 50%;
+  left: 0%;
   background: #bb2020;
 }
 
 .bar-right {
-  left: 50%;
+  right: 0%;
   background: #b5b51e;
 }
 
@@ -624,18 +705,9 @@ td.lsfe {
 
 
 
-
-
-
-
-
-
-
-
-
 #game-content {
-  flex: 1;               /* take remaining 70% */
-  display: flex;         /* split horizontally */
+  flex: 1;
+  display: flex;
 }
 
 .slider-wrapper {
@@ -740,6 +812,7 @@ td.lsfe {
   overflow-wrap: break-word;
   white-space: normal;
   border-bottom-right-radius: 5px;
+  position: relative;
 }
 
 
@@ -757,10 +830,17 @@ td.lsfe {
   padding: 3px;
 }
 
-#currentShot table.competitor {
+#currentShot table.competitor,
+#currentShot table.commands {
   height: 10vw;
   width: 100%;
   margin-top: 3vw;
+}
+
+#currentShot table.commands {
+  position: absolute;
+    bottom: 1vh;
+    left: 2vw;
 }
 
 #currentShot table td{
@@ -771,6 +851,10 @@ td.lsfe {
   vertical-align: middle;
   overflow-wrap: break-word;
   white-space: normal;
+}
+
+#currentShot table.commands td{
+  font-size: 1.75em;
 }
 
 #currentShot table.competitor td img{
@@ -900,8 +984,8 @@ td.lsfe {
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 58px;
+  height: 28px;
 }
 
 .switch input {
@@ -919,16 +1003,16 @@ td.lsfe {
   bottom: 0;
   background-color: #ccc;
   transition: .4s;
-  border-radius: 34px; /* Rounded track */
+  border-radius: 28px; /* Rounded track */
 }
 
 .btn-slider::before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
+  height: 24px;
+  width: 24px;
   left: 4px;
-  bottom: 4px;
+  bottom: 2px;
   background-color: white;
   transition: .4s;
   border-radius: 50%; /* Circular knob */
