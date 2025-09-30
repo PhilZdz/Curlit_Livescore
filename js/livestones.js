@@ -455,7 +455,14 @@ $(document).ready(function () {
         });
       }
 
+      function scrollToGameCenter(){
+        var targetOffset = $('#scoreboard').offset().top;
 
+        // Animate the scroll to that position
+        $('html, body').animate({
+          scrollTop: targetOffset
+        }, 500); // 1000 is the duration in milliseconds
+      }
       
       
         $(window).on('resize', function(){
@@ -534,7 +541,9 @@ $(document).ready(function () {
           if (h2h.is(':visible')) {
             h2h.css('display', 'flex');
           }
+
           animateAllStats();
+          scrollToGameCenter();
 
           // var cbChecked = $(this).parent().find('input:checkbox').is(':checked')
           // if (!cbChecked) {
