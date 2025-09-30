@@ -431,17 +431,17 @@ $(document).ready(function () {
 
           // Normalize
           if (!isNaN(left)) {
-            $row.find(".value-left").text(left);
+            $row.find(".value-left").html(left+ "<span class='prct'>%</span>");
           }
           else {
-            $row.find(".value-left").text("");
+            $row.find(".value-left").html("-");
           }
 
           if (!isNaN(right)) {
-            $row.find(".value-right").text(right);
+            $row.find(".value-right").html(right + " <span class='prct'>%</span>");
           }
           else {
-            $row.find(".value-right").text("");
+            $row.find(".value-right").html("-");
           }
           
           // Reset bars

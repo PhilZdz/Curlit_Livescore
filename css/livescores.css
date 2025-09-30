@@ -494,6 +494,7 @@ td.lsfe {
   display: flex;
   justify-content: center;
   position: relative;
+  overflow: hidden;
 }
 
 #head-to-head .header {
@@ -517,6 +518,28 @@ td.lsfe {
   margin-bottom: 0.5rem;
 }
 
+#head-to-head .team-left {
+  background-image: url(https://livescores.worldcurling.org/flags/DEN.svg);
+  width: 150%;
+  height: 150%;
+  position: absolute;
+  opacity: 0.1;
+  z-index: 0;
+  background-repeat: no-repeat;
+  background-position-x: 0%;
+}
+
+
+#head-to-head .team-right {
+  background-image: url(https://livescores.worldcurling.org/flags/CAN.svg);
+  width: 150%;
+  height: 150%;
+  position: absolute;
+  opacity: 0.1;
+  z-index: 0;
+  background-repeat: no-repeat;
+  background-position-x: 100%;
+}
 
 
 /* Each stat row stacked vertically */
