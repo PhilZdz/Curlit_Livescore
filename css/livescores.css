@@ -478,12 +478,73 @@ td.lsfe {
 /* ----------- */
 /* Game center */
 /* ----------- */
+@font-face {
+  font-family: 'Digital-7';
+  src: url('../fonts/digital-7.woff2') format('woff2'),
+       url('../fonts/digital-7.woff') format('woff'),
+       url('../fonts/digital-7.ttf') format('truetype');
+  font-display: swap; 
+}
+
+.team-clock {
+  font-family: 'Digital-7', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  position: absolute;
+  top: 50%;
+  line-height: 1em;
+  color: #ababab;
+}
+
+/* dot on the right if parent is .home */
+.home .team-clock.timeout::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;             /* dot size */
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;     /* circle */
+  margin-left: 10%;
+}
+
+/* dot on the left if parent is .away */
+.away .team-clock.timeout::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background-color: yellow;
+  border-radius: 50%;
+  margin-left: -30%;
+}
+
+
+.home .team-clock {
+  left: 45%;
+  /* color: rgba(255, 0, 0, 0.7); */
+}
+
+.away .team-clock {
+  right: 45%;
+  /* color: rgba(255, 255, 0, 0.7); */
+}
+
 #game-center {
   display: flex;
   justify-content: flex-end;
   flex-direction: column;
 }
 
+
+
+
+.matchup-tile.running table.scoreboard.game-center {
+  display: none; /* initial state is collapsed */
+}
 
 #head-to-head {
   display:none; /* initial state is collapsed */
@@ -497,6 +558,7 @@ td.lsfe {
   position: relative;
   overflow: hidden;
   transition: max-height 1.3s ease-in-out;
+  min-height: 20vh;
 }
 
 #head-to-head .headers {
@@ -512,9 +574,11 @@ td.lsfe {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   z-index: 3;
-  max-width: 60%;
+  max-width: 75%;
   min-width: 30%;
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 80%;
 }
 
 
@@ -529,12 +593,55 @@ td.lsfe {
 #head-to-head .header-item {
   flex: 0 0 100%;     /* one item per view */
   text-align: center;
-  opacity: 0.5;
+  opacity: 0;
+  cursor:pointer;
+  font-size: 3.5vw;
 }
 
 #head-to-head .header-item.active {
   opacity: 1;
 }
+
+
+/* Expanded menu mode */
+#head-to-head .headers::-webkit-scrollbar {
+  width: 12px; /* Adjust the scrollbar width */
+}
+
+/* Style the track (the background) */
+#head-to-head .headers::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Light gray background */
+  border-radius: 10px;
+}
+
+/* Style the thumb (the draggable handle) */
+#head-to-head .headers::-webkit-scrollbar-thumb {
+  background-color: #051739; /* Dark gray thumb */
+  border-radius: 10px;
+  border: 3px solid #f1f1f1; /* Creates a 3px border around the thumb */
+}
+
+/* Add a hover effect on the thumb */
+#head-to-head .headers::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+#head-to-head .headers.expanded .headers-slider {
+  display: block;         /* stack vertically */
+  transform: none !important; /* reset slider transform */
+}
+
+#head-to-head .headers.expanded .header-item {
+  flex: none;
+  display: block;
+  padding: 6px 12px;
+  border-bottom: 1px solid #eee;
+  opacity: 1;
+  background: #fafafa;
+  text-align: left;
+}
+
+
 
 /* Navigation buttons positioned inside headers box */
 #head-to-head .nav-btn {
@@ -603,6 +710,7 @@ td.lsfe {
   z-index: 2;
 }
 
+
 #head-to-head .team-left {
   background-image: url(https://livescores.worldcurling.org/flags/DEN.svg);
   width: 125%;
@@ -627,7 +735,22 @@ td.lsfe {
 }
 
 
+#head-to-head .team-left.shift {
+  background-position-x: -10%;
+  height: 115%;
+}
+
+#head-to-head .team-right.shift {
+  background-position-x: 110%;
+  height: 115%;
+}
+
+
 /* Each stat row stacked vertically */
+#head-to-head .stat-row-template {
+  display: none;
+}
+
 .stat-row {
   display: flex;
   flex-direction: column;
@@ -641,17 +764,98 @@ td.lsfe {
   font-size: 3vw;
   text-align: center;
   z-index: 5;
-  width: 15%;
+  width: 100%;
   position: relative;
   line-height: 0px;
   margin-top: 5px;
 }
 
+.stat-row .unit {
+  font-size: 2.5vw;
+  margin-left: 2px;
+}
+
 /* Horizontal line: values + bar */
-.bar-line {
+.text-line, .bar-line {
   display: flex;
   align-items: center;
   width: 100%;
+}
+
+.text-line {
+  height: 14px;
+  margin-top: 3px;
+  line-height: 10px;
+  width: 100%;
+  position: relative;
+}
+
+.info-left,
+.info-right{
+  position: inherit;
+  font-size: 2.5vw;
+  line-height: 14px;
+  width: 15%;
+}
+
+.info-left {
+  left: -8%;
+  text-align: right;
+}
+
+.info-right {
+  right: -8%;
+  text-align: left;
+  position: absolute;
+}
+
+.text-left, .text-right {
+  width: 40%;
+  font-size: 2.5vw;
+}
+
+.text-left {
+  position: absolute;
+  left:10%;
+  text-align: left;
+  background: rgb(255 0 0 / 10%);
+  padding-left: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.text-left::before {
+  content: "";
+  position: absolute;
+  left: -1vw;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 12px;
+  background-color: red;
+  border-radius: 2px;
+}
+
+.text-right {
+  position: absolute;
+  right:10%;
+  text-align: right;
+  background: rgb(255 255 0 / 10%);
+  padding-right: 5px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.text-right::after {
+  content: "";
+  position: absolute;
+  right: -1vw;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 12px;
+  background-color: yellow;
+  border-radius: 2px;
 }
 
 .value-left,
@@ -664,10 +868,12 @@ td.lsfe {
 
 .value-left {
   margin-right: 1rem;
+  direction: rtl;
 }
 
 .value-right {
   margin-left: 1rem;
+  direction: ltr;
 }
 
 /* Mirror bar */
@@ -698,6 +904,15 @@ td.lsfe {
   background: #b5b51e;
 }
 
+
+.mirror-bar.fromCenter .bar-left {
+  right: 50%;
+  left:inherit;
+}
+
+.mirror-bar.fromCenter .bar-right {
+  left: 50%;
+}
 
 
 
@@ -1025,4 +1240,14 @@ input:checked + .btn-slider {
 
 input:checked + .btn-slider::before {
   transform: translateX(26px); /* Slide knob */
+}
+
+
+/* Scoreboard adjustments (probably not needed) */
+.matchup-tile table.scoreboard th {
+  text-align: center;
+}
+
+.row, .row td, .matchup-tile table.scoreboard td.noc, .matchup-tile table.details-content td.noc {
+  font-size: clamp(16px, 2vw, 20px) !important;
 }

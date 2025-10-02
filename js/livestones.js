@@ -259,32 +259,145 @@ $(document).ready(function () {
 
   const statsData = [
     {
-      statName: "Shot success - Game",
-      is_prct: true,
+      statName: "Line-ups",
+      is_stat: false,
+      unit: null,
       rows: [
         {
           row_index: 1,
           row_title: "Fourth",
-          row_value_red: 79,
-          row_value_yellow: 79 
+          row_info_red: "Skip",
+          row_value_red: "SCHMIDT J.",
+          row_value_yellow: "WIPF K.", 
+          row_info_yellow: "Skip"
         },
         {
           row_index: 2,
           row_title: "Third",
-          row_value_red: 100,
-          row_value_yellow: 90 
+          row_info_red: "Vice-Skip",
+          row_value_red: "QVIST A.",
+          row_value_yellow: "MACAULAY Ky",
+          row_info_yellow: "Vice-Skip"
         },
         {
           row_index: 3,
           row_title: "Second",
-          row_value_red: 90,
-          row_value_yellow: 83.8 
+          row_value_red: "JURLANDER BOEGE",
+          row_value_yellow: "KEENAN M.",
+          row_info_yellow: null
         },
         {
           row_index: 4,
           row_title: "Lead",
-          row_value_red: 79,
-          row_value_yellow: 10 
+          row_value_red: "GOLDBECK L.",
+          row_value_yellow: "CINNAMON M.",
+          row_info_yellow: null
+        },
+        {
+          row_index: 5,
+          row_title: "Alternate",
+          row_value_red: "JENSEN N.",
+          row_value_yellow: "NAUGLER A.",
+          row_info_yellow: null
+        },
+        {
+          row_index: 6,
+          row_title: "",
+          row_info_red: "Coach",
+          row_value_red: "VILANDT L.",
+          row_value_yellow: "PETERS L.",
+          row_info_yellow: "Coach"
+        },
+        {
+          row_index: 7,
+          row_title: "",
+          row_value_red: null,
+          row_value_yellow: "BOWYER D.",
+          row_info_yellow: "2nd Coach"
+        }
+      ]
+    },
+    {
+      statName: "Last Stone Draw",
+      is_stat: true,
+      unit: "cm",
+      rows: [
+        {
+          row_index: 1,
+          row_title: "clockwise ↻",
+          row_value_red: 116.7,
+          row_value_yellow: 10.9, 
+        },
+        {
+          row_index: 2,
+          row_title: "counter-clockwise ↺",
+          row_value_red: 122.2,
+          row_value_yellow: 85.4,
+        },
+        {
+          row_index: 3,
+          row_title: "Total",
+          row_value_red: 238.9,
+          row_value_yellow: 96.3,
+        }
+      ]
+    },
+    {
+      statName: "Last Stone Draw - Option 2",
+      is_stat: true,
+      unit: "cm",
+      rows: [
+        {
+          row_index: 1,
+          row_title: "clockwise ↻",
+          row_value_red: 116.7,
+          row_value_yellow: 10.9,
+          row_value_max: 199.6 
+        },
+        {
+          row_index: 2,
+          row_title: "counter-clockwise ↺",
+          row_value_red: "122.2",
+          row_value_yellow: 85.4,
+          row_value_max: 199.6 
+        },
+        {
+          row_index: 3,
+          row_title: "Total",
+          row_value_red: 238.9,
+          row_value_yellow: 96.3,
+          row_value_max: 399.2
+        }
+      ]
+    },
+    {
+      statName: "Draws",
+      is_stat: true,
+      unit: null,
+      rows: [
+        {
+          row_index: 1,
+          row_title: "Fourth",
+          row_value_red: 11,
+          row_value_yellow: 14 
+        },
+        {
+          row_index: 2,
+          row_title: "Third",
+          row_value_red: 11,
+          row_value_yellow: 8 
+        },
+        {
+          row_index: 3,
+          row_title: "Second",
+          row_value_red: 10,
+          row_value_yellow: 9 
+        },
+        {
+          row_index: 4,
+          row_title: "Lead",
+          row_value_red: 20,
+          row_value_yellow: 20 
         },
         {
           row_index: 5,
@@ -295,50 +408,51 @@ $(document).ready(function () {
         {
           row_index: 6,
           row_title: "Team",
-          row_value_red: 39,
-          row_value_yellow: 29 
+          row_value_red: 52,
+          row_value_yellow: 51 
         }
       ]
     },
     {
-      statName: "Shot success - Tournament",
-      is_prct: true,
+      statName: "Draws - Percentage",
+      is_stat: true,
+      unit: "%",
       rows: [
         {
           row_index: 1,
           row_title: "Fourth",
-          row_value_red: 51,
-          row_value_yellow: 100 
+          row_value_red: 68,
+          row_value_yellow: 77 
         },
         {
           row_index: 2,
           row_title: "Third",
-          row_value_red: 89,
-          row_value_yellow: 79 
+          row_value_red: 86,
+          row_value_yellow: 75 
         },
         {
           row_index: 3,
           row_title: "Second",
-          row_value_red: 79,
-          row_value_yellow: 79 
+          row_value_red: 75,
+          row_value_yellow: 89 
         },
         {
           row_index: 4,
           row_title: "Lead",
-          row_value_red: 79,
-          row_value_yellow: 79 
+          row_value_red: 83,
+          row_value_yellow: 69 
         },
         {
           row_index: 5,
           row_title: "Alternate",
-          row_value_red: 82,
-          row_value_yellow: 86 
+          row_value_red: null,
+          row_value_yellow: null 
         },
         {
           row_index: 6,
           row_title: "Team",
-          row_value_red: 88,
-          row_value_yellow: 49 
+          row_value_red: 79,
+          row_value_yellow: 75 
         }
       ]
     }
@@ -479,74 +593,138 @@ $(document).ready(function () {
 
 
   function animateAllStats(statIndex = 0) {
-    const rows = $(".stat-row");
-
-
-    // Fill each row with statsData
     var currentStats = statsData[statIndex];
 
-    rows.each(function (idx) {
-      $(this).data('left', currentStats.rows[idx].row_value_red);
-      $(this).data('right', currentStats.rows[idx].row_value_yellow);
-    });
+    // Add/remove rows
+    var $template = $(".stat-row-template");
+    var rowCount = $(".stat-row").length;
 
+    // Add the rows if they do not exist
+    for (let i = 0; i < currentStats.rows.length; i++) {
+      var $existingItem = $(`.stat-row:eq(${i})`)
 
-    // Animate each row
-    rows.each(function () {
-      // Find global max
-      let denominator = 0;
-
-      const dataLeft = parseFloat($(this).data('left'));
-      const dataRight = parseFloat($(this).data('right'));
-
-      // No value at all: no bar
-      // if (isNaN(dataLeft) && isNaN(dataLeft)) {
-      //   $row.find(".value-left").html("-");
-      //   $row.find(".value-right").html("-");
-      // }
-
-
-      // Check if data-left is a valid number and update denominator
-      if (!isNaN(dataLeft)) {
-        denominator += dataLeft;
-      }
-
-      // Check if data-right is a valid number and update denominator
-      if (!isNaN(dataRight)) {
-        denominator += dataRight;
-      }
-
+      if ($existingItem.length == 0) {
+        // debugger;
+        let $newRow = $template.clone();
+        $newRow.removeClass('stat-row-template');
+        $newRow.addClass('stat-row');
       
-      const $row = $(this);
-      const left = parseInt($row.data("left"), 10);
-      const right = parseInt($row.data("right"), 10);
-
-      const leftPct = !isNaN(left) ? (left / denominator) * 100 : 0;
-      const rightPct = !isNaN(right) ? (right / denominator) * 100 : 0;
-
-      // Normalize
-      if (!isNaN(left)) {
-        $row.find(".value-left").html(left + "<span class='prct'>%</span>");
+        $('.stats-container').append($newRow); 
       }
-      else {
-        $row.find(".value-left").html("-");
-      }
+    }
 
-      if (!isNaN(right)) {
-        $row.find(".value-right").html(right + " <span class='prct'>%</span>");
-      }
-      else {
-        $row.find(".value-right").html("-");
-      }
+    // Cleanup the subsequent rows
+    for (let j = currentStats.rows.length; j < rowCount; j++) {
+      $(`.stat-row:eq(${j-3})`).remove();
+    }
 
-      // Reset bars
-      // $row.find(".bar-left, .bar-right").css("width", "0");
+    // Cleanup all the infos
+    $(".info-left, .info-right").empty();
 
-      // Animate
-      setTimeout(() => {
-        $row.find(".bar-left").css("width", leftPct + "%");
-        $row.find(".bar-right").css("width", rightPct + "%");
-      }, 100);
+    var $rows = $(".stat-row");
+
+    if ($rows.length > 6) {
+      $(".team-left, .team-right").addClass("shift");
+    }
+    else {
+      $(".team-left, .team-right").removeClass("shift");
+    }
+
+    if (currentStats.is_stat) { // Stat slide
+    
+      $(".stats-container").find(".text-line").hide();
+      $(".stats-container").find(".bar-line").show();
+
+      // Animate each row
+      $rows.each(function (idx) {
+        const $row = $(this);
+        $row.find(".label").html(currentStats.rows[idx].row_title);
+
+        $row.data('left', currentStats.rows[idx].row_value_red);
+        $row.data('right', currentStats.rows[idx].row_value_yellow);
+
+        let denominator = 0;
+        let fromCenter = currentStats.rows[idx].row_value_max != null;
+
+        // Find max
+        if (fromCenter) {
+          denominator = parseFloat(currentStats.rows[idx].row_value_max) * 2;
+          $row.find(".mirror-bar").addClass("fromCenter");
+        }  
+        else {
+          $row.find(".mirror-bar").removeClass("fromCenter");
+          const dataLeft = parseFloat($row.data('left'));
+          const dataRight = parseFloat($row.data('right'));
+    
+          // Check if data-left is a valid number and update denominator
+          if (!isNaN(dataLeft)) {
+            denominator += dataLeft;
+          }
+    
+          // Check if data-right is a valid number and update denominator
+          if (!isNaN(dataRight)) {
+            denominator += dataRight;
+          }
+        }
+        
+        const left = parseFloat($row.data("left"), 10);
+        const right = parseFloat($row.data("right"), 10);
+  
+        var leftPct = !isNaN(left) ? parseFloat(((left / denominator) * 100).toFixed(2)) : 0;
+        var rightPct = !isNaN(right) ? parseFloat(((right / denominator) * 100).toFixed(2)) : 0;
+
+        // If the rounds do not add up to exactly 100, give it to the red team
+        let leftRight = leftPct+rightPct;
+        if (fromCenter == false && leftRight > 0 && leftRight < 100) {
+          leftPct = leftPct + 100 - leftRight;
+        }
+  
+        // Normalize
+        if (!isNaN(left)) {
+          $row.find(".value-left").html(currentStats.unit != null ? left + `<span class='unit'>${currentStats.unit}</span>` : left);
+        }
+        else {
+          $row.find(".value-left").html("-");
+        }
+  
+        if (!isNaN(right)) {
+          $row.find(".value-right").html(currentStats.unit != null ? right + `<span class='unit'>${currentStats.unit}</span>` : right);
+        }
+        else {
+          $row.find(".value-right").html("-");
+        }
+  
+        // Animate
+        setTimeout(() => {
+          $row.find(".bar-left").css("width", leftPct + "%");
+          $row.find(".bar-right").css("width", rightPct + "%");
+        }, 100);
+      });
+    }
+    else { // Text slide
+
+      $(".stats-container").find(".bar-line").hide();
+      $(".stats-container").find(".text-line").show();
+
+      $rows.each(function (idx) {
+        const $row = $(this);
+        $row.find(".label").html(currentStats.rows[idx].row_title);
+
+        // Reset bars
+        $row.find(".bar-left, .bar-right").css("width", "0");
+
+        $row.find(".info-left").html(currentStats.rows[idx].row_info_red);
+        $row.find(".info-right").html(currentStats.rows[idx].row_info_yellow);
+        $row.find(".text-left").html(currentStats.rows[idx].row_value_red ?? "-");
+        $row.find(".text-right").html(currentStats.rows[idx].row_value_yellow ?? "-");
+
+      });
+    }
+  }
+
+  function refreshStatList() {
+    statsData.forEach(stat => {
+      $(".headers-slider").append(`<span class="header-item">${stat.statName}</span>`);
     });
   }
 
@@ -631,22 +809,27 @@ $(document).ready(function () {
 
 
     $('span.btn-slider').on('click', function () {
-      var h2h = $('#head-to-head')
-      $('#head-to-head').slideToggle(500);
-      if (h2h.is(':visible')) {
-        h2h.css('display', 'flex');
+
+      var target = $(this).data("target");
+
+      if (target == "stats") {
+        var $h2h = $('#head-to-head')
+        $h2h.slideToggle(500);
+        if ($h2h.is(':visible')) {
+          $h2h.css('display', 'flex');
+        }
+        animateAllStats(0);
+      }
+      else if (target == "scoreboard") {
+
+        var $scb = $('table.scoreboard')
+        $scb.slideToggle(500);
+        if ($scb.is(':visible')) {
+          $scb.css('display', 'table');
+        }
       }
 
-      animateAllStats(0);
       scrollToGameCenter();
-
-      // var cbChecked = $(this).parent().find('input:checkbox').is(':checked')
-      // if (!cbChecked) {
-      //   $("#head-to-head").addClass('expanded');
-      // }
-      // else {
-      //   $("#head-to-head").removeClass('expanded');
-      // }
     });
 
 
@@ -655,11 +838,14 @@ $(document).ready(function () {
     // Stats Slider //
     // ------------ //
     $(function () {
+      const $headers = $("#head-to-head .headers");
       const $statSlider = $("#head-to-head .headers-slider");
       const $items = $statSlider.children();
       const total = $items.length;
       let current = 0;
+      let expanded = false;
     
+      // TODO PZ move that out
       function goToStat(index) {
         // wrap index around
         if (index < 0) {
@@ -675,48 +861,80 @@ $(document).ready(function () {
     
         $items.removeClass("active").eq(current).addClass("active");
 
-        animateAllStats(index);
+        animateAllStats(current);
       }
+
+
+      $("#head-to-head").on("click", function (e) {
+        if (expanded && !$(e.target).closest(".headers").length) {
+          $headers.removeClass("expanded");
+          expanded = false;
+        }
+      });
+
+      // In expanded mode: clicking item jumps and closes menu
+      $items.on("click", function (e) {
+        if (expanded) {
+          $("#head-to-head .headers").removeClass("expanded");
+          expanded = false;
+          goToStat($(this).index());
+          e.stopPropagation();
+        }
+      });
+
+
+
+      // Toggle expand on click of the headers box
+      $headers.on("click", function () {
+        expanded = !expanded;
+        $(this).toggleClass("expanded", expanded);
+      });
+
+
     
       // Arrow clicks
-      $("#head-to-head .header-prev").on("click", function () {
+      $("#head-to-head .header-prev").on("click", function (e) {
+        e.stopPropagation();
         goToStat(current - 1);
       });
-      $("#head-to-head .header-next").on("click", function () {
+      $("#head-to-head .header-next").on("click", function (e) {
+        e.stopPropagation();
         goToStat(current + 1);
       });
     
       // Swipe
       let startX = 0, currentX = 0, isDragging = false;
     
-      $statSlider.on("touchstart", e => {
-        startX = e.originalEvent.touches[0].clientX;
-        isDragging = true;
-        $statSlider.css("transition", "none");
-      });
+      // $statSlider.on("touchstart", e => {
+      //   startX = e.originalEvent.touches[0].clientX;
+      //   isDragging = true;
+      //   $statSlider.css("transition", "none");
+      // });
     
-      $statSlider.on("touchmove", e => {
-        if (!isDragging) return;
-        currentX = e.originalEvent.touches[0].clientX;
-        const deltaX = currentX - startX;
-        $statSlider.css("transform", `translateX(calc(-${current * 100}% + ${deltaX}px))`);
-      });
+      // $statSlider.on("touchmove", e => {
+      //   if (!isDragging) return;
+      //   currentX = e.originalEvent.touches[0].clientX;
+      //   const deltaX = currentX - startX;
+      //   $statSlider.css("transform", `translateX(calc(-${current * 100}% + ${deltaX}px))`);
+      // });
     
-      $statSlider.on("touchend", () => {
-        if (!isDragging) return;
-        isDragging = false;
-        $statSlider.css("transition", "transform 0.3s ease");
-        const deltaX = currentX - startX;
-        if (Math.abs(deltaX) > 50) {
-          if (deltaX < 0) {
-            goToStat(current + 1);
-          } else if (deltaX > 0) {
-            goToStat(current - 1);
-          }
-        } else {
-          goToStat(current); // snap back if swipe too small
-        }
-      });
+      // $statSlider.on("touchend", () => {
+      //   if (!isDragging) return;
+      //   isDragging = false;
+      //   $statSlider.css("transition", "transform 0.3s ease");
+      //   const deltaX = currentX - startX;
+      //   if (Math.abs(deltaX) > 50) {
+      //     if (deltaX < 0) {
+      //       goToStat(current + 1);
+      //     } else if (deltaX > 0) {
+      //       goToStat(current - 1);
+      //     }
+      //   } else {
+      //     goToStat(current); // snap back if swipe too small
+      //   }
+      // });
+
+      goToStat(0);
     });
     
 
@@ -724,8 +942,8 @@ $(document).ready(function () {
 
     // Init
     renderDots();
+    refreshStatList();
     goTo(0);
-    goToStat(0);
 
   });
 
