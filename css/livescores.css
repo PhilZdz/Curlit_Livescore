@@ -1008,6 +1008,8 @@ td.lsfe {
   width: 100%;
   font-size: 1em;
   box-sizing: border-box;
+  border-radius: 15px;
+  text-align: center;
 }
 
 #currentShot .competitor {
@@ -1018,6 +1020,8 @@ td.lsfe {
   font-size: 1.1em;
   -webkit-appearance: none;
   appearance: none;
+  cursor: pointer;
+  padding: 4px;
 }
 
 
