@@ -462,9 +462,8 @@ $(document).ready(function () {
 
     // update and resize the svg
     $(".svg-container").eq(index).html(shotInfo.svg);
-    makeSVGResponsive($(".svg-container svg").eq(index));
+    makeSVGResponsive($(".svg-container").eq(index).find("svg"));
 
-    // $("#currentShot .current-stone").html(`Stone ${shotInfo.stoneId}`)
     $("#currentShot .competitor td.flag img").attr('src', `https://livescores.worldcurling.org/flags/${shotInfo.noc}.svg`);
     $("#currentShot .competitor td.flag img").attr('alt', shotInfo.team);
     $("#currentShot .competitor span.lastname").html(shotInfo.lastName);
@@ -758,7 +757,7 @@ $(document).ready(function () {
 
 
   $(".endstone select.current-stone").on('change', function() {
-    goTo($(this).val());
+    goTo(parseInt($(this).val()));
   });
 
 
