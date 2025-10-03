@@ -10,11 +10,12 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
   <link rel="stylesheet" type="text/css" href="css/livescores.css">
+  <link id="scoretheme" rel="stylesheet" type="text/css" href="css/livescores_blue.css">
   <script src="js/livestones.js"></script>
 
   <!-- livescores.worldcurling integration -->
   <link rel="stylesheet" type="text/css" href="https://livescores.worldcurling.org/pg/CSS/curlit.css">
-  <link rel="stylesheet" type="text/css" href="https://livescores.worldcurling.org/pg/CSS/theme.css">
+  <link id="csstheme" rel="stylesheet" type="text/css" href="https://livescores.worldcurling.org/pg/CSS/blue.css">
   <style type="text/css">
     body {
       max-width: 100%;
@@ -271,26 +272,7 @@
                               <!-- Game content -->
                               <div id="game-content">
                                 <div class="slider-wrapper">
-                                  <div class="slider" id="slider">
-                                    <div class="item">
-                                      <div class="svg-container"> </div>
-                                    </div>
-                                    <div class="item">
-                                      <div class="svg-container"> </div>
-                                    </div>
-                                    <div class="item">
-                                      <div class="svg-container"> </div>
-                                    </div>
-                                    <div class="item">
-                                      <div class="svg-container"> </div>
-                                    </div>
-                                    <div class="item">
-                                      <div class="svg-container"> </div>
-                                    </div>
-                                    <div class="item">
-                                      <div class="svg-container"> </div>
-                                    </div>
-                                  </div>
+                                  <div class="slider" id="slider"> </div>
 
                                   <!-- arrows -->
                                   <button onclick="return false;" id="arrowPrev"
@@ -303,103 +285,91 @@
 
                                 <div id="currentShot">
 
-                                  <!-- End/Stone -->
-                                  <div class="endstone">
-                                    <select title="ends" name="ends" class="current-end">
-                                      <option value="End 1">End 1</option>
-                                      <option value="End 2">End 2</option>
-                                      <option value="End 3">End 3</option>
-                                      <option value="End 4">End 4</option>
-                                      <option value="End 5">End 5</option>
-                                      <option value="End 6">End 6</option>
-                                    </select>
+                                  <div class="shotInfo">
+                                    <!-- End/Stone -->
+                                    <table class="endstone">
+                                      <tr>
+                                        <td>
+                                          <select title="ends" name="ends" class="current-end"> </select>
+                                        </td>
+                                        <td>
+                                          <select title="stones" name="stones" class="current-stone"> </select>
+                                        </td>
+                                      </tr>
+                                    </table>
 
-                                    <select title="stones" name="stones" class="current-stone">
-                                      <option value="Stone 1">Stone 1</option>
-                                      <option value="Stone 2">Stone 2</option>
-                                      <option value="Stone 3">Stone 3</option>
-                                      <option value="Stone 4">Stone 4</option>
-                                      <option value="Stone 5">Stone 5</option>
-                                      <option value="Stone 6">Stone 6</option>
-                                    </select>
+                                    <!-- Competitor -->
+                                    <table class="competitor">
+                                      <tr>
+                                        <td class="flag" rowspan="2">
+                                          <img alt="" class="flag" src="">
+                                        </td>
+                                        <td>
+                                          <span class="lastname"></span>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          <span class="firstname"></span>
+                                        </td>
+                                      </tr>
+                                    </table>
+
+                                    <!-- Shot details -->
+                                    <table class="shot-details">
+                                      <tr>
+                                        <td>
+                                          <span class="type"></span>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          <span class="handle"></span>
+                                          <span class="accuracy">%</span>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          <span class="comment">Did not pass the hogline</span>
+                                        </td>
+                                      </tr>
+                                    </table>
+
+
+
                                   </div>
-
-                                  <!-- Competitor -->
-                                  <table class="competitor">
-                                    <tr>
-                                      <td class="flag" rowspan="2">
-                                        <img alt="" class="flag" src="">
-                                      </td>
-                                      <td>
-                                        <span class="lastname"></span>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>
-                                        <span class="firstname"></span>
-                                      </td>
-                                    </tr>
-                                  </table>
-
-                                  <!-- Shot details -->
-                                  <table class="shot-details">
-                                    <tr>
-                                      <td>
-                                        <span class="type"></span>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>
-                                        <span class="handle"></span>
-                                        <span class="accuracy">%</span>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>
-                                        <span class="comment">Did not pass the hogline</span>
-                                      </td>
-                                    </tr>
-                                  </table>
-
-
-
-                                  <div class="horizontal-line"></div>
-
-
 
 
                                   <!-- Action Buttons -->
-                                  <table class="commands">
-                                    <tr>
-                                      <td>Scoreboard</td>
-                                      <td>
+                                  <div class="commands">
+                                    <div class="command">
+                                      <div class="col">Scoreboard</div>
+                                      <div class="col">
                                         <label class="switch">
                                           <input type="checkbox">
                                           <span class="btn-slider round" data-target="scoreboard"></span>
                                         </label>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Stats</td>
-                                      <td>
+                                      </div>
+                                    </div>
+                                    <div class="command">
+                                      <div class="col">Stats</div>
+                                      <div class="col">
                                         <label class="switch">
                                           <input type="checkbox">
                                           <span class="btn-slider round" data-target="stats"></span>
                                         </label>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td>Follow Live</td>
-                                      <td>
+                                      </div>
+                                    </div>
+                                    <div class="command expand">
+                                      <div class="col">Follow Live</div>
+                                      <div class="col">
                                         <label class="switch">
                                           <input type="checkbox" checked>
                                           <span class="btn-slider round" data-target="lsd"></span>
                                         </label>
-                                      </td>
-                                    </tr>
-                                  </table>
-
-
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
 
                               </div>
@@ -430,11 +400,11 @@
               </div>
             </td>
             <td valign="middle" class="favTeam" style="white-space: nowrap;" align="right">
-              <input type="submit" name="ctl00$bfbblue" value="BW" id="bfbblue"
+              <input type="button" name="ctl00$bfbblue" value="BW" id="bfbblue"
                 title="Set color scheme to blue background with white font color" class="xsbtnBlue">
-              <input type="submit" name="ctl00$bfbwhite" value="WB" id="bfbwhite"
+              <input type="button" name="ctl00$bfbwhite" value="WB" id="bfbwhite"
                 title="Set color scheme to white background with dark blue font color" class="xsbtnWhite">
-              <input type="submit" name="ctl00$bfbbig" value="BIG" id="bfbbig"
+              <input type="button" name="ctl00$bfbbig" value="BIG" id="bfbbig"
                 title="Set color scheme to white background, using big black fonts (improving accessibility for people with low Vision)"
                 class="xsbtnBig">&nbsp;&nbsp;
 

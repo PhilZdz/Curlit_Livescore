@@ -1,0 +1,35 @@
+#head-to-head {
+    background: rgba(0,0,0,0.1);
+}
+
+#currentShot {
+  background: #f0f0f0;
+  color: #333;
+}
+
+#head-to-head .headers {
+    color: white;
+    background: #424242;
+}
+
+#head-to-head .headers.expanded .header-item {
+    border-bottom: 1px solid #a8a8a8;
+    background: #424242;
+  }
+
+
+    /* Style the track (the background) */
+#head-to-head .headers::-webkit-scrollbar-track {
+    background: #3f3f3f;
+  }
+  
+  /* Style the thumb (the draggable handle) */
+  #head-to-head .headers::-webkit-scrollbar-thumb {
+    background-color: #e8e8e8;
+    border: 3px solid #424242; 
+  }
+  
+  /* Add a hover effect on the thumb */
+  #head-to-head .headers::-webkit-scrollbar-thumb:hover {
+    background-color: #424242;
+  }

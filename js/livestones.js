@@ -299,21 +299,6 @@ $(document).ready(function () {
           row_value_red: "JENSEN N.",
           row_value_yellow: "NAUGLER A.",
           row_info_yellow: null
-        },
-        {
-          row_index: 6,
-          row_title: "",
-          row_info_red: "Coach",
-          row_value_red: "VILANDT L.",
-          row_value_yellow: "PETERS L.",
-          row_info_yellow: "Coach"
-        },
-        {
-          row_index: 7,
-          row_title: "",
-          row_value_red: null,
-          row_value_yellow: "BOWYER D.",
-          row_info_yellow: "2nd Coach"
         }
       ]
     },
@@ -497,6 +482,9 @@ $(document).ready(function () {
     $(".slider-wrapper")
       .removeClass("odd even")
       .addClass(shotInfo.homeTeam == 1 ? "odd" : "even");
+
+    // Update stone select
+    $(".endstone select.current-stone").val(`${index}`);
 
     updateButtons();
 
@@ -728,8 +716,26 @@ $(document).ready(function () {
     });
   }
 
+  function refreshShotList() {
+    $("#slider").empty();
+    $(".endstone select.current-end").empty();
+    $(".endstone select.current-stone").empty();
+    $(".endstone select.current-end").append(`<option value="End 1">End 1</option>`);
+
+    shotData.forEach((shot, idx) => {
+
+      $("#slider").append(`<div class="item">
+      <div class="svg-container"> </div>
+      </div>`); 
+
+      $(".endstone select.current-stone").append(`<option value="${idx}">Stone ${idx+1}</option>`);
+    });
+
+    totalItems = $slider.children().length;
+  }
+
   function scrollToGameCenter() {
-    var targetOffset = $('#scoreboard').offset().top;
+    var targetOffset = $('.menu1').offset().top;
 
     // Animate the scroll to that position
     $('html, body').animate({
@@ -738,8 +744,21 @@ $(document).ready(function () {
   }
 
 
+  function switchTheme(color) {
+    $("#csstheme").attr("href", `https://livescores.worldcurling.org/pg/CSS/${color}.css`);
+    $("#scoretheme").attr("href", `css/livescores_${color}.css`);
+
+  }
+
+
+
   $(window).on('resize', function () {
     fitCompetitorNames();
+  });
+
+
+  $(".endstone select.current-stone").on('change', function() {
+    goTo($(this).val());
   });
 
 
@@ -754,7 +773,8 @@ $(document).ready(function () {
     $arrowPrev = $("#arrowPrev");
     $arrowNext = $("#arrowNext");
 
-    totalItems = $slider.children().length;
+
+    refreshShotList();
 
     // Button clicks
     $firstBtn.on("click", () => goTo(0));
@@ -765,6 +785,8 @@ $(document).ready(function () {
     $arrowPrev.on("click", () => goTo(currentIndex - 1));
     $arrowNext.on("click", () => goTo(currentIndex + 1));
 
+    $("#bfbblue").on("click", () => switchTheme("blue"));
+    $("#bfbwhite").on("click", () => switchTheme("white"));
 
 
     // ---------- //
