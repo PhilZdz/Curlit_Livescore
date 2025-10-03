@@ -1016,6 +1016,8 @@ td.lsfe {
 
 #currentShot select {
   font-size: 1.1em;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 
