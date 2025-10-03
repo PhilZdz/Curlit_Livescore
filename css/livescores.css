@@ -1,4 +1,4 @@
-﻿/* Version 1.8 from 30.4.25  */
+﻿/* Version 1.9 from 2.10.25  */
 /* body {
   max-width: 1200px;
   position: absolute;
@@ -195,7 +195,7 @@
 }
 
 .header-content span.longText {
-    transform: scaleX(1) !important;
+    transform: scaleX(1);
 }
 
 
@@ -398,13 +398,13 @@
     height: 100%;
 }
 
-.matchup-tile span.team-name .short {
-    display: block;
-}
+    .matchup-tile span.team-name .short {
+        display: block;
+    }
 
-.matchup-tile span.team-name .long {
-    display: none;
-}
+    .matchup-tile span.team-name .long {
+        display: none;
+    }
 
 .matchup-tile span.team-history {
     position: absolute;
@@ -731,9 +731,10 @@
         margin-left: 10px;
     }
 
-    .matchup-tile span.team-name .short{
+    .matchup-tile span.team-name .short {
         display: none !important;
     }
+
     .matchup-tile span.team-name .long {
         display: block !important;
     }
