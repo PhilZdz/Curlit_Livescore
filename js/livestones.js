@@ -741,7 +741,7 @@ $(document).ready(function () {
       $el.css("font-size", maxSize + "px");
     }
     else {
-      while ($el[0].scrollWidth >= maxWidth+0.001  && fontSize > minSize) {
+      while ($el[0].scrollWidth >= maxWidth+0.01  && fontSize > minSize) {
         fontSize--;
         $el.css("font-size", fontSize + "px");
       }
