@@ -1024,7 +1024,7 @@ td.lsfe {
   content: "";
   position: absolute;
   top: 50%;
-  right: 0.6em;
+  right: 0.3em;
   transform: translateY(-50%) rotate(45deg);
   width: 6px;
   height: 6px;
