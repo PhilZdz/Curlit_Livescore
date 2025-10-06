@@ -977,7 +977,7 @@ td.lsfe {
 #currentShot {
   display: grid;
   grid-template-rows: 60% 40%;
-  padding: 0.5rem;
+  padding: 0.25rem;
   text-align: right;
   font-size: 1.1rem;
   border-bottom: 1px solid #ccc;
@@ -1007,7 +1007,6 @@ td.lsfe {
 
 #currentShot table select {
   width: 100%;
-  font-size: 1em;
   box-sizing: border-box;
   border-radius: 15px;
   text-align: center;
@@ -1017,6 +1016,23 @@ td.lsfe {
   position: relative;
 }
 
+#currentShot .select-wrapper {
+  position: relative;
+  display: inline-block;
+}
+#currentShot .select-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0.6em;
+  transform: translateY(-50%) rotate(45deg);
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  pointer-events: none; /* don’t block clicks */
+}
+
 #currentShot select {
   font-size: 1.1em;
   -webkit-appearance: none;
@@ -1024,13 +1040,8 @@ td.lsfe {
 
   border-radius: 4px;
   cursor: pointer;
-}
-
-@supports (-webkit-appearance: none) {
-  /* Safari/iOS keeps arrow */
-  #currentShot select {
-    -webkit-appearance: menulist;
-  }
+  padding-left: 1px;
+  padding-right: 1em;
 }
 
 
