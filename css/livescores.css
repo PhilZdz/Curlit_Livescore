@@ -889,6 +889,7 @@ td.lsfe {
   position: relative;
   /* background: white; */
   border-bottom-left-radius: 5px;
+  margin-right: 1vw;
 }
 
 .slider-wrapper.odd {
@@ -1016,6 +1017,14 @@ td.lsfe {
 
 #currentShot select {
   font-size: 1.1em;
+  -webkit-appearance: none;
+  appearance: none;
+
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='none' stroke='%23051739' stroke-width='2' d='M1 1l5 5 5-5'/></svg>") 
+              no-repeat right 0.6em center / 0.8em auto;
+  padding-right: 1.6em; /* space for the arrow */
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 

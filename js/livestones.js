@@ -493,12 +493,10 @@ $(document).ready(function () {
 
   function fitCompetitorNames() {
     $('.lastname').each(function () {
-      fitText($(this), 22);
+      var lastNameSize = fitText($(this), 22);
+      fitText($(this).closest('.competitor').find(".firstname"), lastNameSize, lastNameSize);
     });
 
-    $('.firstname').each(function () {
-      fitText($(this), 20);
-    });
   }
 
   function renderDots() {
@@ -570,12 +568,20 @@ $(document).ready(function () {
     const maxWidth = $("#currentShot").width() - $("#currentShot .flag").width();
     let fontSize = maxSize;
 
-    $el.css('font-size', fontSize + 'px');
+    $el.css({
+      "white-space": "normal",
+      "font-size": fontSize + "px",
+    });
 
-    // shrink until it fits or hit minSize
-    while ($el[0].offsetWidth > maxWidth && fontSize > minSize) {
-      fontSize--;
-      $el.css('font-size', fontSize + 'px');
+    if (maxSize == minSize) {
+      $el.css("font-size", maxSize + "px");
+    }
+    else {
+      while ($el[0].scrollWidth >= maxWidth+0.001  && fontSize > minSize) {
+        fontSize--;
+        $el.css("font-size", fontSize + "px");
+      }
+      return fontSize;
     }
   }
 
