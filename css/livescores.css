@@ -1011,8 +1011,6 @@ td.lsfe {
   border-radius: 10px;
   text-align: left;
   padding-left: 4px;
-  color: red;
-  overflow-x: visible !important;
 }
 
 #currentShot .competitor {
@@ -1044,7 +1042,6 @@ td.lsfe {
   border-radius: 4px;
   cursor: pointer;
   padding-left: 2px;
-  padding-right: 1.4em;
   overflow-x: visible !important;
 }
 
