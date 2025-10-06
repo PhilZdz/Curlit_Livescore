@@ -517,7 +517,6 @@ td.lsfe {
   transform: translateY(-50%);
   border: 1px solid gray;
   width: 16px;
-  color: white;
   font-size: 0.7em;
   font-weight: bold;
   text-align: center;
@@ -535,7 +534,7 @@ td.lsfe {
 }
 
 .away .team-clock.active::before {
-  border: 1px solid yellow;
+  border: 1px solid #d7d702;
 }
 
 .away .team-clock::before {
