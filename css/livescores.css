@@ -1009,6 +1009,8 @@ td.lsfe {
   width: 100%;
   font-size: 1em;
   box-sizing: border-box;
+  border-radius: 15px;
+  text-align: center;
 }
 
 #currentShot .competitor {
@@ -1025,6 +1027,7 @@ td.lsfe {
   padding-right: 1.6em; /* space for the arrow */
   border: 1px solid #ccc;
   border-radius: 4px;
+  cursor: pointer;
 }
 
 
