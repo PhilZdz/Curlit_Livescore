@@ -1008,7 +1008,7 @@ td.lsfe {
 #currentShot table select {
   width: 100%;
   box-sizing: border-box;
-  border-radius: 15px;
+  border-radius: 10px;
   text-align: center;
 }
 
@@ -1040,6 +1040,7 @@ td.lsfe {
   cursor: pointer;
   padding-left: 3px;
   padding-right: 1em;
+  overflow-x: visible !important;
 }
 
 
