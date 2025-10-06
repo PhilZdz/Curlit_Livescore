@@ -494,18 +494,54 @@ td.lsfe {
   top: 50%;
   line-height: 1em;
   color: #ababab;
+  /* padding: 0 16px; */
 }
 
 
 .home .team-clock {
   left: 45%;
-  /* color: rgba(255, 0, 0, 0.7); */
+  padding-right: 20px;
 }
 
 .away .team-clock {
   right: 45%;
-  /* color: rgba(255, 255, 0, 0.7); */
+  padding-left: 20px;
 }
+
+
+.home .team-clock.timeout::after,
+.away .team-clock.timeout::before {
+  content: "T";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid gray;
+  width: 16px;
+  color: white;
+  font-size: 0.7em;
+  font-weight: bold;
+  text-align: center;
+  line-height: 14px;
+  border-radius: 4px;
+  padding-left: 2px;
+}
+
+.home .team-clock::after {
+  right: 0;
+}
+
+.home .team-clock.active::after {
+  border: 1px solid red;
+}
+
+.away .team-clock.active::before {
+  border: 1px solid yellow;
+}
+
+.away .team-clock::before {
+  left:0;
+}
+
 
 #game-center {
   display: flex;
@@ -723,8 +759,10 @@ td.lsfe {
   z-index: 5;
   width: 100%;
   position: relative;
-  line-height: 0px;
-  margin-top: 5px;
+  line-height: 0px;    
+  margin-top: 2px;
+  margin-bottom: 3px;
+  color: lightgray;
 }
 
 .stat-row .unit {
@@ -741,7 +779,7 @@ td.lsfe {
 
 .text-line {
   height: 14px;
-  margin-top: 3px;
+  margin-bottom: 3px;
   line-height: 10px;
   width: 100%;
   position: relative;
@@ -846,19 +884,24 @@ td.lsfe {
 .bar-right {
   position: absolute;
   bottom: 25%;
-  height: 50%;
+  height: 75%;
   transition: width 1s ease;
   width: 50%;
+  line-height: 99%;
+  font-size: 75%;
+  text-align: center;
 }
 
 .bar-left {
   left: 0%;
   background: #bb2020;
+  color: #ffffff;
 }
 
 .bar-right {
   right: 0%;
   background: #b5b51e;
+  color: #000000;
 }
 
 

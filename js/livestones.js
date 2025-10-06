@@ -521,88 +521,89 @@ $(document).ready(function () {
       ]
     },
     {
-      statName: "Draws",
+      statName: "Last Stone Draw - Option 3",
       is_stat: true,
-      unit: null,
+      unit: "cm",
       rows: [
         {
           row_index: 1,
-          row_title: "Fourth",
-          row_value_red: 11,
-          row_value_yellow: 14 
+          row_title: "clockwise ↻",
+          row_bar_value_red: "QVIST A.",
+          row_value_red: 116.7,
+          row_value_yellow: 10.9,
+          row_value_max: -1,
+          row_bar_value_yellow: "CINNAMON M."
         },
         {
           row_index: 2,
-          row_title: "Third",
-          row_value_red: 11,
-          row_value_yellow: 8 
+          row_title: "counter-clockwise ↺",
+          row_bar_value_red: "JENSEN N.",
+          row_value_red: 122.2,
+          row_value_yellow: 85.4,
+          row_value_max: -1,
+          row_bar_value_yellow: "MACAULAY Ky"
         },
         {
           row_index: 3,
-          row_title: "Second",
-          row_value_red: 10,
-          row_value_yellow: 9 
-        },
-        {
-          row_index: 4,
-          row_title: "Lead",
-          row_value_red: 20,
-          row_value_yellow: 20 
-        },
-        {
-          row_index: 5,
-          row_title: "Alternate",
-          row_value_red: null,
-          row_value_yellow: null 
-        },
-        {
-          row_index: 6,
-          row_title: "Team",
-          row_value_red: 52,
-          row_value_yellow: 51 
+          row_title: "Total",
+          row_value_red: 238.9,
+          row_value_yellow: 96.3,
+          row_value_max: 399.2
         }
       ]
     },
     {
-      statName: "Draws - Percentage",
+      statName: "Draws",
       is_stat: true,
       unit: "%",
       rows: [
         {
           row_index: 1,
           row_title: "Fourth",
+          row_bar_value_red: 11,
           row_value_red: 68,
-          row_value_yellow: 77 
+          row_value_yellow: 77,
+          row_bar_value_yellow: 14
         },
         {
           row_index: 2,
           row_title: "Third",
+          row_bar_value_red: 11,
           row_value_red: 86,
-          row_value_yellow: 75 
+          row_value_yellow: 75,
+          row_bar_value_yellow: 8
         },
         {
           row_index: 3,
           row_title: "Second",
+          row_bar_value_red: 10,
           row_value_red: 75,
-          row_value_yellow: 89 
+          row_value_yellow: 89,
+          row_bar_value_yellow: 9
         },
         {
           row_index: 4,
           row_title: "Lead",
+          row_bar_value_red: 20,
           row_value_red: 83,
-          row_value_yellow: 69 
+          row_value_yellow: 69,
+          row_bar_value_yellow: 20
         },
         {
           row_index: 5,
           row_title: "Alternate",
+          row_bar_value_red: null,
           row_value_red: null,
-          row_value_yellow: null 
+          row_value_yellow: null,
+          row_bar_value_yellow: null
         },
         {
           row_index: 6,
           row_title: "Team",
+          row_bar_value_red: 11,
           row_value_red: 79,
-          row_value_yellow: 75 
+          row_value_yellow: 52,
+          row_bar_value_yellow: 51
         }
       ]
     }
@@ -836,6 +837,11 @@ $(document).ready(function () {
         if (fromCenter == false && leftRight > 0 && leftRight < 100) {
           leftPct = leftPct + 100 - leftRight;
         }
+
+        // Special case, bar width set to 100%
+        if (currentStats.rows[idx].row_value_max == -1) {
+            leftPct = rightPct = 50;
+        }
   
         // Normalize
         if (!isNaN(left)) {
@@ -851,9 +857,14 @@ $(document).ready(function () {
         else {
           $row.find(".value-right").html("-");
         }
+
+        // Reset bar values
+        $row.find(".bar-left, .bar-right").html("");
   
         // Animate
         setTimeout(() => {
+          $row.find(".bar-left").html(currentStats.rows[idx].row_bar_value_red);
+          $row.find(".bar-right").html(currentStats.rows[idx].row_bar_value_yellow);
           $row.find(".bar-left").css("width", leftPct + "%");
           $row.find(".bar-right").css("width", rightPct + "%");
         }, 100);
