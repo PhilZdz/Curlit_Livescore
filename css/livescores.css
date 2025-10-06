@@ -1038,7 +1038,9 @@ td.lsfe {
 
   border-radius: 4px;
   cursor: pointer;
-  padding-left: 3px;    padding-right: 1.3em;
+  padding-left: 3px;
+  padding-right: 1.4em;
+  overflow-x: visible !important;
 }
 
 
