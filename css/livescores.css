@@ -916,7 +916,7 @@ td.lsfe {
   justify-content: center;
   text-align: center;
   box-sizing: border-box;
-  padding-left: 1px;
+  /* padding-left: 1px; */
 }
 
 
