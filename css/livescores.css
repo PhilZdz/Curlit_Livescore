@@ -565,6 +565,8 @@ td.lsfe {
   overflow: hidden;
   transition: max-height 1.3s ease-in-out;
   min-height: 20vh;
+  touch-action: pan-y;   /* allow vertical scrolling, block horizontal swipes */
+  overscroll-behavior-x: contain;
 }
 
 #head-to-head .headers {
