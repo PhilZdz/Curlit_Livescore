@@ -1021,6 +1021,7 @@ $(document).ready(function () {
         if ($h2h.is(':visible')) {
           $h2h.css('display', 'flex');
         }
+        initStats();
         animateAllStats(0);
       }
       else if (target == "scoreboard") {
@@ -1040,7 +1041,8 @@ $(document).ready(function () {
     // ------------ //
     // Stats Slider //
     // ------------ //
-    $(function () {
+    function initStats() {
+      const $h2h = $("#head-to-head");
       const $headers = $("#head-to-head .headers");
       const $statSlider = $("#head-to-head .headers-slider");
       const $items = $statSlider.children();
@@ -1048,6 +1050,7 @@ $(document).ready(function () {
       let current = 0;
       let expanded = false;
     
+      
       // TODO PZ move that out
       function goToStat(index) {
         // wrap index around
@@ -1067,7 +1070,6 @@ $(document).ready(function () {
         animateAllStats(current);
       }
 
-
       $("#head-to-head").on("click", function (e) {
         if (expanded && !$(e.target).closest(".headers").length) {
           $headers.removeClass("expanded");
@@ -1084,8 +1086,6 @@ $(document).ready(function () {
           e.stopPropagation();
         }
       });
-
-
 
       // Toggle expand on click of the headers box
       $headers.on("click", function () {
@@ -1107,38 +1107,35 @@ $(document).ready(function () {
     
       // Swipe
       let startX = 0, currentX = 0, isDragging = false;
-    
-      // $statSlider.on("touchstart", e => {
-      //   startX = e.originalEvent.touches[0].clientX;
-      //   isDragging = true;
-      //   $statSlider.css("transition", "none");
-      // });
-    
-      // $statSlider.on("touchmove", e => {
-      //   if (!isDragging) return;
-      //   currentX = e.originalEvent.touches[0].clientX;
-      //   const deltaX = currentX - startX;
-      //   $statSlider.css("transform", `translateX(calc(-${current * 100}% + ${deltaX}px))`);
-      // });
-    
-      // $statSlider.on("touchend", () => {
-      //   if (!isDragging) return;
-      //   isDragging = false;
-      //   $statSlider.css("transition", "transform 0.3s ease");
-      //   const deltaX = currentX - startX;
-      //   if (Math.abs(deltaX) > 50) {
-      //     if (deltaX < 0) {
-      //       goToStat(current + 1);
-      //     } else if (deltaX > 0) {
-      //       goToStat(current - 1);
-      //     }
-      //   } else {
-      //     goToStat(current); // snap back if swipe too small
-      //   }
-      // });
+      const swipeThreshold = 50;
+
+      // --- Swipe detection ---
+      $h2h.on("touchstart", function(e) {
+        startX = e.originalEvent.touches[0].clientX;
+        isDragging = true;
+      });
+
+      $h2h.on("touchmove", function(e)  {
+        if (!isDragging) return;
+        currentX = e.originalEvent.touches[0].clientX;
+      });
+
+      $h2h.on("touchend", function(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        const dx = currentX - startX;
+        if (Math.abs(dx) > swipeThreshold) {
+          if (dx < 0) {
+            goToStat(current + 1);
+          }
+          else {
+            goToStat(current - 1);
+          }
+        }
+      });
 
       goToStat(0);
-    });
+    };
     
 
 
