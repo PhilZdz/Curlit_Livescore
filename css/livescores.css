@@ -1019,7 +1019,9 @@ td.lsfe {
 #currentShot .select-wrapper {
   position: relative;
   display: inline-block;
+  width: 100%;
 }
+
 #currentShot .select-wrapper::after {
   content: "";
   position: absolute;
@@ -1038,7 +1040,7 @@ td.lsfe {
 
   border-radius: 4px;
   cursor: pointer;
-  padding-left: 3px;
+  padding-left: 2px;
   padding-right: 1.4em;
   overflow-x: visible !important;
 }
