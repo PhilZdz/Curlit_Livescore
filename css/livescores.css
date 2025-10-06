@@ -1032,15 +1032,13 @@ td.lsfe {
 }
 
 #currentShot select {
-  font-size: 1.1em;
+  font-size: 1em;
   -webkit-appearance: none;
   appearance: none;
 
   border-radius: 4px;
   cursor: pointer;
-  padding-left: 3px;
-  padding-right: 1em;
-  overflow-x: visible !important;
+  padding-left: 3px;    padding-right: 1.3em;
 }
 
 
