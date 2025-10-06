@@ -1111,6 +1111,11 @@ $(document).ready(function () {
 
       // --- Swipe detection ---
       $h2h.on("touchstart", function(e) {
+        const touch = e.originalEvent.touches[0];
+        const dx = Math.abs(touch.clientX - startX);
+        const dy = Math.abs(touch.clientY - startY);
+        if (dx > dy) e.preventDefault();
+
         startX = e.originalEvent.touches[0].clientX;
         isDragging = true;
       });
