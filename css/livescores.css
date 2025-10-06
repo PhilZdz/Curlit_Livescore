@@ -478,10 +478,6 @@ td.lsfe {
 /* ----------- */
 /* Game center */
 /* ----------- */
-body, html {
-  overscroll-behavior-x: none; /* prevent left/right swipe navigation globally */
-}
-
 @font-face {
   font-family: 'Digital-7';
   src: url('../fonts/digital-7.woff2') format('woff2'),
