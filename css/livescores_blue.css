@@ -29,12 +29,21 @@ svg rect {
   }
   
   /* Style the thumb (the draggable handle) */
-  #head-to-head .headers::-webkit-scrollbar-thumb {
-    background-color: #051739;
-    border: 3px solid #f1f1f1; 
-  }
+#head-to-head .headers::-webkit-scrollbar-thumb {
+  background-color: #051739;
+  border: 3px solid #f1f1f1; 
+}
   
   /* Add a hover effect on the thumb */
-  #head-to-head .headers::-webkit-scrollbar-thumb:hover {
-    background-color: #555;
-  }
+#head-to-head .headers::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+#currentShot table select {
+    border: 1px solid gray;
+}
+
+#currentShot .select-wrapper::after {
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+}

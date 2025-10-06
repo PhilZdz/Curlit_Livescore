@@ -33,3 +33,9 @@
   #head-to-head .headers::-webkit-scrollbar-thumb:hover {
     background-color: #424242;
   }
+
+
+  #currentShot .select-wrapper::after {
+    border-right: 2px solid #051739;
+    border-bottom: 2px solid #051739;
+  }
