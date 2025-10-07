@@ -630,6 +630,12 @@ $(document).ready(function () {
     $(".svg-container").eq(index).html(shotInfo.svg + `<div class="svg-touch-overlay"></div>`);
     makeSVGResponsive($(".svg-container").eq(index).find("svg"));
 
+    // add the next svg for a smarted swipe
+    if (shotData.length > currentIndex) {
+      $(".svg-container").eq(index+1).html(shotData[currentIndex+1].svg + `<div class="svg-touch-overlay"></div>`);
+      makeSVGResponsive($(".svg-container").eq(index+1).find("svg"));
+    }
+
     $("#currentShot .competitor td.flag img").attr('src', `https://livescores.worldcurling.org/flags/${shotInfo.noc}.svg`);
     $("#currentShot .competitor td.flag img").attr('alt', shotInfo.team);
     $("#currentShot .competitor span.lastname").html(shotInfo.lastName);
@@ -944,7 +950,6 @@ $(document).ready(function () {
 
 
 
-  $(document).ready(function () {
     $slider = $("#slider");
     $firstBtn = $("#firstBtn");
     $prevBtn = $("#prevBtn");
@@ -973,15 +978,15 @@ $(document).ready(function () {
     // ---------- //
     // SVG slider //
     // ---------- //
-    const $overlay = $(".svg-touch-overlay");
+    const $overlay = $("#slider");
     let pinchActive = false;
 
-    $overlay.on("touchstart", function (e) {
+    $slider.on("touchstart", function (e) {
       const touches = e.originalEvent.touches;
       if (touches.length > 1) {
         // two-finger pinch → allow browser zoom/pan
         pinchActive = true;
-        $(this).css("pointer-events", "none");
+        $overlay.css("pointer-events", "none");
         return;
       }
       pinchActive = false;
@@ -990,7 +995,7 @@ $(document).ready(function () {
       $slider.css("transition", "none");
     });
     
-    $overlay.on("touchmove", function (e) {
+    $slider.on("touchmove", function (e) {
       const touches = e.originalEvent.touches;
       if (pinchActive || !isDragging || touches.length > 1) return; // ignore pinch
       currentX = touches[0].clientX;
@@ -1001,11 +1006,11 @@ $(document).ready(function () {
       );
     });
     
-    $overlay.on("touchend", function (e) {
+    $slider.on("touchend", function (e) {
       if (pinchActive) {
         // finished pinch → re-enable overlay
         pinchActive = false;
-        $(this).css("pointer-events", "auto");
+        $overlay.css("pointer-events", "auto");
         return;
       }
       if (!isDragging) return;
@@ -1108,6 +1113,7 @@ $(document).ready(function () {
     
       // Arrow clicks
       $("#head-to-head .header-prev").on("click", function (e) {
+        alert("OK");
         e.stopPropagation();
         goToStat(current - 1);
       });
@@ -1177,7 +1183,6 @@ $(document).ready(function () {
     refreshStatList();
     goTo(0);
 
-  });
 
 
 
