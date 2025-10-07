@@ -973,21 +973,24 @@ $(document).ready(function () {
     // ---------- //
     // SVG slider //
     // ---------- //
-    $slider.on("touchstart", function (e) {
+    const $overlay = $(".svg-touch-overlay");
+    $overlay.on("touchstart", function (e) {
       const touches = e.originalEvent.touches;
       if (touches.length > 1) {
-        // 👆 More than one finger → allow browser to handle pinch
-        isDragging = false;
+        // two-finger pinch → allow browser zoom/pan
+        pinchActive = true;
+        $(this).css("pointer-events", "none");
         return;
       }
+      pinchActive = false;
       startX = touches[0].clientX;
       isDragging = true;
       $slider.css("transition", "none");
     });
-
-    $slider.on("touchmove", function (e) {
+    
+    $overlay.on("touchmove", function (e) {
       const touches = e.originalEvent.touches;
-      if (!isDragging || touches.length > 1) return; // ignore pinch
+      if (pinchActive || !isDragging || touches.length > 1) return; // ignore pinch
       currentX = touches[0].clientX;
       const deltaX = currentX - startX;
       $slider.css(
@@ -995,8 +998,14 @@ $(document).ready(function () {
         `translateX(calc(-${currentIndex * 100}% + ${deltaX}px))`
       );
     });
-
-    $slider.on("touchend", function (e) {
+    
+    $overlay.on("touchend", function (e) {
+      if (pinchActive) {
+        // finished pinch → re-enable overlay
+        pinchActive = false;
+        $(this).css("pointer-events", "auto");
+        return;
+      }
       if (!isDragging) return;
       isDragging = false;
       const deltaX = currentX - startX;
