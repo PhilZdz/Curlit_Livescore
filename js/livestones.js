@@ -1115,6 +1115,8 @@ $(document).ready(function () {
       });
     
       // Swipe
+      const $leftFeedback = $("#head-to-head .swipe-feedback.left");
+      const $rightFeedback = $("#head-to-head .swipe-feedback.right");
       let startX = 0, currentX = 0, isDragging = false;
       const swipeThreshold = 50;
 
@@ -1127,11 +1129,29 @@ $(document).ready(function () {
       $h2h.on("touchmove", function(e)  {
         if (!isDragging) return;
         currentX = e.originalEvent.touches[0].clientX;
+        const deltaX = currentX - startX;
+
+        // Calculate relative intensity (0–1)
+        const intensity = Math.min(1, Math.abs(deltaX) / 150);
+
+        if (deltaX < 0) {
+          // swiping left → darken right side
+          $rightFeedback.css("opacity", intensity);
+          $leftFeedback.css("opacity", 0);
+        } else {
+          // swiping right → darken left side
+          $leftFeedback.css("opacity", intensity);
+          $rightFeedback.css("opacity", 0);
+        }
       });
 
       $h2h.on("touchend", function(e) {
         if (!isDragging) return;
         isDragging = false;
+
+        $leftFeedback.css("opacity", 0);
+        $rightFeedback.css("opacity", 0);
+
         const dx = currentX - startX;
         if (Math.abs(dx) > swipeThreshold) {
           if (dx < 0) {

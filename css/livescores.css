@@ -745,6 +745,30 @@ td.lsfe {
   display: none;
 }
 
+#head-to-head .swipe-feedback {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 25%;
+  background: rgba(0,0,0,0);
+  pointer-events: none;
+  z-index: 10;
+  transition: background 0.1s ease;
+}
+
+#head-to-head .swipe-feedback.left {
+  left: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.5), transparent);
+  opacity: 0;
+}
+
+#head-to-head .swipe-feedback.right {
+  right: 0;
+  background: linear-gradient(to left, rgba(0,0,0,0.5), transparent);
+  opacity: 0;
+}
+
+
 .stat-row {
   display: flex;
   flex-direction: column;
