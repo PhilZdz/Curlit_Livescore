@@ -1003,6 +1003,7 @@ td.lsfe {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  position: relative;
   box-sizing: border-box;
 }
 
@@ -1013,9 +1014,16 @@ td.lsfe {
   max-height: 100%;
   display: block;
   pointer-events: none; 
+  touch-action: manipulation;
 }
 
-
+.svg-touch-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: transparent;
+  touch-action: pan-y;
+}
 
 
 #currentShot {
