@@ -627,7 +627,7 @@ $(document).ready(function () {
     const shotInfo = shotData[currentIndex];
 
     // update and resize the svg
-    $(".svg-container").eq(index).html(shotInfo.svg);
+    $(".svg-container").eq(index).html(shotInfo.svg + `<div class="svg-touch-overlay"></div>`);
     makeSVGResponsive($(".svg-container").eq(index).find("svg"));
 
     $("#currentShot .competitor td.flag img").attr('src', `https://livescores.worldcurling.org/flags/${shotInfo.noc}.svg`);
@@ -973,7 +973,7 @@ $(document).ready(function () {
     // ---------- //
     // SVG slider //
     // ---------- //
-    const $overlay = $(".svg-container");
+    const $overlay = $(".svg-touch-overlay");
     let pinchActive = false;
 
     $overlay.on("touchstart", function (e) {
