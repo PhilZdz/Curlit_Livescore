@@ -3,6 +3,23 @@ $(document).ready(function () {
   //const apiUrl = "https://livescores.worldcurling.org/curlitsse";
   const apiUrl = "http://sse.curlit.local:5057";
 
+  const curlTasks = {
+    0: "Draw",
+    1: "Front",
+    2: "Guard",
+    3: "Raise / Tap-back",
+    4: "Wick / Soft Peeling",
+    5: "Freeze",
+    6: "Take-out",
+    7: "Hit and Roll",
+    8: "Clearing",
+    9: "Double Take-out",
+    10: "Promotion Take-out",
+    11: "through",
+    12: "no statistics"
+};
+
+
   const params = new URLSearchParams(window.location.search);
   const pathSegments = window.location.pathname.split("/");
   var season = params.get("Season");
@@ -20,41 +37,309 @@ $(document).ready(function () {
   if (document.getElementById('ContentMain_HiddenSessionID') != null)
     sessionId = document.getElementById('ContentMain_HiddenSessionID').value ?? 0;
 
-  // TODO PZ Remove that
-  eventId = sessionId = 1;
-  gameId = 2;
-
   const competitionCode = pathSegments[1] ?? competition;
 
-  // The name of the group that sign
-  const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${gameId}`;
+  // TODO PZ Remove that
+  season = 2526;
+  competition = "PREOQE";
+  eventId = 1;
+  sessionId = 3;
+  gameId = 1;
+  // ENDTODO PZ
+  
+  const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}`;
 
-  const $container = $('#scoreboard');
-  const $template = $('#template');
+
+  
   const $sessionHeader = $('#session-header');
+  const $slider = $('#slider');
+  const $gameTile = $('#game-tile');
+
+  // ------------------- //
+  // ----- RESULTS ----- //
+  // ------------------- //
+  function startConnectionResults() {
+    let resultConnection = new signalR.HubConnectionBuilder()
+        .withUrl(`${apiUrl}/notificationHub`, { withCredentials: false })
+        .build();
+
+        resultConnection.on("ReceiveMessage", function (resultList) {
+        // Refresh the tiles
+        renderTileData(resultList);
+
+        // Refresh the tile size
+        refreshContainer(resultList);
+    });
+
+    resultConnection.onclose(function () {
+        // Handle connection closed event
+        setOnlineHeader(false);
+        console.error("Connection closed. Retrying in 5 seconds");
+        setTimeout(startConnectionResults, 5000);
+
+    });
+
+    resultConnection.start().then(function () {
+        const urlParams = {}
+        if (season != null) {
+            urlParams["season"] = season;
+        }
+        if (competition != null) {
+            urlParams["competition"] = competition;
+        }
+        if (eventId != null) {
+            urlParams["eventId"] = eventId;
+        }
+        if (sessionId != null) {
+            urlParams["sessionId"] = sessionId;
+        }
+
+        var callUrl = `${apiUrl}/Result/LiveResults`
+
+        if (Object.keys(urlParams).length > 0) {
+            const keys = Object.keys(urlParams);
+
+            for (let i = 0; i < keys.length; i++) {
+                const key = keys[i];
+                callUrl = callUrl + `${i == 0 ? "?" : "&"}${key}=${urlParams[key]}`
+            }
+        }
+
+        // Call the subscription API endpoint
+        fetch(callUrl)
+            .then(response => response.json())
+            .then(function (data) {
+                // Hide the loader and show the session title
+                $('#slider').empty();
+                $("#loader").hide();
+
+                // Build the header
+                renderTileData(data);
+
+                setOnlineHeader(true);
+
+                // Subscribe to real time updates
+                resultConnection.invoke("SubscribeToGroup", signalGroupName).catch(err => console.error(err.toString()));
+            });
+    }).catch(function (err) {
+        setOnlineHeader(false);
+        // TODO write an error in the DOM
+        setTimeout(startConnectionResults, 5000);
+    });
+
+  }
 
 
-  var nbGames = 0;
+  function renderTileData(data) {
+    var result = data.find(g => g.gameID === gameId);
 
-  function startConnection() {
-    const connection = new signalR.HubConnectionBuilder()
+    if (result) {
+      feedTileUI($gameTile, result);
+    }
+    else {
+      debugger;
+      // TODO Place an error in the DOM. But this should never happen.
+    };
+}
+
+
+  // TODO this method should be moved to a common JS between result/stones
+  function feedTileUI(tile, result) {
+    // Header
+    tile.find('.matchup-tile').attr('class', `matchup-tile ${result.status}`);
+
+    tile.find('span.sheet').text(result.sheet);
+
+    let $leftText = tile.find('span.left-text');
+    var leftText = result.gamesTitle;
+    $leftText.removeClass("longText");
+    $leftText.removeClass("shortSessionName");
+    // Special case - shorten the session title if it contains Women's Round Robin (only on smaller devices)
+    var sequenceToStrip = "Women's Round Robin";
+    if (leftText.length > 28 && leftText.indexOf(sequenceToStrip) != -1) {
+        leftText = leftText.replace(sequenceToStrip, "Women's <span class='wideScreenText'>Round Robin</span>");
+    }
+    else if (leftText.length > 20) {
+        $leftText.addClass("longText");
+    }
+    $leftText.html(leftText);
+
+
+    tile.find('span.middle-text').text(result.status);
+
+    let $generalComment = $('#ContentMain_SessionComment');
+    if ($generalComment.text() != result.generalComment) {
+        $generalComment.text(result.generalComment);
+    }
+
+    let $rightComment = tile.find('.right-area .me-1');
+    $rightComment.removeClass("longText");
+    $rightComment.html(result.gameComment);
+    if (result.gameComment != null && result.gameComment != '' && result.gameComment.length > 14) {
+        $rightComment.addClass("longText");
+    }
+
+    tile.find('.right-area .btnStats').attr("href", `/${competitionCode}/aspnet/currentstats.aspx?EventID=${result.eventID}&Sheet=${result.sheet}`);
+    tile.find('.right-area .btnGraphics').attr("href", `/${competitionCode}/aspnet/livegraphics.aspx?EventID=${result.eventID}&Sheet=${result.sheet}`);
+
+    if (result.doStats == true) {
+        tile.find('.right-area .btnStats img').attr("src", `../general/proc-button.svg`);
+        tile.find('.right-area .btnStats img').attr("alt", `Line-Up`);
+    }
+    else {
+        tile.find('.right-area .btnStats img').attr("src", `../general/lineup-button.svg`);
+    }
+
+    if (result.doGraphics == false) {
+        tile.find('.right-area .btnGraphics').hide();
+    }
+
+    // Home team
+    tile.find('.summary .home img.flag').attr('src', `https://livescores.worldcurling.org/flags/${result.homeTeam.noc}.svg`);
+    tile.find('.summary .home .team-name').html(`<span class='short'>${result.homeTeam.teamShortName}</span><span class='long'>${result.homeTeam.teamLongName}</span>`);
+    tile.find('.summary .home .score').text(result.homeTeam.total);
+    tile.find('.summary .home .team-history').text(result.homeTeam.history);
+    tile.find('.summary .home .team-history').attr('title', `wins - losses`);
+
+    // Away team
+    tile.find('.summary .away img.flag').attr('src', `https://livescores.worldcurling.org/flags/${result.awayTeam.noc}.svg`);
+    tile.find('.summary .away .team-name').html(`<span class='short'>${result.awayTeam.teamShortName}</span><span class='long'>${result.awayTeam.teamLongName}</span>`);
+    tile.find('.summary .away .score').text(result.awayTeam.total);
+    tile.find('.summary .away .team-history').text(result.awayTeam.history);
+    tile.find('.summary .away .team-history').attr('title', `wins - losses`);
+
+    // Scoreboard
+    var thead = tile.find('.scoreboard thead');
+    var homeRow = tile.find('.scoreboard tbody tr').eq(0);
+    var awayRow = tile.find('.scoreboard tbody tr').eq(1);
+
+    // Clear the scoreboard
+    thead.empty();
+    homeRow.find('td').remove();
+    awayRow.find('td').remove();
+
+    // NOC
+    thead.append(`<th class="noc"></th>`);
+    homeRow.append(`<td class="noc">${result.homeTeam.noc}</td>`)
+    awayRow.append(`<td class="noc">${result.awayTeam.noc}</td>`)
+
+    // LSFE
+    thead.append(`<th class="lsfe"></th>`);
+    homeRow.append(`<td class="lsfe">${result.homeTeam.lsfe == true ? "*" : ""}</td>`)
+    awayRow.append(`<td class="lsfe">${result.awayTeam.lsfe == true ? "*" : ""}</td>`)
+
+    // LSD (only on desktop)
+    if (result.homeTeam.lsd.total != null) {
+        thead.append(`<th class="lsd-lsfe" colspan=3>LSD/LSFE</th>`);
+        homeRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.homeTeam.lsd.total != null ? Number(result.homeTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.homeTeam.lsfe == true ? "*" : ""}</td>`)
+        awayRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.awayTeam.lsd.total != null ? Number(result.awayTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.awayTeam.lsfe == true ? "*" : ""}</td>`)
+    }
+    else {
+        thead.append(`<th class="lsd-lsfe" colspan=2>LSFE</th><th></th>`);
+        homeRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.homeTeam.lsfe == true ? "*" : ""}</td><td></td>`)
+        awayRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.awayTeam.lsfe == true ? "*" : ""}</td><td></td>`)
+    }
+
+    // ENDS
+    var idx = 1;
+    Object.entries(result.ends).forEach(([endName, endDetails]) => {
+        thead.append(`<th>${endName}</th>`);
+
+        var homeClass = "";
+        var awayClass = "";
+        var homeSpanClass = "";
+        var awaySpanClass = "";
+
+        // Hammer                   
+        if (result.cEnd == idx && result.homeTeam.lsce == true) {
+            homeClass = homeClass + "hammer";
+        }
+        if (result.cEnd == idx && result.awayTeam.lsce == true) {
+            awayClass = awayClass + "hammer";
+        }
+
+        // Powerplay
+        if (result.homeTeam.ppE1 == idx || result.homeTeam.ppE2 == idx) {
+            homeSpanClass = "powerplay";
+        }
+        if (result.awayTeam.ppE1 == idx || result.awayTeam.ppE2 == idx) {
+            awaySpanClass = "powerplay";
+        }
+
+        // Extra end placeholder, no border (for small displays)
+        if (endName == "") {
+            homeClass = homeClass + " no-border";
+            awayClass = awayClass + " no-border";
+        }
+
+        homeRow.append(`<td${homeClass != "" ? ` class=\"${homeClass}\"` : ""}><span${homeSpanClass != "" ? ` class=\"${homeSpanClass}\"` : ""}>${endDetails.h}</span></td>`);
+        awayRow.append(`<td${awayClass != "" ? ` class=\"${awayClass}\"` : ""}><span${awaySpanClass != "" ? ` class=\"${awaySpanClass}\"` : ""}>${endDetails.a}</span></td>`);
+
+        idx++;
+    });
+
+    // Score
+    thead.append(`<th class="score"></th>`);
+    homeRow.append(`<td class="score">${result.homeTeam.total}</td>`)
+    awayRow.append(`<td class="score">${result.awayTeam.total}</td>`)
+
+
+    // Details
+    var homeDetails = tile.find('table.details-content tr').eq(0);
+    var awayDetails = tile.find('table.details-content tr').eq(1);
+
+    // Hide the header if the LSFE is already decided
+    if ((result.homeTeam.lsd.total == null && result.homeTeam.lsfe == true) || (result.awayTeam.lsd.total == null && result.awayTeam.lsfe == true)) {
+        tile.find('.details').hide();
+    }
+
+    homeDetails.find('td.noc').text(result.homeTeam.noc);
+    homeDetails.find('td.lsfe').text(`${result.homeTeam.lsfe == true ? "*" : ""}`);
+    homeDetails.find('td').eq(2).text(result.homeTeam.lsd.cw != null ? Number(result.homeTeam.lsd.cw).toFixed(1) : null);
+    homeDetails.find('td').eq(3).text(result.homeTeam.lsd.ccw != null ? Number(result.homeTeam.lsd.ccw).toFixed(1) : null);
+    homeDetails.find('td.lsd').text(result.homeTeam.lsd.total != null ? `${Number(result.homeTeam.lsd.total).toFixed(1)}cm` : null);
+    homeDetails.find('td.score span').text(result.homeTeam.total);
+
+    awayDetails.find('td.noc').text(result.awayTeam.noc);
+    awayDetails.find('td.lsfe').text(`${result.awayTeam.lsfe == true ? "*" : ""}`);
+    awayDetails.find('td').eq(2).text(result.awayTeam.lsd.cw != null ? Number(result.awayTeam.lsd.cw).toFixed(1) : null);
+    awayDetails.find('td').eq(3).text(result.awayTeam.lsd.ccw != null ? Number(result.awayTeam.lsd.ccw).toFixed(1) : null);
+    awayDetails.find('td.lsd').text(result.awayTeam.lsd.total != null ? `${Number(result.awayTeam.lsd.total).toFixed(1)}cm` : null);
+    awayDetails.find('td.score span').text(result.awayTeam.total);
+  }
+
+
+
+
+
+  // ------------------ //
+  // ----- STONES ----- //
+  // ------------------ //
+  const signalGroupStoneName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${gameId}-STONE`;
+
+  var shotData, statsData, latestLiveData;
+
+  function startConnectionStones() {
+    let stoneConnection = new signalR.HubConnectionBuilder()
       .withUrl(`${apiUrl}/notificationHub`, { withCredentials: false })
       .build();
 
-    connection.on("ReceiveMessage", function (resultList) {
-      console.log(resultList);
-      // Refresh the live viewport
-      refreshContainer(resultList);
+      stoneConnection.on("StoneUpdated", function (data) {
+      latestLiveData = data;
+
+      if ($("#is_live").is(":checked")) {
+        updateLiveData(data);
+      }
     });
 
-    connection.onclose(function () {
+    stoneConnection.onclose(function () {
       // Handle connection closed event
       setOnlineHeader(false);
       console.error("Live connection closed. Retrying in 5 seconds");
-      setTimeout(startConnection, 5000);
+      setTimeout(startConnectionStones, 5000);
     });
 
-    connection.start().then(function () {
+    stoneConnection.start().then(function () {
       const urlParams = {}
       if (season != null) {
         urlParams["season"] = season;
@@ -73,7 +358,7 @@ $(document).ready(function () {
       }
 
       var callUrl = `${apiUrl}/Stone/LiveStones`
-
+      
       if (Object.keys(urlParams).length > 0) {
         const keys = Object.keys(urlParams);
 
@@ -89,340 +374,86 @@ $(document).ready(function () {
         .then(function (data) {
           // Hide the loader and show the session title
           $("#loader").hide();
+          $('#slider').removeClass("notconnected");
+          $('#slider').addClass("connected");
 
-          refreshContainer(data);
+          // Build the scoreboard
+          latestLiveData = data;
+
+          updateLiveData(data);
 
           setOnlineHeader(true);
 
           // Subscribe to real time updates
-          connection.invoke("SubscribeToGroup", signalGroupName).catch(err => console.error(err.toString()));
+          stoneConnection.invoke("SubscribeToGroup", signalGroupStoneName).catch(err => console.error(err.toString()));
         });
     }).catch(function (err) {
       setOnlineHeader(false);
-      console.error(err.toString())
-      setTimeout(startConnection, 5000);
+      $('#slider').addClass("notconnected");
+      // $('#slider').html("Connection unsuccessful.");
+      setTimeout(startConnectionStones, 5000);
     });
 
   }
 
-  function refreshContainer(data) {
-    console.log(data);
-    var nbMatchups = data.length;
-    var gamesTitle = data.length > 0 ? data[0].gamesTitle : "";
+  async function fetchStonesAsync(endId) {
+    try {
+        const urlParams = {}
+        if (season != null) {
+          urlParams["season"] = season;
+        }
+        if (competition != null) {
+          urlParams["competition"] = competition;
+        }
+        if (eventId != null) {
+          urlParams["eventId"] = eventId;
+        }
+        if (sessionId != null) {
+          urlParams["sessionId"] = sessionId;
+        }
+        if (gameId != null) {
+          urlParams["gameId"] = gameId;
+        }
 
-    if (nbGames == nbMatchups && gamesTitle == $sessionHeader.html()) {
-      return;
+        urlParams["endId"] = endId;
+
+        var callUrl = `${apiUrl}/Stone/Stones`
+        
+        if (Object.keys(urlParams).length > 0) {
+          const keys = Object.keys(urlParams);
+
+          for (let i = 0; i < keys.length; i++) {
+            const key = keys[i];
+            callUrl = callUrl + `${i == 0 ? "?" : "&"}${key}=${urlParams[key]}`
+          }
+        }
+
+
+        const response = await fetch(callUrl);
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching data:', error);
     }
+}
 
-    // // Append the sorted divs back to the container
-    // $container.append($rows);
-    const isMobile = /iPhone|iPad|iPod|Android|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    $container.removeClass("tile-s");
-    $container.removeClass("tile-m");
-    $container.removeClass("tile-l");
-
-    if (nbMatchups <= 4) {
-      $container.addClass("tile-l");
+  function updateLiveData(data) {
+    shotData = data;
+    
+    if (data.length > 0) {
+      refreshShotList();
+      renderDots();
+      
+      goTo(shotData.length - 1);
+      
     }
-    else if (nbMatchups == 5 || (nbMatchups == 6 && !isMobile)) {
-      $container.addClass("tile-m");
-    }
-    else {
-      $container.addClass("tile-s");
-    }
-
-    nbGames = nbMatchups;
   }
 
-  function setOnlineHeader(online) {
-    var updateIcon;
-    if (document.getElementById('RefreshButton') != null)
-      updateIcon = document.getElementById('RefreshButton');
-    if (online) {
-      $sessionHeader.removeClass("offline");
-      $sessionHeader.addClass("online");
-      if (updateIcon != null)
-        updateIcon.src = "../general/online.png";
-    }
-    else {
-      $sessionHeader.removeClass("online");
-      $sessionHeader.addClass("offline");
-      if (updateIcon != null)
-        updateIcon.src = "../general/offline.png";
-    }
-  }
 
-
-
-
-  const shotData = [
-    {
-      stoneId: 1,
-      noc: "CAN",
-      team: "Canada",
-      homeTeam: 0,
-      lastName: "Cinnamon",
-      firstName: "Max",
-      task: 1,
-      task_web: "Front",
-      handle: 1,
-      handle_web: "cw",
-      points: 4,
-      points_web: 100,
-      comment: null,
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="35.0" cy="14.4" r="4.06" /><circle cx="35.0" cy="5.6" r="4.06" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="148.6" cy="283.8" r="8.65" class="CUR_cs" /><circle cx="148.6" cy="283.8" r="1.44" stroke-width="3" /><circle cx="265.0" cy="5.6" r="4.06" /><circle cx="275.0" cy="14.4" r="4.06" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-    },
-    {
-      stoneId: 2,
-      noc: "DEN",
-      team: "Denmark",
-      homeTeam: 1,
-      lastName: "Goldbeck",
-      firstName: "Liam",
-      task: 4,
-      task_web: "Draw",
-      handle: 1,
-      handle_web: "cw",
-      points: 4,
-      points_web: 100,
-      comment: null,
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" class="CUR_cs" /><circle cx="149.0" cy="379.4" r="1.44" stroke-width="3" /><circle cx="35.0" cy="5.6" r="4.06" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="148.6" cy="283.8" r="8.65" /><circle cx="265.0" cy="5.6" r="4.06" /><circle cx="275.0" cy="14.4" r="4.06" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-    },
-    {
-      stoneId: 3,
-      noc: "CAN",
-      team: "Canada",
-      homeTeam: 0,
-      lastName: "Cinnamon",
-      firstName: "Max",
-      task: 1,
-      task_web: "Draw",
-      handle: 1,
-      handle_web: "cw",
-      points: 4,
-      points_web: 100,
-      comment: null,
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="35.0" cy="5.6" r="4.06" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="148.6" cy="283.8" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" class="CUR_cs" /><circle cx="156.2" cy="363.0" r="1.44" stroke-width="3" /><circle cx="275.0" cy="14.4" r="4.06" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-    },
-    {
-      stoneId: 4,
-      noc: "DEN",
-      team: "Denmark",
-      homeTeam: 1,
-      lastName: "Goldbeck",
-      firstName: "Liam",
-      task: 1,
-      task_web: "Draw",
-      handle: 1,
-      handle_web: "cw",
-      points: 3,
-      points_web: 75,
-      comment: null,
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" class="CUR_cs" /><circle cx="47.8" cy="489.0" r="1.44" stroke-width="3" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="148.6" cy="283.8" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="275.0" cy="14.4" r="4.06" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-    },
-    {
-      stoneId: 5,
-      noc: "CAN",
-      team: "Canada",
-      homeTeam: 0,
-      lastName: "Keenan",
-      firstName: "Michael",
-      task: 1,
-      task_web: "Promotion Take-out",
-      handle: 1,
-      handle_web: "cw",
-      points: 0,
-      points_web: 0,
-      comment: "No tick zone violation",
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#808080" stroke="#ffe600" stroke-width="0.5" fill-opacity="0" class="CUR_os"><circle cx="148.6" cy="283.8" r="8.65" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="73.6" cy="342.4" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="150.0" cy="590.0" r="8.65" class="CUR_cs" /><circle cx="150.0" cy="590.0" r="1.44" stroke-width="3" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-
-    },
-    {
-      stoneId: 6,
-      noc: "DEN",
-      team: "Denmark",
-      homeTeam: 1,
-      lastName: "Jurlander Boege",
-      firstName: "Kasper",
-      task: 9,
-      task_web: "Draw",
-      handle: 1,
-      handle_web: "ccw",
-      points: 4,
-      points_web: 100,
-      comment: null,
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" /><circle cx="234.0" cy="442.6" r="8.65" class="CUR_cs" /><circle cx="234.0" cy="442.6" r="1.44" stroke-width="3" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="73.6" cy="342.4" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="288.2" cy="590.0" r="8.65" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-    },
-    {
-      stoneId: 7,
-      noc: "CAN",
-      team: "Canada",
-      homeTeam: 0,
-      lastName: "Keenan",
-      firstName: "Michael",
-      task: 1,
-      task_web: "Promotion Take-out",
-      handle: 1,
-      handle_web: "cw",
-      points: 0,
-      points_web: 0,
-      comment: "No tick zone violation",
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#808080" stroke="#ffe600" stroke-width="0.5" fill-opacity="0" class="CUR_os"><circle cx="148.6" cy="283.8" r="8.65" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="73.6" cy="342.4" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="150.0" cy="590.0" r="8.65" class="CUR_cs" /><circle cx="150.0" cy="590.0" r="1.44" stroke-width="3" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-
-    },
-    {
-      stoneId: 8,
-      noc: "DEN",
-      team: "Denmark",
-      homeTeam: 1,
-      lastName: "Jurlander Boege",
-      firstName: "Kasper",
-      task: 9,
-      task_web: "Draw",
-      handle: 1,
-      handle_web: "ccw",
-      points: 4,
-      points_web: 100,
-      comment: null,
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" /><circle cx="234.0" cy="442.6" r="8.65" class="CUR_cs" /><circle cx="234.0" cy="442.6" r="1.44" stroke-width="3" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="73.6" cy="342.4" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="288.2" cy="590.0" r="8.65" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-    },
-    {
-      stoneId: 9,
-      noc: "CAN",
-      team: "Canada",
-      homeTeam: 0,
-      lastName: "Keenan",
-      firstName: "Michael",
-      task: 1,
-      task_web: "Promotion Take-out",
-      handle: 1,
-      handle_web: "cw",
-      points: 0,
-      points_web: 0,
-      comment: "No tick zone violation",
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#808080" stroke="#ffe600" stroke-width="0.5" fill-opacity="0" class="CUR_os"><circle cx="148.6" cy="283.8" r="8.65" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="73.6" cy="342.4" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="150.0" cy="590.0" r="8.65" class="CUR_cs" /><circle cx="150.0" cy="590.0" r="1.44" stroke-width="3" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-
-    },
-    {
-      stoneId: 10,
-      noc: "DEN",
-      team: "Denmark",
-      homeTeam: 1,
-      lastName: "Jurlander Boege",
-      firstName: "Kasper",
-      task: 9,
-      task_web: "Draw",
-      handle: 1,
-      handle_web: "ccw",
-      points: 4,
-      points_web: 100,
-      comment: null,
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" /><circle cx="234.0" cy="442.6" r="8.65" class="CUR_cs" /><circle cx="234.0" cy="442.6" r="1.44" stroke-width="3" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="73.6" cy="342.4" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="288.2" cy="590.0" r="8.65" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-    },
-    {
-      stoneId: 11,
-      noc: "CAN",
-      team: "Canada",
-      homeTeam: 0,
-      lastName: "Keenan",
-      firstName: "Michael",
-      task: 1,
-      task_web: "Promotion Take-out",
-      handle: 1,
-      handle_web: "cw",
-      points: 0,
-      points_web: 0,
-      comment: "No tick zone violation",
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#808080" stroke="#ffe600" stroke-width="0.5" fill-opacity="0" class="CUR_os"><circle cx="148.6" cy="283.8" r="8.65" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="73.6" cy="342.4" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="150.0" cy="590.0" r="8.65" class="CUR_cs" /><circle cx="150.0" cy="590.0" r="1.44" stroke-width="3" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-
-    },
-    {
-      stoneId: 12,
-      noc: "DEN",
-      team: "Denmark",
-      homeTeam: 1,
-      lastName: "Jurlander Boege",
-      firstName: "Kasper",
-      task: 9,
-      task_web: "Draw",
-      handle: 1,
-      handle_web: "ccw",
-      points: 4,
-      points_web: 100,
-      comment: null,
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" /><circle cx="234.0" cy="442.6" r="8.65" class="CUR_cs" /><circle cx="234.0" cy="442.6" r="1.44" stroke-width="3" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="73.6" cy="342.4" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="288.2" cy="590.0" r="8.65" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-    },
-    {
-      stoneId: 13,
-      noc: "CAN",
-      team: "Canada",
-      homeTeam: 0,
-      lastName: "Keenan",
-      firstName: "Michael",
-      task: 1,
-      task_web: "Promotion Take-out",
-      handle: 1,
-      handle_web: "cw",
-      points: 0,
-      points_web: 0,
-      comment: "No tick zone violation",
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#808080" stroke="#ffe600" stroke-width="0.5" fill-opacity="0" class="CUR_os"><circle cx="148.6" cy="283.8" r="8.65" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="73.6" cy="342.4" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="150.0" cy="590.0" r="8.65" class="CUR_cs" /><circle cx="150.0" cy="590.0" r="1.44" stroke-width="3" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-
-    },
-    {
-      stoneId: 14,
-      noc: "DEN",
-      team: "Denmark",
-      homeTeam: 1,
-      lastName: "Jurlander Boege",
-      firstName: "Kasper",
-      task: 9,
-      task_web: "Draw",
-      handle: 1,
-      handle_web: "ccw",
-      points: 4,
-      points_web: 100,
-      comment: null,
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" /><circle cx="234.0" cy="442.6" r="8.65" class="CUR_cs" /><circle cx="234.0" cy="442.6" r="1.44" stroke-width="3" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="73.6" cy="342.4" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="288.2" cy="590.0" r="8.65" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-    },
-    {
-      stoneId: 15,
-      noc: "CAN",
-      team: "Canada",
-      homeTeam: 0,
-      lastName: "Keenan",
-      firstName: "Michael",
-      task: 1,
-      task_web: "Promotion Take-out",
-      handle: 1,
-      handle_web: "cw",
-      points: 0,
-      points_web: 0,
-      comment: "No tick zone violation",
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#808080" stroke="#ffe600" stroke-width="0.5" fill-opacity="0" class="CUR_os"><circle cx="148.6" cy="283.8" r="8.65" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" /><circle cx="25.0" cy="14.4" r="4.06" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="73.6" cy="342.4" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="150.0" cy="590.0" r="8.65" class="CUR_cs" /><circle cx="150.0" cy="590.0" r="1.44" stroke-width="3" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-
-    },
-    {
-      stoneId: 16,
-      noc: "DEN",
-      team: "Denmark",
-      homeTeam: 1,
-      lastName: "Jurlander Boege",
-      firstName: "Kasper",
-      task: 9,
-      task_web: "Draw",
-      handle: 1,
-      handle_web: "ccw",
-      points: 4,
-      points_web: 100,
-      comment: null,
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" /><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="440.0" r="120.0" fill="#c8c8ff" /><circle cx="150.0" cy="440.0" r="80.0" fill="#ffffff" /><circle cx="150.0" cy="440.0" r="40.0" fill="#a0ffc0" /><circle cx="150.0" cy="440.0" r="16.0" fill="#ffffff" /><line x1="0" y1="560.0" x2="300.0" y2="560.0" /><line x1="0" y1="440.0" x2="300.0" y2="440.0" /><line x1="0" y1="20.0" x2="300.0" y2="20.0" /><line x1="150.0" y1="20.0" x2="150.0" y2="560.0" /></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="149.0" cy="379.4" r="8.65" /><circle cx="47.8" cy="489.0" r="8.65" /><circle cx="234.0" cy="442.6" r="8.65" class="CUR_cs" /><circle cx="234.0" cy="442.6" r="1.44" stroke-width="3" /><circle cx="25.0" cy="5.6" r="4.06" /><circle cx="15.0" cy="14.4" r="4.06" /><circle cx="15.0" cy="5.6" r="4.06" /><circle cx="5.0" cy="14.4" r="4.06" /><circle cx="5.0" cy="5.6" r="4.06" /></g><g fill="#ffe600" stroke="black" stroke-width="1"><circle cx="73.6" cy="342.4" r="8.65" /><circle cx="156.2" cy="363.0" r="8.65" /><circle cx="288.2" cy="590.0" r="8.65" /><circle cx="275.0" cy="5.6" r="4.06" /><circle cx="285.0" cy="14.4" r="4.06" /><circle cx="285.0" cy="5.6" r="4.06" /><circle cx="295.0" cy="14.4" r="4.06" /><circle cx="295.0" cy="5.6" r="4.06" /></g></svg>'
-    },
-  ];
-
-
-  const statsData = [
+  statsData = [
     {
       statName: "Line-ups",
       is_stat: false,
@@ -469,59 +500,6 @@ $(document).ready(function () {
     },
     {
       statName: "Last Stone Draw",
-      is_stat: true,
-      unit: "cm",
-      rows: [
-        {
-          row_index: 1,
-          row_title: "clockwise ↻",
-          row_value_red: 116.7,
-          row_value_yellow: 10.9, 
-        },
-        {
-          row_index: 2,
-          row_title: "counter-clockwise ↺",
-          row_value_red: 122.2,
-          row_value_yellow: 85.4,
-        },
-        {
-          row_index: 3,
-          row_title: "Total",
-          row_value_red: 238.9,
-          row_value_yellow: 96.3,
-        }
-      ]
-    },
-    {
-      statName: "Last Stone Draw - Option 2",
-      is_stat: true,
-      unit: "cm",
-      rows: [
-        {
-          row_index: 1,
-          row_title: "clockwise ↻",
-          row_value_red: 116.7,
-          row_value_yellow: 10.9,
-          row_value_max: 199.6 
-        },
-        {
-          row_index: 2,
-          row_title: "counter-clockwise ↺",
-          row_value_red: "122.2",
-          row_value_yellow: 85.4,
-          row_value_max: 199.6 
-        },
-        {
-          row_index: 3,
-          row_title: "Total",
-          row_value_red: 238.9,
-          row_value_yellow: 96.3,
-          row_value_max: 399.2
-        }
-      ]
-    },
-    {
-      statName: "Last Stone Draw - Option 3",
       is_stat: true,
       unit: "cm",
       rows: [
@@ -609,42 +587,51 @@ $(document).ready(function () {
     }
   ]
 
-  let $slider, $firstBtn, $prevBtn, $nextBtn, $lastBtn, $indexButtonsContainer;
+  let $firstBtn, $prevBtn, $nextBtn, $lastBtn, $indexButtonsContainer;
   let $arrowPrev, $arrowNext;
   let totalItems, currentIndex = 0;
 
   let startX = 0, currentX = 0, isDragging = false;
   const swipeThreshold = 50;
 
-  function goTo(index) {
+  function goTo(index, isManual = false) {
+    // On manual navigation, remove the live
+    if (isManual && $("#is_live").is(":checked")) {
+      $("#is_live").prop('checked', false);
+    }
+    
     currentIndex = Math.max(0, Math.min(index, totalItems - 1));
     $slider.css({
-      transition: "transform 0.3s ease",
+      // transition: "transform 0.3s ease",
+      transition: "none",
       transform: `translateX(-${currentIndex * 100}%)`
     });
 
     // Update shot info
     const shotInfo = shotData[currentIndex];
+    if (shotInfo === undefined) {
+      return;
+    }
 
     // update and resize the svg
     $(".svg-container").eq(index).html(shotInfo.svg + `<div class="svg-touch-overlay"></div>`);
     makeSVGResponsive($(".svg-container").eq(index).find("svg"));
 
     // add the next svg for a smarted swipe
-    if (shotData.length > currentIndex) {
-      $(".svg-container").eq(index+1).html(shotData[currentIndex+1].svg + `<div class="svg-touch-overlay"></div>`);
+    if (shotData.length >= currentIndex) {
+      // $(".svg-container").eq(index+1).html(shotData[currentIndex].svg + `<div class="svg-touch-overlay"></div>`);
       makeSVGResponsive($(".svg-container").eq(index+1).find("svg"));
     }
-
+    
     $("#currentShot .competitor td.flag img").attr('src', `https://livescores.worldcurling.org/flags/${shotInfo.noc}.svg`);
-    $("#currentShot .competitor td.flag img").attr('alt', shotInfo.team);
+    $("#currentShot .competitor td.flag img").attr('alt', shotInfo.teamName);
     $("#currentShot .competitor span.lastname").html(shotInfo.lastName);
     $("#currentShot .competitor span.firstname").html(shotInfo.firstName);
-    $("#currentShot .shot-details span.type").html(shotInfo.task_web);
+    $("#currentShot .shot-details span.type").html(curlTasks[shotInfo.task]);
     $("#currentShot .shot-details span.handle")
       .removeClass("cw ccw")
-      .addClass(shotInfo.handle_web);
-    $("#currentShot .shot-details span.accuracy").html(`${shotInfo.points_web} %`);
+      .addClass(shotInfo.handleName);
+    $("#currentShot .shot-details span.accuracy").html(`${shotInfo.pointsPrct} %`);
     $("#currentShot .shot-details span.comment").html(shotInfo.comment);
 
 
@@ -655,11 +642,39 @@ $(document).ready(function () {
       .addClass(shotInfo.homeTeam == 1 ? "odd" : "even");
 
     // Update stone select
+    $(".endstone select.current-end").val(`${shotInfo.endID-1}`);
     $(".endstone select.current-stone").val(`${index}`);
 
     updateButtons();
 
     fitCompetitorNames();
+  }
+
+  // Fetch a different end
+  async function goToHistory(endId) {
+    // Disable the live if it isn't already
+    if ($("#is_live").is(":checked")) {
+      $("#is_live").prop('checked', false);
+    }
+
+    shotData = await fetchStonesAsync(endId);
+
+    $("#slider").empty();
+    $(".endstone select.current-stone").empty();
+
+    shotData.forEach((shot, idx) => {
+
+      $("#slider").append(`<div class="item">
+      <div class="svg-container">${shot.svg}</div>
+      </div>`); 
+
+      $(".endstone select.current-stone").append(`<option value="${idx}">Stone ${idx+1}</option>`);
+    });
+
+    totalItems = $slider.children().length;
+    
+    renderDots();
+    goTo(0);
   }
 
   function fitCompetitorNames() {
@@ -769,7 +784,6 @@ $(document).ready(function () {
       var $existingItem = $(`.stat-row:eq(${i})`)
 
       if ($existingItem.length == 0) {
-        // debugger;
         let $newRow = $template.clone();
         $newRow.removeClass('stat-row-template');
         $newRow.addClass('stat-row');
@@ -903,16 +917,24 @@ $(document).ready(function () {
     });
   }
 
+  // TODO skip the empty #slider if !isLive
   function refreshShotList() {
     $("#slider").empty();
     $(".endstone select.current-end").empty();
     $(".endstone select.current-stone").empty();
-    $(".endstone select.current-end").append(`<option value="End 1">End 1</option>`);
+    
+    if (shotData.length > 0) {
+      let currentEnd = shotData[0].endID;
+
+      for (let i = 0; i < currentEnd; i++) {
+        $(".endstone select.current-end").append(`<option value="${i}">End ${i+1}</option>`);
+      }
+    }
 
     shotData.forEach((shot, idx) => {
 
       $("#slider").append(`<div class="item">
-      <div class="svg-container"> </div>
+      <div class="svg-container">${shot.svg}</div>
       </div>`); 
 
       $(".endstone select.current-stone").append(`<option value="${idx}">Stone ${idx+1}</option>`);
@@ -944,13 +966,16 @@ $(document).ready(function () {
   });
 
 
-  $(".endstone select.current-stone").on('change', function() {
-    goTo(parseInt($(this).val()));
+  $(document).on('change', "select.current-end", function() {
+    goToHistory(parseInt($(this).val())+1);
+  });
+
+  $(document).on('change', "select.current-stone", function() {
+    goTo(parseInt($(this).val()), true);
   });
 
 
 
-    $slider = $("#slider");
     $firstBtn = $("#firstBtn");
     $prevBtn = $("#prevBtn");
     $nextBtn = $("#nextBtn");
@@ -960,16 +985,16 @@ $(document).ready(function () {
     $arrowNext = $("#arrowNext");
 
 
-    refreshShotList();
+    // refreshShotList();
 
     // Button clicks
-    $firstBtn.on("click", () => goTo(0));
-    $prevBtn.on("click", () => goTo(currentIndex - 1));
-    $nextBtn.on("click", () => goTo(currentIndex + 1));
-    $lastBtn.on("click", () => goTo(totalItems - 1));
+    $firstBtn.on("click", () => goTo(0, true));
+    $prevBtn.on("click", () => goTo(currentIndex - 1, true));
+    $nextBtn.on("click", () => goTo(currentIndex + 1, true));
+    $lastBtn.on("click", () => goTo(totalItems - 1, true));
 
-    $arrowPrev.on("click", () => goTo(currentIndex - 1));
-    $arrowNext.on("click", () => goTo(currentIndex + 1));
+    $arrowPrev.on("click", () => goTo(currentIndex - 1, true));
+    $arrowNext.on("click", () => goTo(currentIndex + 1, true));
 
     $("#bfbblue").on("click", () => switchTheme("blue"));
     $("#bfbwhite").on("click", () => switchTheme("white"));
@@ -1046,6 +1071,11 @@ $(document).ready(function () {
         $scb.slideToggle(500);
         if ($scb.is(':visible')) {
           $scb.css('display', 'table');
+        }
+      }
+      else if (target == "live") {
+        if (!$("#is_live").is(":checked")) {
+          updateLiveData(latestLiveData);
         }
       }
 
@@ -1179,13 +1209,32 @@ $(document).ready(function () {
 
 
     // Init
-    renderDots();
-    refreshStatList();
-    goTo(0);
+    // renderDots();
+    // refreshStatList();
+    // goTo(0);
 
 
 
 
 
-  startConnection();
+  startConnectionResults();
+  startConnectionStones();
+
+  function setOnlineHeader(online) {
+    var updateIcon;
+    if (document.getElementById('RefreshButton') != null)
+        updateIcon = document.getElementById('RefreshButton');
+    if (online) {
+        $sessionHeader.removeClass("offline");
+        $sessionHeader.addClass("online");
+        if (updateIcon != null)
+            updateIcon.src = "../general/online.png";
+    }
+    else {
+        $sessionHeader.removeClass("online");
+        $sessionHeader.addClass("offline");
+        if (updateIcon != null)
+            updateIcon.src = "../general/offline.png";
+    }
+}
 });

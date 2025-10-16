@@ -35,7 +35,7 @@ $(document).ready(function () {
     var nbGames = 0;
 
     function startConnection() {
-        const connection = new signalR.HubConnectionBuilder()
+        let connection = new signalR.HubConnectionBuilder()
             .withUrl(`${apiUrl}/notificationHub`, { withCredentials: false })
             .build();
 
@@ -86,6 +86,7 @@ $(document).ready(function () {
                 .then(response => response.json())
                 .then(function (data) {
                     // Hide the loader and show the session title
+                    $('#slider').empty();
                     $("#loader").hide();
 
                     // Build the scoreboard
@@ -100,7 +101,7 @@ $(document).ready(function () {
                 });
         }).catch(function (err) {
             setOnlineHeader(false);
-            console.error(err.toString())
+            // TODO write an error in the DOM
             setTimeout(startConnection, 5000);
         });
 
@@ -341,6 +342,10 @@ $(document).ready(function () {
         awayDetails.find('td.score span').text(result.awayTeam.total);
     }
 
+
+
+    startConnection();
+
     function setOnlineHeader(online) {
         var updateIcon;
         if (document.getElementById('RefreshButton') != null)
@@ -358,6 +363,7 @@ $(document).ready(function () {
                 updateIcon.src = "../general/offline.png";
         }
     }
-
-    startConnection();
 });
+
+
+
