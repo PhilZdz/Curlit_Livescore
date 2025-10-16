@@ -917,9 +917,15 @@ $(document).ready(function () {
     });
   }
 
-  // TODO skip the empty #slider if !isLive
+  
   function refreshShotList() {
-    $("#slider").empty();
+
+    if ($slider.length === 0) {
+      // Container not ready — try again shortly
+      return setTimeout(() => refreshShotList(), 50);
+    }
+
+    $slider.empty();
     $(".endstone select.current-end").empty();
     $(".endstone select.current-stone").empty();
     
@@ -932,8 +938,8 @@ $(document).ready(function () {
     }
 
     shotData.forEach((shot, idx) => {
-
-      $("#slider").append(`<div class="item">
+      console.log(shot);
+      $slider.append(`<div class="item">
       <div class="svg-container">${shot.svg}</div>
       </div>`); 
 
