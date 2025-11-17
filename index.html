@@ -18,6 +18,7 @@
   <!-- livescores.worldcurling integration -->
   <link rel="stylesheet" type="text/css" href="https://livescores.worldcurling.org/pg/CSS/curlit.css">
   <link id="csstheme" rel="stylesheet" type="text/css" href="https://livescores.worldcurling.org/pg/CSS/blue.css">
+  <link id="cssextra" rel="stylesheet" type="text/css" href="css/livestones_blue.css">
   <style type="text/css">
     body {
       max-width: 100%;
@@ -110,6 +111,7 @@
                 
                 <div id="scoreboard" class="container-wide tile-l">
                   <div id="session-header" class="offline"></div>
+                  <div id="loader">&nbsp;</div>
                   <!-- Running -->
                   <div id="game-tile" class="row">
                     <!-- Matchup Tile -->
@@ -298,7 +300,7 @@
                                         </label>
                                       </div>
                                     </div>
-                                    <!-- <div class="command">
+                                    <div class="command">
                                       <div class="col">Stats</div>
                                       <div class="col">
                                         <label class="switch">
@@ -306,7 +308,7 @@
                                           <span class="btn-slider round" data-target="stats"></span>
                                         </label>
                                       </div>
-                                    </div> -->
+                                    </div>
                                     <div class="command expand">
                                       <div class="col">Follow Live</div>
                                       <div class="col">

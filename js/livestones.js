@@ -1,7 +1,8 @@
 $(document).ready(function () {
-  // Version 0.1 from 22.8.25
+  // Version 0.1 from 18.10.25
   //const apiUrl = "https://livescores.worldcurling.org/curlitsse";
   const apiUrl = "http://sse.curlit.local:5057";
+  // const apiUrl = "https://curlit.com/curlitsse";
 
   const curlTasks = {
     0: "Draw",
@@ -17,7 +18,7 @@ $(document).ready(function () {
     10: "Promotion Take-out",
     11: "through",
     12: "no statistics"
-};
+  };
 
 
   const params = new URLSearchParams(window.location.search);
@@ -26,7 +27,8 @@ $(document).ready(function () {
   var competition = params.get("Competition");
   var eventId = params.get("EventID") ?? 0;
   var sessionId = params.get("SessionID") ?? 0;
-  // TODO PZ see later how to pass the Game ID (iFrame?)
+  var gameId = params.get("GameId") ?? 1;
+  var isDebug = params.get("Debug") ?? 0;
 
   if (document.getElementById('ContentMain_HiddenSeason') != null)
     season = document.getElementById('ContentMain_HiddenSeason').value;
@@ -39,92 +41,95 @@ $(document).ready(function () {
 
   const competitionCode = pathSegments[1] ?? competition;
 
-  // TODO PZ Remove that
-  season = 2526;
-  competition = "PREOQE";
-  eventId = 1;
-  sessionId = 3;
+  // Hard-coded values if needed
+  season = 2425;
+  competition = "WJCC";
+  eventId = 2;
+  sessionId = 1;
   gameId = 1;
-  // ENDTODO PZ
-  
+
   const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}`;
 
 
-  
+
   const $sessionHeader = $('#session-header');
   const $slider = $('#slider');
   const $gameTile = $('#game-tile');
+  const parser = new DOMParser();
+
+$('table.scoreboard').hide();
+    $('#head-to-head').hide();
 
   // ------------------- //
   // ----- RESULTS ----- //
   // ------------------- //
   function startConnectionResults() {
     let resultConnection = new signalR.HubConnectionBuilder()
-        .withUrl(`${apiUrl}/notificationHub`, { withCredentials: false })
-        .build();
+      .withUrl(`${apiUrl}/notificationHub`, { withCredentials: false })
+      .build();
 
-        resultConnection.on("ReceiveMessage", function (resultList) {
-        // Refresh the tiles
-        renderTileData(resultList);
+    resultConnection.on("ReceiveMessage", function (resultList) {
+      // Refresh the tiles
+      renderTileData(resultList);
 
-        // Refresh the tile size
-        refreshContainer(resultList);
+      // Refresh the tile size
+      refreshContainer(resultList);
     });
 
     resultConnection.onclose(function () {
-        // Handle connection closed event
-        setOnlineHeader(false);
-        console.error("Connection closed. Retrying in 5 seconds");
-        setTimeout(startConnectionResults, 5000);
+      // Handle connection closed event
+      setOnlineHeader(false);
+      console.error("Connection closed. Retrying in 5 seconds");
+      setTimeout(startConnectionResults, 5000);
 
     });
 
     resultConnection.start().then(function () {
-        const urlParams = {}
-        if (season != null) {
-            urlParams["season"] = season;
+      const urlParams = {}
+      if (season != null) {
+        urlParams["season"] = season;
+      }
+      if (competition != null) {
+        urlParams["competition"] = competition;
+      }
+      if (eventId != null) {
+        urlParams["eventId"] = eventId;
+      }
+      if (sessionId != null) {
+        urlParams["sessionId"] = sessionId;
+      }
+
+      var callUrl = `${apiUrl}/Result/LiveResults`
+
+      if (Object.keys(urlParams).length > 0) {
+        const keys = Object.keys(urlParams);
+
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i];
+          callUrl = callUrl + `${i == 0 ? "?" : "&"}${key}=${urlParams[key]}`
         }
-        if (competition != null) {
-            urlParams["competition"] = competition;
-        }
-        if (eventId != null) {
-            urlParams["eventId"] = eventId;
-        }
-        if (sessionId != null) {
-            urlParams["sessionId"] = sessionId;
-        }
+      }
 
-        var callUrl = `${apiUrl}/Result/LiveResults`
+      // Call the subscription API endpoint
+      fetch(callUrl)
+        .then(response => response.json())
+        .then(function (data) {
+          // Hide the loader and show the session title
+          $("#loader").hide();
+          $("#game-tile").show();
 
-        if (Object.keys(urlParams).length > 0) {
-            const keys = Object.keys(urlParams);
+          // Build the header
+          renderTileData(data);
 
-            for (let i = 0; i < keys.length; i++) {
-                const key = keys[i];
-                callUrl = callUrl + `${i == 0 ? "?" : "&"}${key}=${urlParams[key]}`
-            }
-        }
+          setOnlineHeader(true);
 
-        // Call the subscription API endpoint
-        fetch(callUrl)
-            .then(response => response.json())
-            .then(function (data) {
-                // Hide the loader and show the session title
-                $('#slider').empty();
-                $("#loader").hide();
-
-                // Build the header
-                renderTileData(data);
-
-                setOnlineHeader(true);
-
-                // Subscribe to real time updates
-                resultConnection.invoke("SubscribeToGroup", signalGroupName).catch(err => console.error(err.toString()));
-            });
+          // Subscribe to real time updates
+          resultConnection.invoke("SubscribeToGroup", signalGroupName).catch(err => console.error(err.toString()));
+        });
     }).catch(function (err) {
-        setOnlineHeader(false);
-        // TODO write an error in the DOM
-        setTimeout(startConnectionResults, 5000);
+      setOnlineHeader(false);
+      // TODO write an error in the DOM
+      setTimeout(startConnectionResults, 5000);
     });
 
   }
@@ -140,7 +145,7 @@ $(document).ready(function () {
       debugger;
       // TODO Place an error in the DOM. But this should never happen.
     };
-}
+  }
 
 
   // TODO this method should be moved to a common JS between result/stones
@@ -157,10 +162,10 @@ $(document).ready(function () {
     // Special case - shorten the session title if it contains Women's Round Robin (only on smaller devices)
     var sequenceToStrip = "Women's Round Robin";
     if (leftText.length > 28 && leftText.indexOf(sequenceToStrip) != -1) {
-        leftText = leftText.replace(sequenceToStrip, "Women's <span class='wideScreenText'>Round Robin</span>");
+      leftText = leftText.replace(sequenceToStrip, "Women's <span class='wideScreenText'>Round Robin</span>");
     }
     else if (leftText.length > 20) {
-        $leftText.addClass("longText");
+      $leftText.addClass("longText");
     }
     $leftText.html(leftText);
 
@@ -169,29 +174,29 @@ $(document).ready(function () {
 
     let $generalComment = $('#ContentMain_SessionComment');
     if ($generalComment.text() != result.generalComment) {
-        $generalComment.text(result.generalComment);
+      $generalComment.text(result.generalComment);
     }
 
     let $rightComment = tile.find('.right-area .me-1');
     $rightComment.removeClass("longText");
     $rightComment.html(result.gameComment);
     if (result.gameComment != null && result.gameComment != '' && result.gameComment.length > 14) {
-        $rightComment.addClass("longText");
+      $rightComment.addClass("longText");
     }
 
     tile.find('.right-area .btnStats').attr("href", `/${competitionCode}/aspnet/currentstats.aspx?EventID=${result.eventID}&Sheet=${result.sheet}`);
     tile.find('.right-area .btnGraphics').attr("href", `/${competitionCode}/aspnet/livegraphics.aspx?EventID=${result.eventID}&Sheet=${result.sheet}`);
 
     if (result.doStats == true) {
-        tile.find('.right-area .btnStats img').attr("src", `../general/proc-button.svg`);
-        tile.find('.right-area .btnStats img').attr("alt", `Line-Up`);
+      tile.find('.right-area .btnStats img').attr("src", `../general/proc-button.svg`);
+      tile.find('.right-area .btnStats img').attr("alt", `Line-Up`);
     }
     else {
-        tile.find('.right-area .btnStats img').attr("src", `../general/lineup-button.svg`);
+      tile.find('.right-area .btnStats img').attr("src", `../general/lineup-button.svg`);
     }
 
     if (result.doGraphics == false) {
-        tile.find('.right-area .btnGraphics').hide();
+      tile.find('.right-area .btnGraphics').hide();
     }
 
     // Home team
@@ -230,52 +235,52 @@ $(document).ready(function () {
 
     // LSD (only on desktop)
     if (result.homeTeam.lsd.total != null) {
-        thead.append(`<th class="lsd-lsfe" colspan=3>LSD/LSFE</th>`);
-        homeRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.homeTeam.lsd.total != null ? Number(result.homeTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.homeTeam.lsfe == true ? "*" : ""}</td>`)
-        awayRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.awayTeam.lsd.total != null ? Number(result.awayTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.awayTeam.lsfe == true ? "*" : ""}</td>`)
+      thead.append(`<th class="lsd-lsfe" colspan=3>LSD/LSFE</th>`);
+      homeRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.homeTeam.lsd.total != null ? Number(result.homeTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.homeTeam.lsfe == true ? "*" : ""}</td>`)
+      awayRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.awayTeam.lsd.total != null ? Number(result.awayTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.awayTeam.lsfe == true ? "*" : ""}</td>`)
     }
     else {
-        thead.append(`<th class="lsd-lsfe" colspan=2>LSFE</th><th></th>`);
-        homeRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.homeTeam.lsfe == true ? "*" : ""}</td><td></td>`)
-        awayRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.awayTeam.lsfe == true ? "*" : ""}</td><td></td>`)
+      thead.append(`<th class="lsd-lsfe" colspan=2>LSFE</th><th></th>`);
+      homeRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.homeTeam.lsfe == true ? "*" : ""}</td><td></td>`)
+      awayRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.awayTeam.lsfe == true ? "*" : ""}</td><td></td>`)
     }
 
     // ENDS
     var idx = 1;
     Object.entries(result.ends).forEach(([endName, endDetails]) => {
-        thead.append(`<th>${endName}</th>`);
+      thead.append(`<th>${endName}</th>`);
 
-        var homeClass = "";
-        var awayClass = "";
-        var homeSpanClass = "";
-        var awaySpanClass = "";
+      var homeClass = "";
+      var awayClass = "";
+      var homeSpanClass = "";
+      var awaySpanClass = "";
 
-        // Hammer                   
-        if (result.cEnd == idx && result.homeTeam.lsce == true) {
-            homeClass = homeClass + "hammer";
-        }
-        if (result.cEnd == idx && result.awayTeam.lsce == true) {
-            awayClass = awayClass + "hammer";
-        }
+      // Hammer                   
+      if (result.cEnd == idx && result.homeTeam.lsce == true) {
+        homeClass = homeClass + "hammer";
+      }
+      if (result.cEnd == idx && result.awayTeam.lsce == true) {
+        awayClass = awayClass + "hammer";
+      }
 
-        // Powerplay
-        if (result.homeTeam.ppE1 == idx || result.homeTeam.ppE2 == idx) {
-            homeSpanClass = "powerplay";
-        }
-        if (result.awayTeam.ppE1 == idx || result.awayTeam.ppE2 == idx) {
-            awaySpanClass = "powerplay";
-        }
+      // Powerplay
+      if (result.homeTeam.ppE1 == idx || result.homeTeam.ppE2 == idx) {
+        homeSpanClass = "powerplay";
+      }
+      if (result.awayTeam.ppE1 == idx || result.awayTeam.ppE2 == idx) {
+        awaySpanClass = "powerplay";
+      }
 
-        // Extra end placeholder, no border (for small displays)
-        if (endName == "") {
-            homeClass = homeClass + " no-border";
-            awayClass = awayClass + " no-border";
-        }
+      // Extra end placeholder, no border (for small displays)
+      if (endName == "") {
+        homeClass = homeClass + " no-border";
+        awayClass = awayClass + " no-border";
+      }
 
-        homeRow.append(`<td${homeClass != "" ? ` class=\"${homeClass}\"` : ""}><span${homeSpanClass != "" ? ` class=\"${homeSpanClass}\"` : ""}>${endDetails.h}</span></td>`);
-        awayRow.append(`<td${awayClass != "" ? ` class=\"${awayClass}\"` : ""}><span${awaySpanClass != "" ? ` class=\"${awaySpanClass}\"` : ""}>${endDetails.a}</span></td>`);
+      homeRow.append(`<td${homeClass != "" ? ` class=\"${homeClass}\"` : ""}><span${homeSpanClass != "" ? ` class=\"${homeSpanClass}\"` : ""}>${endDetails.h}</span></td>`);
+      awayRow.append(`<td${awayClass != "" ? ` class=\"${awayClass}\"` : ""}><span${awaySpanClass != "" ? ` class=\"${awaySpanClass}\"` : ""}>${endDetails.a}</span></td>`);
 
-        idx++;
+      idx++;
     });
 
     // Score
@@ -290,7 +295,7 @@ $(document).ready(function () {
 
     // Hide the header if the LSFE is already decided
     if ((result.homeTeam.lsd.total == null && result.homeTeam.lsfe == true) || (result.awayTeam.lsd.total == null && result.awayTeam.lsfe == true)) {
-        tile.find('.details').hide();
+      tile.find('.details').hide();
     }
 
     homeDetails.find('td.noc').text(result.homeTeam.noc);
@@ -324,7 +329,7 @@ $(document).ready(function () {
       .withUrl(`${apiUrl}/notificationHub`, { withCredentials: false })
       .build();
 
-      stoneConnection.on("StoneUpdated", function (data) {
+    stoneConnection.on("StoneUpdated", function (data) {
       latestLiveData = data;
 
       if ($("#is_live").is(":checked")) {
@@ -358,7 +363,7 @@ $(document).ready(function () {
       }
 
       var callUrl = `${apiUrl}/Stone/LiveStones`
-      
+
       if (Object.keys(urlParams).length > 0) {
         const keys = Object.keys(urlParams);
 
@@ -398,57 +403,56 @@ $(document).ready(function () {
 
   async function fetchStonesAsync(endId) {
     try {
-        const urlParams = {}
-        if (season != null) {
-          urlParams["season"] = season;
-        }
-        if (competition != null) {
-          urlParams["competition"] = competition;
-        }
-        if (eventId != null) {
-          urlParams["eventId"] = eventId;
-        }
-        if (sessionId != null) {
-          urlParams["sessionId"] = sessionId;
-        }
-        if (gameId != null) {
-          urlParams["gameId"] = gameId;
-        }
+      const urlParams = {}
+      if (season != null) {
+        urlParams["season"] = season;
+      }
+      if (competition != null) {
+        urlParams["competition"] = competition;
+      }
+      if (eventId != null) {
+        urlParams["eventId"] = eventId;
+      }
+      if (sessionId != null) {
+        urlParams["sessionId"] = sessionId;
+      }
+      if (gameId != null) {
+        urlParams["gameId"] = gameId;
+      }
 
-        urlParams["endId"] = endId;
+      urlParams["endId"] = endId;
 
-        var callUrl = `${apiUrl}/Stone/Stones`
-        
-        if (Object.keys(urlParams).length > 0) {
-          const keys = Object.keys(urlParams);
+      var callUrl = `${apiUrl}/Stone/Stones`
 
-          for (let i = 0; i < keys.length; i++) {
-            const key = keys[i];
-            callUrl = callUrl + `${i == 0 ? "?" : "&"}${key}=${urlParams[key]}`
-          }
+      if (Object.keys(urlParams).length > 0) {
+        const keys = Object.keys(urlParams);
+
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i];
+          callUrl = callUrl + `${i == 0 ? "?" : "&"}${key}=${urlParams[key]}`
         }
+      }
 
 
-        const response = await fetch(callUrl);
-        if (!response.ok) {
-            throw new Error(`Error: ${response.statusText}`);
-        }
-        return await response.json();
+      const response = await fetch(callUrl);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+      return await response.json();
     } catch (error) {
-        console.error('Error fetching data:', error);
+      console.error('Error fetching data:', error);
     }
-}
+  }
 
 
   function updateLiveData(data) {
     shotData = data;
-    
-    if (data.length > 0) {
-      refreshShotList();
-      renderDots();
-      
-      goTo(shotData.length - 1);
-      
+
+      if (shotData.stones.length > 0) {
+        refreshStatList();
+        refreshShotList();
+        renderDots();
+        goTo(shotData.stones.length - 1);
     }
   }
 
@@ -464,7 +468,7 @@ $(document).ready(function () {
           row_title: "Fourth",
           row_info_red: "Skip",
           row_value_red: "SCHMIDT J.",
-          row_value_yellow: "WIPF K.", 
+          row_value_yellow: "WIPF K.",
           row_info_yellow: "Skip"
         },
         {
@@ -599,7 +603,7 @@ $(document).ready(function () {
     if (isManual && $("#is_live").is(":checked")) {
       $("#is_live").prop('checked', false);
     }
-    
+
     currentIndex = Math.max(0, Math.min(index, totalItems - 1));
     $slider.css({
       // transition: "transform 0.3s ease",
@@ -608,7 +612,7 @@ $(document).ready(function () {
     });
 
     // Update shot info
-    const shotInfo = shotData[currentIndex];
+    const shotInfo = shotData.stones[currentIndex];
     if (shotInfo === undefined) {
       return;
     }
@@ -617,12 +621,25 @@ $(document).ready(function () {
     $(".svg-container").eq(index).html(shotInfo.svg + `<div class="svg-touch-overlay"></div>`);
     makeSVGResponsive($(".svg-container").eq(index).find("svg"));
 
+    // Hotfix, if the circle is down, move the navigation bullets up
+      var svgDoc = parser.parseFromString(shotInfo.svg, "image/svg+xml");
+      var targetCircle = svgDoc.querySelector('circle[r="120.0"]');
+      var cy = parseFloat(targetCircle.getAttribute("cy"));
+      if (cy > 160) {
+        $(".index-buttons").css("top", "0.5%");
+        $(".index-buttons").css("margin-top", "0");
+      }
+      else {
+        $(".index-buttons").css("margin-top", "1rem");
+        $(".index-buttons").css("top", "");
+      }
+
     // add the next svg for a smarted swipe
-    if (shotData.length >= currentIndex) {
+    if (shotData.stones.length >= currentIndex) {
       // $(".svg-container").eq(index+1).html(shotData[currentIndex].svg + `<div class="svg-touch-overlay"></div>`);
-      makeSVGResponsive($(".svg-container").eq(index+1).find("svg"));
+      makeSVGResponsive($(".svg-container").eq(index + 1).find("svg"));
     }
-    
+
     $("#currentShot .competitor td.flag img").attr('src', `https://livescores.worldcurling.org/flags/${shotInfo.noc}.svg`);
     $("#currentShot .competitor td.flag img").attr('alt', shotInfo.teamName);
     $("#currentShot .competitor span.lastname").html(shotInfo.lastName);
@@ -642,7 +659,7 @@ $(document).ready(function () {
       .addClass(shotInfo.homeTeam == 1 ? "odd" : "even");
 
     // Update stone select
-    $(".endstone select.current-end").val(`${shotInfo.endID-1}`);
+    $(".endstone select.current-end").val(`${shotInfo.endID - 1}`);
     $(".endstone select.current-stone").val(`${index}`);
 
     updateButtons();
@@ -662,17 +679,17 @@ $(document).ready(function () {
     $("#slider").empty();
     $(".endstone select.current-stone").empty();
 
-    shotData.forEach((shot, idx) => {
+    shotData.stones.forEach((shot, idx) => {
 
       $("#slider").append(`<div class="item">
       <div class="svg-container">${shot.svg}</div>
-      </div>`); 
+      </div>`);
 
-      $(".endstone select.current-stone").append(`<option value="${idx}">Stone ${idx+1}</option>`);
+      $(".endstone select.current-stone").append(`<option value="${idx}">Stone ${idx + 1}</option>`);
     });
 
     totalItems = $slider.children().length;
-    
+
     renderDots();
     goTo(0);
   }
@@ -763,7 +780,7 @@ $(document).ready(function () {
       $el.css("font-size", maxSize + "px");
     }
     else {
-      while ($el[0].scrollWidth >= maxWidth+0.01  && fontSize > minSize) {
+      while ($el[0].scrollWidth >= maxWidth + 0.01 && fontSize > minSize) {
         fontSize--;
         $el.css("font-size", fontSize + "px");
       }
@@ -787,14 +804,14 @@ $(document).ready(function () {
         let $newRow = $template.clone();
         $newRow.removeClass('stat-row-template');
         $newRow.addClass('stat-row');
-      
-        $('.stats-container').append($newRow); 
+
+        $('.stats-container').append($newRow);
       }
     }
 
     // Cleanup the subsequent rows
     for (let j = currentStats.rows.length; j < rowCount; j++) {
-      $(`.stat-row:eq(${j-3})`).remove();
+      $(`.stat-row:eq(${j - 3})`).remove();
     }
 
     // Cleanup all the infos
@@ -810,7 +827,7 @@ $(document).ready(function () {
     }
 
     if (currentStats.is_stat) { // Stat slide
-    
+
       $(".stats-container").find(".text-line").hide();
       $(".stats-container").find(".bar-line").show();
 
@@ -829,40 +846,40 @@ $(document).ready(function () {
         if (fromCenter) {
           denominator = parseFloat(currentStats.rows[idx].row_value_max) * 2;
           $row.find(".mirror-bar").addClass("fromCenter");
-        }  
+        }
         else {
           $row.find(".mirror-bar").removeClass("fromCenter");
           const dataLeft = parseFloat($row.data('left'));
           const dataRight = parseFloat($row.data('right'));
-    
+
           // Check if data-left is a valid number and update denominator
           if (!isNaN(dataLeft)) {
             denominator += dataLeft;
           }
-    
+
           // Check if data-right is a valid number and update denominator
           if (!isNaN(dataRight)) {
             denominator += dataRight;
           }
         }
-        
+
         const left = parseFloat($row.data("left"), 10);
         const right = parseFloat($row.data("right"), 10);
-  
+
         var leftPct = !isNaN(left) ? parseFloat(((left / denominator) * 100).toFixed(2)) : 0;
         var rightPct = !isNaN(right) ? parseFloat(((right / denominator) * 100).toFixed(2)) : 0;
 
         // If the rounds do not add up to exactly 100, give it to the red team
-        let leftRight = leftPct+rightPct;
+        let leftRight = leftPct + rightPct;
         if (fromCenter == false && leftRight > 0 && leftRight < 100) {
           leftPct = leftPct + 100 - leftRight;
         }
 
         // Special case, bar width set to 100%
         if (currentStats.rows[idx].row_value_max == -1) {
-            leftPct = rightPct = 50;
+          leftPct = rightPct = 50;
         }
-  
+
         // Normalize
         if (!isNaN(left)) {
           $row.find(".value-left").html(currentStats.unit != null ? left + `<span class='unit'>${currentStats.unit}</span>` : left);
@@ -870,7 +887,7 @@ $(document).ready(function () {
         else {
           $row.find(".value-left").html("-");
         }
-  
+
         if (!isNaN(right)) {
           $row.find(".value-right").html(currentStats.unit != null ? right + `<span class='unit'>${currentStats.unit}</span>` : right);
         }
@@ -880,7 +897,7 @@ $(document).ready(function () {
 
         // Reset bar values
         $row.find(".bar-left, .bar-right").html("");
-  
+
         // Animate
         setTimeout(() => {
           $row.find(".bar-left").html(currentStats.rows[idx].row_bar_value_red);
@@ -917,33 +934,26 @@ $(document).ready(function () {
     });
   }
 
-  
+
   function refreshShotList() {
-
-    if ($slider.length === 0) {
-      // Container not ready — try again shortly
-      return setTimeout(() => refreshShotList(), 50);
-    }
-
     $slider.empty();
     $(".endstone select.current-end").empty();
     $(".endstone select.current-stone").empty();
-    
-    if (shotData.length > 0) {
-      let currentEnd = shotData[0].endID;
+
+    if (shotData.stones.length > 0) {
+      let currentEnd = shotData.stones[0].endID;
 
       for (let i = 0; i < currentEnd; i++) {
-        $(".endstone select.current-end").append(`<option value="${i}">End ${i+1}</option>`);
+        $(".endstone select.current-end").append(`<option value="${i}">End ${i + 1}</option>`);
       }
     }
 
-    shotData.forEach((shot, idx) => {
-      console.log(shot);
+    shotData.stones.forEach((shot, idx) => {
       $slider.append(`<div class="item">
       <div class="svg-container">${shot.svg}</div>
-      </div>`); 
+      </div>`);
 
-      $(".endstone select.current-stone").append(`<option value="${idx}">Stone ${idx+1}</option>`);
+      $(".endstone select.current-stone").append(`<option value="${idx}">Stone ${idx + 1}</option>`);
     });
 
     totalItems = $slider.children().length;
@@ -972,254 +982,243 @@ $(document).ready(function () {
   });
 
 
-  $(document).on('change', "select.current-end", function() {
-    goToHistory(parseInt($(this).val())+1);
+  $(document).on('change', "select.current-end", function () {
+    goToHistory(parseInt($(this).val()) + 1);
   });
 
-  $(document).on('change', "select.current-stone", function() {
+  $(document).on('change', "select.current-stone", function () {
     goTo(parseInt($(this).val()), true);
   });
 
 
 
-    $firstBtn = $("#firstBtn");
-    $prevBtn = $("#prevBtn");
-    $nextBtn = $("#nextBtn");
-    $lastBtn = $("#lastBtn");
-    $indexButtonsContainer = $("#indexButtons");
-    $arrowPrev = $("#arrowPrev");
-    $arrowNext = $("#arrowNext");
+  $firstBtn = $("#firstBtn");
+  $prevBtn = $("#prevBtn");
+  $nextBtn = $("#nextBtn");
+  $lastBtn = $("#lastBtn");
+  $indexButtonsContainer = $("#indexButtons");
+  $arrowPrev = $("#arrowPrev");
+  $arrowNext = $("#arrowNext");
 
 
-    // refreshShotList();
+  // refreshShotList();
 
-    // Button clicks
-    $firstBtn.on("click", () => goTo(0, true));
-    $prevBtn.on("click", () => goTo(currentIndex - 1, true));
-    $nextBtn.on("click", () => goTo(currentIndex + 1, true));
-    $lastBtn.on("click", () => goTo(totalItems - 1, true));
+  // Button clicks
+  $firstBtn.on("click", () => goTo(0, true));
+  $prevBtn.on("click", () => goTo(currentIndex - 1, true));
+  $nextBtn.on("click", () => goTo(currentIndex + 1, true));
+  $lastBtn.on("click", () => goTo(totalItems - 1, true));
 
-    $arrowPrev.on("click", () => goTo(currentIndex - 1, true));
-    $arrowNext.on("click", () => goTo(currentIndex + 1, true));
+  $arrowPrev.on("click", () => goTo(currentIndex - 1, true));
+  $arrowNext.on("click", () => goTo(currentIndex + 1, true));
 
-    $("#bfbblue").on("click", () => switchTheme("blue"));
-    $("#bfbwhite").on("click", () => switchTheme("white"));
+  $("#bfbblue").on("click", () => switchTheme("blue"));
+  $("#bfbwhite").on("click", () => switchTheme("white"));
 
 
-    // ---------- //
-    // SVG slider //
-    // ---------- //
-    const $overlay = $("#slider");
-    let pinchActive = false;
+  // ---------- //
+  // SVG slider //
+  // ---------- //
+  const $overlay = $("#slider");
+  let pinchActive = false;
 
-    $slider.on("touchstart", function (e) {
-      const touches = e.originalEvent.touches;
-      if (touches.length > 1) {
-        // two-finger pinch → allow browser zoom/pan
-        pinchActive = true;
-        $overlay.css("pointer-events", "none");
-        return;
-      }
+  $slider.on("touchstart", function (e) {
+    const touches = e.originalEvent.touches;
+    if (touches.length > 1) {
+      // two-finger pinch → allow browser zoom/pan
+      pinchActive = true;
+      $overlay.css("pointer-events", "none");
+      return;
+    }
+    pinchActive = false;
+    startX = touches[0].clientX;
+    isDragging = true;
+    $slider.css("transition", "none");
+  });
+
+  $slider.on("touchmove", function (e) {
+    const touches = e.originalEvent.touches;
+    if (pinchActive || !isDragging || touches.length > 1) return; // ignore pinch
+    currentX = touches[0].clientX;
+    const deltaX = currentX - startX;
+    $slider.css(
+      "transform",
+      `translateX(calc(-${currentIndex * 100}% + ${deltaX}px))`
+    );
+  });
+
+  $slider.on("touchend", function (e) {
+    if (pinchActive) {
+      // finished pinch → re-enable overlay
       pinchActive = false;
-      startX = touches[0].clientX;
-      isDragging = true;
-      $slider.css("transition", "none");
-    });
-    
-    $slider.on("touchmove", function (e) {
-      const touches = e.originalEvent.touches;
-      if (pinchActive || !isDragging || touches.length > 1) return; // ignore pinch
-      currentX = touches[0].clientX;
-      const deltaX = currentX - startX;
-      $slider.css(
-        "transform",
-        `translateX(calc(-${currentIndex * 100}% + ${deltaX}px))`
-      );
-    });
-    
-    $slider.on("touchend", function (e) {
-      if (pinchActive) {
-        // finished pinch → re-enable overlay
-        pinchActive = false;
-        $overlay.css("pointer-events", "auto");
-        return;
+      $overlay.css("pointer-events", "auto");
+      return;
+    }
+    if (!isDragging) return;
+    isDragging = false;
+    const deltaX = currentX - startX;
+    if (Math.abs(deltaX) > swipeThreshold) {
+      if (deltaX < 0 && currentIndex < totalItems - 1) {
+        currentIndex++;
+      } else if (deltaX > 0 && currentIndex > 0) {
+        currentIndex--;
       }
+    }
+    goTo(currentIndex);
+  });
+
+
+  $('span.btn-slider').on('click', function () {
+
+    var target = $(this).data("target");
+
+    if (target == "stats") {
+      var $h2h = $('#head-to-head')
+      $h2h.slideToggle(500);
+      if ($h2h.is(':visible')) {
+        $h2h.css('display', 'flex');
+      }
+      initStats();
+      animateAllStats(0);
+    }
+    else if (target == "scoreboard") {
+
+        var $scb = $('table.scoreboard');
+      $scb.slideToggle(500);
+      if ($scb.is(':visible')) {
+        $scb.css('display', 'table');
+      }
+    }
+    else if (target == "live") {
+      if (!$("#is_live").is(":checked")) {
+        updateLiveData(latestLiveData);
+      }
+    }
+
+    scrollToGameCenter();
+  });
+
+
+
+  // ------------ //
+  // Stats Slider //
+  // ------------ //
+  function initStats() {
+    const $h2h = $("#head-to-head");
+    const $headers = $("#head-to-head .headers");
+    const $statSlider = $("#head-to-head .headers-slider");
+    const $items = $statSlider.children();
+    const total = $items.length;
+    let current = 0;
+    let expanded = false;
+
+
+    // TODO PZ move that out
+    function goToStat(index) {
+      // wrap index around
+      if (index < 0) {
+        current = total - 1;
+      } else if (index >= total) {
+        current = 0;
+      } else {
+        current = index;
+      }
+
+      $statSlider.css("transition", "transform 0.3s ease");
+      $statSlider.css("transform", `translateX(-${current * 100}%)`);
+
+      $items.removeClass("active").eq(current).addClass("active");
+
+      animateAllStats(current);
+    }
+
+    $("#head-to-head").on("click", function (e) {
+      if (expanded && !$(e.target).closest(".headers").length) {
+        $headers.removeClass("expanded");
+        expanded = false;
+      }
+    });
+
+    // In expanded mode: clicking item jumps and closes menu
+    $items.on("click", function (e) {
+      if (expanded) {
+        $("#head-to-head .headers").removeClass("expanded");
+        expanded = false;
+        goToStat($(this).index());
+        e.stopPropagation();
+      }
+    });
+
+    // Toggle expand on click of the headers box
+    $headers.on("click", function () {
+      expanded = !expanded;
+      $(this).toggleClass("expanded", expanded);
+    });
+
+
+
+    // Arrow clicks
+    $("#head-to-head .header-prev").on("click", function (e) {
+      e.stopPropagation();
+      goToStat(current - 1);
+    });
+    $("#head-to-head .header-next").on("click", function (e) {
+      e.stopPropagation();
+      goToStat(current + 1);
+    });
+
+    // Swipe
+    const $leftFeedback = $("#head-to-head .swipe-feedback.left");
+    const $rightFeedback = $("#head-to-head .swipe-feedback.right");
+    let startX = 0, currentX = 0, isDragging = false;
+    const swipeThreshold = 50;
+
+    // --- Swipe detection ---
+    $h2h.on("touchstart", function (e) {
+      startX = e.originalEvent.touches[0].clientX;
+      isDragging = true;
+    });
+
+    $h2h.on("touchmove", function (e) {
+      if (!isDragging) return;
+      currentX = e.originalEvent.touches[0].clientX;
+      const deltaX = currentX - startX;
+
+      // Calculate relative intensity (0–1)
+      const intensity = Math.min(1, Math.abs(deltaX) / 150);
+
+      if (deltaX < 0) {
+        console.log(intensity);
+        // swiping left → darken right side
+        $rightFeedback.css("opacity", intensity);
+        $leftFeedback.css("opacity", 0);
+      } else {
+        // swiping right → darken left side
+        $leftFeedback.css("opacity", intensity);
+        $rightFeedback.css("opacity", 0);
+      }
+    });
+
+    $h2h.on("touchend", function (e) {
       if (!isDragging) return;
       isDragging = false;
-      const deltaX = currentX - startX;
-      if (Math.abs(deltaX) > swipeThreshold) {
-        if (deltaX < 0 && currentIndex < totalItems - 1) {
-          currentIndex++;
-        } else if (deltaX > 0 && currentIndex > 0) {
-          currentIndex--;
+
+      $leftFeedback.css("opacity", 0);
+      $rightFeedback.css("opacity", 0);
+
+      const dx = currentX - startX;
+      if (Math.abs(dx) > swipeThreshold) {
+        if (dx < 0) {
+          goToStat(current + 1);
+        }
+        else {
+          goToStat(current - 1);
         }
       }
-      goTo(currentIndex);
     });
 
-
-    $('span.btn-slider').on('click', function () {
-
-      var target = $(this).data("target");
-
-      if (target == "stats") {
-        var $h2h = $('#head-to-head')
-        $h2h.slideToggle(500);
-        if ($h2h.is(':visible')) {
-          $h2h.css('display', 'flex');
-        }
-        initStats();
-        animateAllStats(0);
-      }
-      else if (target == "scoreboard") {
-
-        var $scb = $('table.scoreboard')
-        $scb.slideToggle(500);
-        if ($scb.is(':visible')) {
-          $scb.css('display', 'table');
-        }
-      }
-      else if (target == "live") {
-        if (!$("#is_live").is(":checked")) {
-          updateLiveData(latestLiveData);
-        }
-      }
-
-      scrollToGameCenter();
-    });
-
-
-
-    // ------------ //
-    // Stats Slider //
-    // ------------ //
-    function initStats() {
-      const $h2h = $("#head-to-head");
-      const $headers = $("#head-to-head .headers");
-      const $statSlider = $("#head-to-head .headers-slider");
-      const $items = $statSlider.children();
-      const total = $items.length;
-      let current = 0;
-      let expanded = false;
-    
-      
-      // TODO PZ move that out
-      function goToStat(index) {
-        // wrap index around
-        if (index < 0) {
-          current = total - 1;
-        } else if (index >= total) {
-          current = 0;
-        } else {
-          current = index;
-        }
-    
-        $statSlider.css("transition", "transform 0.3s ease");
-        $statSlider.css("transform", `translateX(-${current * 100}%)`);
-    
-        $items.removeClass("active").eq(current).addClass("active");
-
-        animateAllStats(current);
-      }
-
-      $("#head-to-head").on("click", function (e) {
-        if (expanded && !$(e.target).closest(".headers").length) {
-          $headers.removeClass("expanded");
-          expanded = false;
-        }
-      });
-
-      // In expanded mode: clicking item jumps and closes menu
-      $items.on("click", function (e) {
-        if (expanded) {
-          $("#head-to-head .headers").removeClass("expanded");
-          expanded = false;
-          goToStat($(this).index());
-          e.stopPropagation();
-        }
-      });
-
-      // Toggle expand on click of the headers box
-      $headers.on("click", function () {
-        expanded = !expanded;
-        $(this).toggleClass("expanded", expanded);
-      });
-
-
-    
-      // Arrow clicks
-      $("#head-to-head .header-prev").on("click", function (e) {
-        alert("OK");
-        e.stopPropagation();
-        goToStat(current - 1);
-      });
-      $("#head-to-head .header-next").on("click", function (e) {
-        e.stopPropagation();
-        goToStat(current + 1);
-      });
-    
-      // Swipe
-      const $leftFeedback = $("#head-to-head .swipe-feedback.left");
-      const $rightFeedback = $("#head-to-head .swipe-feedback.right");
-      let startX = 0, currentX = 0, isDragging = false;
-      const swipeThreshold = 50;
-
-      // --- Swipe detection ---
-      $h2h.on("touchstart", function(e) {
-        startX = e.originalEvent.touches[0].clientX;
-        isDragging = true;
-      });
-
-      $h2h.on("touchmove", function(e)  {
-        if (!isDragging) return;
-        currentX = e.originalEvent.touches[0].clientX;
-        const deltaX = currentX - startX;
-
-        // Calculate relative intensity (0–1)
-        const intensity = Math.min(1, Math.abs(deltaX) / 150);
-
-        if (deltaX < 0) {
-          console.log(intensity);
-          // swiping left → darken right side
-          $rightFeedback.css("opacity", intensity);
-          $leftFeedback.css("opacity", 0);
-        } else {
-          // swiping right → darken left side
-          $leftFeedback.css("opacity", intensity);
-          $rightFeedback.css("opacity", 0);
-        }
-      });
-
-      $h2h.on("touchend", function(e) {
-        if (!isDragging) return;
-        isDragging = false;
-
-        $leftFeedback.css("opacity", 0);
-        $rightFeedback.css("opacity", 0);
-
-        const dx = currentX - startX;
-        if (Math.abs(dx) > swipeThreshold) {
-          if (dx < 0) {
-            goToStat(current + 1);
-          }
-          else {
-            goToStat(current - 1);
-          }
-        }
-      });
-
-      goToStat(0);
-    };
-    
-
-
-
-    // Init
-    // renderDots();
-    // refreshStatList();
-    // goTo(0);
-
-
+    goToStat(0);
+  };
 
 
 
@@ -1229,18 +1228,87 @@ $(document).ready(function () {
   function setOnlineHeader(online) {
     var updateIcon;
     if (document.getElementById('RefreshButton') != null)
-        updateIcon = document.getElementById('RefreshButton');
+      updateIcon = document.getElementById('RefreshButton');
     if (online) {
-        $sessionHeader.removeClass("offline");
-        $sessionHeader.addClass("online");
-        if (updateIcon != null)
-            updateIcon.src = "../general/online.png";
+      $sessionHeader.removeClass("offline");
+      $sessionHeader.addClass("online");
+      if (updateIcon != null)
+        updateIcon.src = "../general/online.png";
     }
     else {
-        $sessionHeader.removeClass("online");
-        $sessionHeader.addClass("offline");
-        if (updateIcon != null)
-            updateIcon.src = "../general/offline.png";
+      $sessionHeader.removeClass("online");
+      $sessionHeader.addClass("offline");
+      if (updateIcon != null)
+        updateIcon.src = "../general/offline.png";
     }
-}
+  }
+
+
+
+
+
+
+
+  // --- RECORDING FEATURE ---
+  if (isDebug == 1) {
+
+    let signalrRecordings = [];
+
+    // Capture both event streams
+    function recordEvent(source, eventName, data) {
+      signalrRecordings.push({
+        timestamp: new Date().toISOString(),
+        source,
+        eventName,
+        data
+      });
+    }
+
+    // Hook into both SignalR handlers
+    // Wrap ReceiveMessage
+    const originalRenderTileData = renderTileData;
+    renderTileData = function (resultList) {
+      recordEvent("Results", "ReceiveMessage", resultList);
+      originalRenderTileData(resultList);
+    };
+
+    // Wrap StoneUpdated
+    const originalUpdateLiveData = updateLiveData;
+    updateLiveData = function (data) {
+      recordEvent("Stones", "StoneUpdated", data);
+      originalUpdateLiveData(data);
+    };
+
+    // Periodically download to JSON file (every 2 minutes)
+    setInterval(() => {
+      if (signalrRecordings.length > 0) {
+        const blob = new Blob(
+          [JSON.stringify(signalrRecordings, null, 2)],
+          { type: "application/json" }
+        );
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `signalr-recording-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        // Clear after saving
+        // signalrRecordings = [];
+      }
+    }, 120000); // every 120 seconds
+
+    // Optional: save once before leaving
+    window.addEventListener("beforeunload", () => {
+      if (signalrRecordings.length > 0) {
+        const blob = new Blob([JSON.stringify(signalrRecordings, null, 2)], { type: "application/json" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `signalr-recording-final.json`;
+        a.click();
+      }
+    });
+
+  }
+
+
 });

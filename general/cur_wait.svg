@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+	<circle transform-origin="center" fill="#FFFFFF" opacity=".8" stroke="#FFFFFF" stroke-width="0" stroke-linecap="round" cx="100" cy="100" r="100"/>
+	<circle transform-origin="center" fill="none" opacity=".1" stroke="#003FAF" stroke-width="30" stroke-linecap="round" cx="100" cy="100" r="85"/>
+	<circle transform-origin="center" fill="none" opacity=".1" stroke="#00E7FF" stroke-width="30" stroke-linecap="round" cx="100" cy="100" r="25"/>
+	<radialGradient id="6ft" cx=".4" fx=".4" cy="0.6" fy="0.6" gradientTransform="scale(3.7)">
+		<stop offset="0" stop-color="#003FAF"/>
+		<stop offset=".3" stop-color="#003FAF" stop-opacity=".3"/>
+		<stop offset=".5" stop-color="#003FAF" stop-opacity=".6"/>
+		<stop offset=".8" stop-color="#003FAF" stop-opacity=".9"/>
+		<stop offset="1" stop-color="#003FAF" stop-opacity="0"/>
+	</radialGradient>
+		<radialGradient id="2ft" cx=".5" fx=".5" cy=".5" fy=".5" gradientTransform="scale(3.7)">
+		<stop offset="0" stop-color="#00E7FF"/>
+		<stop offset=".3" stop-color="#00E7FF" stop-opacity=".3"/>
+		<stop offset=".6" stop-color="#00E7FF" stop-opacity=".6"/>
+		<stop offset=".8" stop-color="#00E7FF" stop-opacity=".9"/>
+		<stop offset="1" stop-color="#00E7FF" stop-opacity="0"/>
+	</radialGradient>
+	<circle transform-origin="center" fill="none" stroke="url(#6ft)" stroke-width="30" stroke-linecap="round" stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="85">
+		<animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="2.5" values="0;360" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"/>
+	</circle>
+	<circle transform-origin="center" fill="none" stroke="url(#2ft)" stroke-width="30" stroke-linecap="round" stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="25">
+		<animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="2.5" values="0;360" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"/>
+	</circle>
+
+	<!--	<circle transform-origin="center" fill="none" stroke="url(#2ft)" stroke-width="30" stroke-linecap="round" cx="100" cy="100" r="25">
+		<animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="3" values="0;360" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"/>
+    </circle>-->
+</svg>
