@@ -1029,7 +1029,7 @@ td.lsfe {
   padding-top: 50px;
   margin: auto;
   width: auto;
-  font-size: 24px;
+  font-size: 22px;
   text-align: center;
   align-items: center;
   line-height: 100vh;
@@ -1043,6 +1043,8 @@ td.lsfe {
   content: "No stone played yet";
   color: #777;
   font-style: italic;
+  text-align: center;
+  width: 100%;
 }
 
 #slider.notconnected:empty::before {
@@ -1384,4 +1386,28 @@ input:checked + .btn-slider::before {
 
 .row, .row td, .matchup-tile table.scoreboard td.noc, .matchup-tile table.details-content td.noc {
   font-size: clamp(16px, 2vw, 20px) !important;
+}
+
+
+.text-line .longName, 
+.bar-line .longName{
+  display: block;
+}
+
+.text-line .shortName, 
+.bar-line .shortName{
+  display: none;
+}
+
+@media screen and (max-width: 480px) {
+
+  .text-line .longName, 
+  .bar-line .longName{
+    display: none;
+  }
+
+  .text-line .shortName, 
+  .bar-line .shortName{
+    display: block;
+  }
 }
