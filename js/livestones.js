@@ -136,7 +136,7 @@ $('table.scoreboard').hide();
 
 
   function renderTileData(data) {
-    var result = data.find(g => g.gameID === gameId);
+    var result = data.find(g => g.gameID == gameId);
 
     if (result) {
       feedTileUI($gameTile, result);
