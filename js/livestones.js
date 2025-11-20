@@ -1,7 +1,7 @@
 $(document).ready(function () {
   // Version 1.3rc1 from 19.11.25
-  const apiUrl = "https://livescores.worldcurling.org/curlitsse";
-  //const apiUrl = "http://sse.curlit.local:5057";
+  // const apiUrl = "https://livescores.worldcurling.org/curlitsse";
+  const apiUrl = "http://sse.curlit.local:5057";
   // const apiUrl = "https://curlit.com/curlitsse";
 
   const curlTasks = {
@@ -1024,7 +1024,7 @@ $('table.scoreboard').hide();
   });
 
   // In expanded mode: clicking item jumps and closes menu
-  $("#head-to-head .headers-slider").on("click", function (e) {
+  $("#head-to-head .headers-slider").on("click", "> *", function (e) {
     if (expanded) {
       $("#head-to-head .headers").removeClass("expanded");
       expanded = false;

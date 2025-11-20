@@ -1179,7 +1179,7 @@ td.lsfe {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  line-height: 4vh;
+  line-height: 5vh;
   font-size: 1rem;
   text-align: left;
 }
