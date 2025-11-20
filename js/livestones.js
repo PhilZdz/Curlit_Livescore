@@ -1,7 +1,7 @@
 $(document).ready(function () {
-  // Version 0.1 from 18.10.25
-  //const apiUrl = "https://livescores.worldcurling.org/curlitsse";
-  const apiUrl = "http://sse.curlit.local:5057";
+  // Version 1.3rc1 from 19.11.25
+  const apiUrl = "https://livescores.worldcurling.org/curlitsse";
+  //const apiUrl = "http://sse.curlit.local:5057";
   // const apiUrl = "https://curlit.com/curlitsse";
 
   const curlTasks = {
@@ -42,11 +42,11 @@ $(document).ready(function () {
   const competitionCode = pathSegments[1] ?? competition;
 
   // Hard-coded values if needed
-  season = 2526;
-  competition = "ECCA";
-  eventId = 2;
-  sessionId = 1;
-  gameId = 2;
+  // season = 2526;
+  // competition = "ECCA";
+  // eventId = 2;
+  // sessionId = 1;
+  // gameId = 2;
 
   const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}`;
 
