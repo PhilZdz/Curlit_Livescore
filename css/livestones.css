@@ -1,4 +1,6 @@
-﻿#loader {
+﻿/* Version 1.3rc2 from 20.11.25  */
+
+#loader {
     background-image: url(../img/curloading.gif);
     background-size: 100px;
     background-repeat: no-repeat;
@@ -698,7 +700,6 @@ td.lsfe {
 
 
 #head-to-head .team-left {
-  background-image: url(https://livescores.worldcurling.org/flags/DEN.svg);
   width: 125%;
   height: 125%;
   position: absolute;
@@ -710,7 +711,6 @@ td.lsfe {
 
 
 #head-to-head .team-right {
-  background-image: url(https://livescores.worldcurling.org/flags/CAN.svg);
   width: 125%;
   height: 125%;
   position: absolute;

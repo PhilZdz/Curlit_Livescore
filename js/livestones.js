@@ -1,5 +1,6 @@
+  // Version 1.3rc2 from 20.11.25
+  
 $(document).ready(function () {
-  // Version 1.3rc1 from 19.11.25
   // const apiUrl = "https://livescores.worldcurling.org/curlitsse";
   const apiUrl = "http://sse.curlit.local:5057";
   // const apiUrl = "https://curlit.com/curlitsse";
@@ -311,6 +312,11 @@ $('table.scoreboard').hide();
     awayDetails.find('td').eq(3).text(result.awayTeam.lsd.ccw != null ? Number(result.awayTeam.lsd.ccw).toFixed(1) : null);
     awayDetails.find('td.lsd').text(result.awayTeam.lsd.total != null ? `${Number(result.awayTeam.lsd.total).toFixed(1)}cm` : null);
     awayDetails.find('td.score span').text(result.awayTeam.total);
+
+    // Stats panel
+    $("#head-to-head .team-left").css('background-image', `url(https://livescores.worldcurling.org/flags/${result.homeTeam.noc}.svg)`);
+    $("#head-to-head .team-right").css('background-image', `url(https://livescores.worldcurling.org/flags/${result.awayTeam.noc}.svg)`);
+
   }
 
 
@@ -519,8 +525,6 @@ $('table.scoreboard').hide();
       .addClass(shotInfo.handleName);
     $("#currentShot .shot-details span.accuracy").html(`${shotInfo.pointsPrct} %`);
     $("#currentShot .shot-details span.comment").html(shotInfo.comment);
-
-
 
     // Update wrapper shadow (odd/even by slide index)
     $(".slider-wrapper")
@@ -769,7 +773,7 @@ $('table.scoreboard').hide();
         }
 
         // Reset bar values
-        $row.find(".bar-left, .bar-right").html("");
+        // $row.find(".bar-left, .bar-right").html("");
 
         var barValueRed = currentStats.rows[idx].rowBarValueRed;
         var barValueYellow = currentStats.rows[idx].rowBarValueYellow;
