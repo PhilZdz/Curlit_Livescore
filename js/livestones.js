@@ -1,8 +1,9 @@
-  // Version 1.3rc2 from 20.11.25
+  // Version 1.3rc2 from 21.11.25
   
 $(document).ready(function () {
-  // const apiUrl = "https://livescores.worldcurling.org/curlitsse";
-  const apiUrl = "http://sse.curlit.local:5057";
+							  
+  const apiUrl = "https://livescores.worldcurling.org/curlitsse";
+ // const apiUrl = "http://sse.curlit.local:5057";
   // const apiUrl = "https://curlit.com/curlitsse";
 
   const curlTasks = {
@@ -24,20 +25,32 @@ $(document).ready(function () {
 
   const params = new URLSearchParams(window.location.search);
   const pathSegments = window.location.pathname.split("/");
-  var season = params.get("Season");
-  var competition = params.get("Competition");
-  var eventId = params.get("EventID") ?? 0;
-  var sessionId = params.get("SessionID") ?? 0;
-  var gameId = params.get("GameId") ?? 1;
-  var isDebug = params.get("Debug") ?? 0;
+// Convert all params to a case-insensitive map
+  const queryParams = {};
+  for (const [key, value] of params.entries()) {
+      queryParams[key.toLowerCase()] = value;
+  }
 
-  if (document.getElementById('ContentMain_HiddenSeason') != null)
+  // Helper to get int from case-insensitive key
+  function getIntParam(key, fallback = 0) {
+      const val = queryParams[key.toLowerCase()];
+      const parsed = parseInt(val);
+      return Number.isNaN(parsed) ? fallback : parsed;
+  }											 
+  var season = params.get("Season","");
+  var competition = params.get("Competition","");
+  var eventId = getIntParam("EventID");
+  var sessionId = getIntParam("SessionID");
+  var gameId = getIntParam("GameId", 1);
+  var isDebug = getIntParam("Debug");
+
+  if (document.getElementById('ContentMain_HiddenSeason') != null && document.getElementById('ContentMain_HiddenSeason') != "")
     season = document.getElementById('ContentMain_HiddenSeason').value;
-  if (document.getElementById('ContentMain_HiddenCompetition') != null)
+  if (document.getElementById('ContentMain_HiddenCompetition') != null && document.getElementById('ContentMain_HiddenCompetition') != "")
     competition = document.getElementById('ContentMain_HiddenCompetition').value;
-  if (document.getElementById('ContentMain_HiddenEventID') != null)
+  if (document.getElementById('ContentMain_HiddenEventID') != null && document.getElementById('ContentMain_HiddenEventID') != "")
     eventId = document.getElementById('ContentMain_HiddenEventID').value ?? 0;
-  if (document.getElementById('ContentMain_HiddenSessionID') != null)
+  if (document.getElementById('ContentMain_HiddenSessionID') != null && document.getElementById('ContentMain_HiddenSessionID') != "")
     sessionId = document.getElementById('ContentMain_HiddenSessionID').value ?? 0;
 
   const competitionCode = pathSegments[1] ?? competition;
