@@ -1,4 +1,4 @@
-﻿/* Version 1.3rc2 from 20.11.25  */
+﻿/* Version 1.3rc3 from 20.11.25  */
 
 #loader {
     background-image: url(../img/curloading.gif);
@@ -76,7 +76,6 @@
   justify-content: space-between;
   align-items: center;
   line-height: 2px;
-  height: 3px;
 }
 
 .header-content .left-text {
@@ -115,7 +114,7 @@
 }
 
 .header-content span {
-  font-size: 3vw;
+  font-size: 15px;
   /* TODO 1, 2 or 3 based on the viewport size*/
 }
 
@@ -707,6 +706,7 @@ td.lsfe {
   z-index: 0;
   background-repeat: no-repeat;
   background-position-x: 0%;
+  background-size: contain;
 }
 
 
@@ -718,6 +718,7 @@ td.lsfe {
   z-index: 0;
   background-repeat: no-repeat;
   background-position-x: 100%;
+  background-size: contain;
 }
 
 
@@ -809,6 +810,31 @@ td.lsfe {
   font-size: 70%;
   line-height: 14px;
   width: 15%;
+}
+
+.info-left span,
+.info-right span{
+  width: 11px;
+  height: 11px;
+  display: inline-block;
+}
+
+.info-left span.IN,
+.info-right span.IN {
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/c/c0/Eo_circle_green_arrow-up.svg);
+}
+
+.info-left span.OUT,
+.info-right span.OUT {
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/b/b7/Eo_circle_red_arrow-down.svg);
+}
+
+info-left span {
+  margin-right: 10%;
+}
+
+info-right span {
+  margin-left: 10%;
 }
 
 .info-left {

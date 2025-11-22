@@ -1,9 +1,9 @@
-  // Version 1.3rc2 from 21.11.25
+  // Version 1.3rc3 from 21.11.25
   
 $(document).ready(function () {
 							  
   const apiUrl = "https://livescores.worldcurling.org/curlitsse";
- // const apiUrl = "http://sse.curlit.local:5057";
+  //const apiUrl = "http://sse.curlit.local:5057";
   // const apiUrl = "https://curlit.com/curlitsse";
 
   const curlTasks = {
@@ -753,8 +753,15 @@ $('table.scoreboard').hide();
           }
         }
 
-        const left = parseFloat($row.data("left"), 10);
-        const right = parseFloat($row.data("right"), 10);
+
+        if (currentStats.unit == "cm") {
+          var left = parseFloat($row.data("left")).toFixed(1);
+          var right = parseFloat($row.data("right")).toFixed(1);
+        }
+        else {
+          var left = parseFloat($row.data("left"), 10);
+          var right = parseFloat($row.data("right"), 10);
+        }
 
         var leftPct = !isNaN(left) ? parseFloat(((left / denominator) * 100).toFixed(2)) : 0;
         var rightPct = !isNaN(right) ? parseFloat(((right / denominator) * 100).toFixed(2)) : 0;
