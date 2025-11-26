@@ -1,9 +1,9 @@
-  // Version 1.3rc5 from 23.11.25
+  // Version 1.3rc6 from 25.11.25
   
   $(document).ready(function () {
 							  
     const apiUrl = "https://livescores.worldcurling.org/curlitsse";
-    // const apiUrl = "http://sse.curlit.local:5057";
+    //const apiUrl = "http://sse.curlit.local:5057";
     // const apiUrl = "https://curlit.com/curlitsse";
   
     const curlTasks = {
@@ -352,6 +352,11 @@
         latestLiveData = data;
         latestStatsData = data.stats;
 
+        // No stones in data: clear the
+        if (data.stones.length == 0) {
+          resetViewport();
+        }
+
         if ($("#is_live").is(":checked")) {
           updateLiveData(data);
         }
@@ -425,6 +430,26 @@
       });
   
     }
+
+    function resetViewport() {
+      $("#slider").empty();
+      $("#slider").removeAttr('style');
+      
+      $indexButtonsContainer.empty();
+  
+      $(".endstone select.current-stone").empty();
+      $(".endstone select.current-end").empty();
+  
+      $("#currentShot .competitor td.flag img").attr('src', "");
+      $("#currentShot .competitor td.flag img").attr('alt', "");
+      $("#currentShot .competitor span.lastname").html("");
+      $("#currentShot .competitor span.firstname").html("");
+      $("#currentShot .shot-details span").empty();
+      $("#currentShot .shot-details span.comment").empty();
+      $("#currentShot .shot-details span.handle").html("");
+      $("#currentShot .shot-details span.handle").removeClass("through cw ccw")
+      $("#currentShot .shot-details span.accuracy").html("");
+    }
   
     async function fetchStonesAsync(endId) {
       try {
@@ -485,6 +510,8 @@
         goToStat(current);
       }
     }
+
+   
   
   
     let $indexButtonsContainer;
@@ -507,6 +534,16 @@
       return `<span class="shortName">${shortName}</span><span class="longName">${longName}</span>`;
     }
   
+    function displayRowTitle(rowTitle) {
+      if (typeof rowTitle !== "string") return rowTitle;
+  
+      const match = rowTitle.match(/^\{([^|]+)\|([^}]+)\}$/);
+      if (!match) return rowTitle;
+
+      const [, leftName, rightName] = match;
+      return `<span class="leftName">${leftName}</span><span class="rightName">${rightName}</span>`;
+    }
+
     function goTo(index, isManual = false) {
 
       // If index=-1, navigate to the previous end
@@ -556,6 +593,7 @@
       // add the next svg for a smarted swipe
       if (shotData.stones.length >= currentIndex) {
         // $(".svg-container").eq(index+1).html(shotData[currentIndex].svg + `<div class="svg-touch-overlay"></div>`);
+        // makeSVGResponsive($(".svg-container").eq(index - 1).find("svg"));
         makeSVGResponsive($(".svg-container").eq(index + 1).find("svg"));
       }
   
@@ -563,9 +601,10 @@
       $("#currentShot .competitor td.flag img").attr('alt', shotInfo.teamName);
       $("#currentShot .competitor span.lastname").html(shotInfo.lastName);
       $("#currentShot .competitor span.firstname").html(shotInfo.firstName);
-      $("#currentShot .shot-details span.type").html(curlTasks[shotInfo.task]);
-      
-      $("#currentShot .shot-details span.handle").removeClass("through cw ccw")
+      $("#currentShot .shot-details span.type").html((shotInfo.stoneID > 5 && shotInfo.task == 4) ? "Wick" : curlTasks[shotInfo.task]);
+      $("#currentShot .shot-details span.comment").html(shotInfo.comment);
+
+      $("#currentShot .shot-details span.handle").removeClass("through cw ccw");
 
       // Through -- not considered
       if (shotInfo.task == "11") {
@@ -577,8 +616,6 @@
         $("#currentShot .shot-details span.accuracy").html(`${shotInfo.pointsPrct} %`);
       }
 
-
-      $("#currentShot .shot-details span.comment").html(shotInfo.comment);
   
       // Update wrapper shadow (odd/even by slide index)
       $(".slider-wrapper")
@@ -634,7 +671,7 @@
       }
 
       renderDots();
-      goTo(stoneId - 1);
+      goTo(stoneId == 99 ? shotData.stones.length - 1 : stoneId - 1, true);
     }
   
     function fitCompetitorNames() {
@@ -769,7 +806,7 @@
         // Animate each row
         $rows.each(function (idx) {
           const $row = $(this);
-          $row.find(".label").html(currentStats.rows[idx].rowTitle);
+          $row.find(".label").html(displayRowTitle(currentStats.rows[idx].rowTitle));
   
           $row.data('left', currentStats.rows[idx].rowValueRed);
           $row.data('right', currentStats.rows[idx].rowValueYellow);
@@ -807,20 +844,36 @@
             var left = parseFloat($row.data("left"), 10);
             var right = parseFloat($row.data("right"), 10);
           }
-  
-          var leftPct = !isNaN(left) ? parseFloat(((left / denominator) * 100).toFixed(2)) : 0;
-          var rightPct = !isNaN(right) ? parseFloat(((right / denominator) * 100).toFixed(2)) : 0;
-  
-          // If the rounds do not add up to exactly 100, give it to the red team
-          let leftRight = leftPct + rightPct;
-          if (fromCenter == false && leftRight > 0 && leftRight < 100) {
-            leftPct = leftPct + 100 - leftRight;
+
+          var leftPct;
+          var rightPct;
+
+          // If one side filled only, give it 50% and 0% to the other
+          if (!isNaN(left) && isNaN(right)) {
+            leftPct = 50;
+            rightPct = 0;
           }
-  
-          // Special case, bar width set to 100%
-          if (currentStats.rows[idx].rowValueMax == -1) {
-            leftPct = rightPct = 50;
+          else if (isNaN(left) && !isNaN(right)) {
+            leftPct = 0;
+            rightPct = 50;
           }
+          else {
+            leftPct = !isNaN(left) ? parseFloat(((left / denominator) * 100).toFixed(2)) : 0;
+            rightPct = !isNaN(right) ? parseFloat(((right / denominator) * 100).toFixed(2)) : 0;
+    
+            // If the rounds do not add up to exactly 100, give it to the red team
+            let leftRight = leftPct + rightPct;
+            if (fromCenter == false && leftRight > 0 && leftRight < 100) {
+              leftPct = leftPct + 100 - leftRight;
+            }
+    
+            // Special case, LSD
+            if (currentStats.rows[idx].rowValueMax == -1) {
+              leftPct = rightPct = 50;
+            }
+          }
+
+
   
           // Normalize
           if (!isNaN(left)) {
@@ -939,7 +992,7 @@
   
   
     $(document).on('change', "select.current-end", function () {
-      goToHistory(parseInt($(this).val()) + 1);
+      goToHistory(parseInt($(this).val()) + 1, 99);
     });
   
     $(document).on('change', "select.current-stone", function () {
@@ -1270,3 +1323,4 @@
   
   
   });
+
