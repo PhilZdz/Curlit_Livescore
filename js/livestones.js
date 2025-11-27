@@ -1,4 +1,4 @@
-  // Version 1.3rc6 from 25.11.25
+  // Version 1.3rc7 from 26.11.25
   
   $(document).ready(function () {
 							  
@@ -436,6 +436,7 @@
       $("#slider").removeAttr('style');
       
       $indexButtonsContainer.empty();
+      $indexButtonsStatsContainer.empty();
   
       $(".endstone select.current-stone").empty();
       $(".endstone select.current-end").empty();
@@ -515,6 +516,7 @@
   
   
     let $indexButtonsContainer;
+    let $indexButtonsStatsContainer;
     let $arrowPrev, $arrowNext;
     let totalItems, currentIndex = 0;
     var statList = [];
@@ -718,6 +720,46 @@
         $("<button>").addClass("ellipsis").appendTo($indexButtonsContainer);
       }
     }
+
+
+    function renderStatsDots() {
+      $indexButtonsStatsContainer.empty();
+  
+      const maxVisible = 3;
+      const halfWindow = Math.floor(maxVisible / 2);
+  
+      var totalStats = statList.length;
+
+      let start = Math.max(0, current - halfWindow);
+      let stat = Math.min(totalStats - 1, current + halfWindow);
+  
+      // Adjust window if fewer than maxVisible
+      if (stat - start + 1 < maxVisible) {
+        if (start === 0) {
+          stat = Math.min(totalStats - 1, start + maxVisible - 1);
+        } else if (stat === totalStats - 1) {
+          start = Math.max(0, stat - (maxVisible - 1));
+        }
+      }
+  
+      // Left ellipsis
+      if (start > 0) {
+        $("<button>").addClass("ellipsis").appendTo($indexButtonsStatsContainer);
+      }
+  
+      // Main dots
+      for (let i = start; i <= stat; i++) {
+        const $btn = $("<button>");
+        if (i === current) $btn.addClass("active");
+        $btn.on("click", () => goToStat(i));
+        $indexButtonsStatsContainer.append($btn);
+      }
+  
+      // Right ellipsis
+      if (stat < totalStats - 1) {
+        $("<button>").addClass("ellipsis").appendTo($indexButtonsStatsContainer);
+      }
+    }
   
     function makeSVGResponsive($svg) {
       const w = $svg.attr("width");
@@ -849,11 +891,11 @@
           var rightPct;
 
           // If one side filled only, give it 50% and 0% to the other
-          if (!isNaN(left) && isNaN(right)) {
+          if (!fromCenter && !isNaN(left) && isNaN(right)) {
             leftPct = 50;
             rightPct = 0;
           }
-          else if (isNaN(left) && !isNaN(right)) {
+          else if (!fromCenter && isNaN(left) && !isNaN(right)) {
             leftPct = 0;
             rightPct = 50;
           }
@@ -941,6 +983,7 @@
         });
       }
   
+      renderStatsDots();
     }
   
   
@@ -1002,6 +1045,7 @@
   
   
     $indexButtonsContainer = $("#indexButtons");
+    $indexButtonsStatsContainer = $("#indexButtonsStats");
     $arrowPrev = $("#arrowPrev");
     $arrowNext = $("#arrowNext");
   
@@ -1123,6 +1167,9 @@
       $statSlider.css("transform", `translateX(-${current * 100}%)`);
       $statSlider.children().removeClass("active").eq(current).addClass("active");
   
+      
+      renderStatsDots();
+
       animateAllStats(current);
     }
   

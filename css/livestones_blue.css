@@ -49,3 +49,7 @@ svg rect {
   border-right: 2px solid #ffffff;
   border-bottom: 2px solid #ffffff;
 }
+
+#currentShot table.competitor td img{
+  background: gray;
+}

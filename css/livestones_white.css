@@ -1,7 +1,7 @@
 /* Version 1.3rc2 from 20.11.25  */
 
 #head-to-head {
-    background: rgba(0,0,0,0.1);
+  background: rgba(0,0,0,0.1);
 }
 
 #currentShot {
@@ -46,3 +46,15 @@
     border-right: 2px solid #051739;
     border-bottom: 2px solid #051739;
   }
+
+  .stat-row .label {
+    color: black !important;
+}
+
+.index-buttons button {
+    background: #afafaf;
+}
+
+#currentShot table.competitor td img{
+  background: gray;
+}

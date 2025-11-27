@@ -1,4 +1,4 @@
-﻿/* Version 1.3rc6 from 22.11.25  */
+﻿/* Version 1.3rc7 from 26.11.25  */
 
 #loader {
     background-image: url(../img/curloading.gif);
@@ -1185,7 +1185,7 @@ info-right span {
 }
 
 #currentShot select {
-  font-size: 1.1em;
+  font-size: 1em;
   -webkit-appearance: none;
   appearance: none;
 
@@ -1237,12 +1237,16 @@ info-right span {
 }
 
 
-#currentShot table.competitor td img{
+#currentShot table.competitor td img {
   position: inherit;
-  height: clamp(22px, 7vh, 48px);
+  height: clamp(22px, 7vh, 42px);
   width: auto;
   object-fit: contain;
   vertical-align: middle;
+  background: gray;
+  border-radius: 50%;
+  padding: 0.5px;
+  background: gray;
 }
 
 #currentShot table.competitor td span{
