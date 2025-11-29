@@ -1,4 +1,4 @@
-  // Version 1.3rc7 from 26.11.25
+  // Version 1.3rc8 from 27.11.25
   
   $(document).ready(function () {
 							  
@@ -112,6 +112,9 @@
         if (sessionId != null) {
           urlParams["sessionId"] = sessionId;
         }
+        if (gameId != null) {
+          urlParams["gameId"] = gameId;
+        }
   
         var callUrl = `${apiUrl}/Result/LiveResults`
   
@@ -149,11 +152,10 @@
     }
   
   
-    function renderTileData(data) {
-      var result = data.find(g => g.gameID == gameId);
-  
-      if (result) {
-        feedTileUI($gameTile, result);
+      function renderTileData(data) {
+        // TODO PZ non deterministic enough
+      if (data.length > 0) {
+        feedTileUI($gameTile, data[0]);
       }
       else {
         debugger;
@@ -611,12 +613,17 @@
       // Through -- not considered
       if (shotInfo.task == "11") {
         $("#currentShot .shot-details span.handle").addClass("through");
-        $("#currentShot .shot-details span.accuracy").html(`<span class="throughcomment">Not considered</span>`);
+        $("#currentShot .shot-details span.accuracy").html(`<span class="throughcomment">Not considered`</span>);
+      }
+      else if (shotInfo.pointsPrct >= "101"){
+        $("#currentShot .shot-details span.handle").addClass(shotInfo.handleName);
+        $("#currentShot .shot-details span.accuracy").html(`<span class="throughcomment">Not considered`</span>);
       }
       else {
         $("#currentShot .shot-details span.handle").addClass(shotInfo.handleName);
         $("#currentShot .shot-details span.accuracy").html(`${shotInfo.pointsPrct} %`);
       }
+ 
 
   
       // Update wrapper shadow (odd/even by slide index)
