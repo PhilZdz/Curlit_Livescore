@@ -1,9 +1,9 @@
-  // Version 1.3rc8 from 27.11.25
+  // Version 1.4rc1 from 4.12.25
   
   $(document).ready(function () {
 							  
-    const apiUrl = "https://livescores.worldcurling.org/curlitsse";
-    //const apiUrl = "http://sse.curlit.local:5057";
+    // const apiUrl = "https://livescores.worldcurling.org/curlitsse";
+    const apiUrl = "http://sse.curlit.local:5057";
     // const apiUrl = "https://curlit.com/curlitsse";
   
     const curlTasks = {
@@ -41,7 +41,8 @@
     var competition = params.get("Competition","");
     var eventId = getIntParam("EventID");
     var sessionId = getIntParam("SessionID");
-    var gameId = getIntParam("GameId", 1);
+    var gameId = getIntParam("GameId", 0);
+    var sheet = params.get("Sheet","");
     var isDebug = getIntParam("Debug");
   
     if (document.getElementById('ContentMain_HiddenSeason') != null && document.getElementById('ContentMain_HiddenSeason') != "")
@@ -54,13 +55,6 @@
       sessionId = document.getElementById('ContentMain_HiddenSessionID').value ?? 0;
   
     const competitionCode = pathSegments[1] ?? competition;
-  
-    // Hard-coded values if needed
-    // season = 2526;
-    // competition = "ECCA";
-    // eventId = 2;
-    // sessionId = 1;
-    // gameId = 2;
   
     const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}`;
   
@@ -115,6 +109,9 @@
         if (gameId != null) {
           urlParams["gameId"] = gameId;
         }
+        if (sheet != null) {
+          urlParams["sheet"] = sheet;
+        }
   
         var callUrl = `${apiUrl}/Result/LiveResults`
   
@@ -153,9 +150,10 @@
   
   
       function renderTileData(data) {
-        // TODO PZ non deterministic enough
-      if (data.length > 0) {
-        feedTileUI($gameTile, data[0]);
+      var result = data.find(g => g.sheet == sheet);
+  
+      if (result) {
+        feedTileUI($gameTile, result);
       }
       else {
         debugger;
@@ -219,6 +217,14 @@
       tile.find('.summary .home img.flag').attr('src', `https://livescores.worldcurling.org/flags/${result.homeTeam.noc}.svg`);
       tile.find('.summary .home .team-name').html(`<span class='short'>${result.homeTeam.teamShortName}</span><span class='long'>${result.homeTeam.teamLongName}</span>`);
       tile.find('.summary .home .score').text(result.homeTeam.total);
+      
+      if (result.homeTeam.lsce) {
+        tile.find('.summary .home .score').addClass("lsce");
+      }
+      else {
+        tile.find('.summary .home .score').removeClass("lsce");
+      }
+
       tile.find('.summary .home .team-history').text(result.homeTeam.history);
       tile.find('.summary .home .team-history').attr('title', `wins - losses`);
   
@@ -226,6 +232,14 @@
       tile.find('.summary .away img.flag').attr('src', `https://livescores.worldcurling.org/flags/${result.awayTeam.noc}.svg`);
       tile.find('.summary .away .team-name').html(`<span class='short'>${result.awayTeam.teamShortName}</span><span class='long'>${result.awayTeam.teamLongName}</span>`);
       tile.find('.summary .away .score').text(result.awayTeam.total);
+            
+      if (result.awayTeam.lsce) {
+        tile.find('.summary .away .score').addClass("lsce");
+      }
+      else {
+        tile.find('.summary .away .score').removeClass("lsce");
+      }
+
       tile.find('.summary .away .team-history').text(result.awayTeam.history);
       tile.find('.summary .away .team-history').attr('title', `wins - losses`);
   
@@ -392,6 +406,9 @@
         if (gameId != null) {
           urlParams["gameId"] = gameId;
         }
+        if (sheet != null) {
+          urlParams["sheet"] = sheet;
+        }
   
         var callUrl = `${apiUrl}/Stone/LiveStones`
   
@@ -452,6 +469,9 @@
       $("#currentShot .shot-details span.handle").html("");
       $("#currentShot .shot-details span.handle").removeClass("through cw ccw")
       $("#currentShot .shot-details span.accuracy").html("");
+
+      $("#game-tile .matchup-tile .summary .home .team-clock").html("");
+      $("#game-tile .matchup-tile .summary .away .team-clock").html("");
     }
   
     async function fetchStonesAsync(endId) {
@@ -472,6 +492,9 @@
         if (gameId != null) {
           urlParams["gameId"] = gameId;
         }
+        if (sheet != null) {
+          urlParams["sheet"] = sheet;
+        }
   
         urlParams["endId"] = endId;
   
@@ -485,7 +508,6 @@
             callUrl = callUrl + `${i == 0 ? "?" : "&"}${key}=${urlParams[key]}`
           }
         }
-  
   
         const response = await fetch(callUrl);
         if (!response.ok) {
@@ -501,6 +523,10 @@
     function updateLiveData(data) {
       shotData = data;
       statsData = data.stats;
+      
+      if (shotData.gameInfo != null) {
+        refreshHeaderShotData();
+      }
   
       if (shotData.stones.length > 0) {
         refreshShotList();
@@ -613,11 +639,11 @@
       // Through -- not considered
       if (shotInfo.task == "11") {
         $("#currentShot .shot-details span.handle").addClass("through");
-        $("#currentShot .shot-details span.accuracy").html(`<span class="throughcomment">Not considered`</span>);
+        $("#currentShot .shot-details span.accuracy").html(`<span class="throughcomment">Not considered</span>`);
       }
       else if (shotInfo.pointsPrct >= "101"){
         $("#currentShot .shot-details span.handle").addClass(shotInfo.handleName);
-        $("#currentShot .shot-details span.accuracy").html(`<span class="throughcomment">Not considered`</span>);
+        $("#currentShot .shot-details span.accuracy").html(`<span class="throughcomment">Not considered</span>`);
       }
       else {
         $("#currentShot .shot-details span.handle").addClass(shotInfo.handleName);
@@ -650,7 +676,6 @@
       currentEnd = endId;
   
       shotData = await fetchStonesAsync(endId);
-
       // Special case: if we go back to the latest available end, do not show history stats but bind them to the latest live
       if (shotData.stones[0].endID == latestLiveData.stones[0].endID) {
         statsData = latestStatsData;
@@ -958,7 +983,6 @@
   
         $(".stats-container").find(".bar-line").hide();
         $(".stats-container").find(".text-line").show();
-  
         $rows.each(function (idx) {
           const $row = $(this);
           $row.find(".label").html(currentStats.rows[idx].rowTitle);
@@ -993,7 +1017,41 @@
       renderStatsDots();
     }
   
-  
+    function refreshHeaderShotData() {
+      var $headerTile = $("#game-tile .matchup-tile .summary");
+      var timeOutRemaining = shotData.gameInfo.rows.find(r => r.rowTitle == "TIMEOUT_REMAINING");
+      var timeRemaining = shotData.gameInfo.rows.find(r => r.rowTitle == "TIME_REMAINING");
+
+      // reset the timeout indicators (maybe)
+      // $headerTile.find(".home .team-clock").removeClass("timeout active");
+      // $headerTile.find(".away .team-clock").removeClass("timeout active");
+      if (timeRemaining != null) {
+        $headerTile.find(".home .team-clock").html(timeRemaining.rowValueRed);
+        $headerTile.find(".away .team-clock").html(timeRemaining.rowValueYellow);
+
+        if (timeOutRemaining != null && timeRemaining.rowValueRed!="") {
+          if (timeOutRemaining.rowValueRed == "1") {
+            $headerTile.find(".home .team-clock").addClass("timeout");
+          }
+          else {
+            $headerTile.find(".home .team-clock").removeClass("timeout");
+          }
+
+        if (timeOutRemaining.rowValueYellow == "1" && timeRemaining.rowValueYellow!="") {
+            $headerTile.find(".away .team-clock").addClass("timeout");
+          }
+          else {
+            $headerTile.find(".away .team-clock").removeClass("timeout");
+          }
+        }
+      }
+
+    
+
+      // $headerTile.find(".home .team-clock").html(shotData.gameInfo);
+      // $headerTile.find(".home .team-clock").html("");
+    }
+
     function refreshShotList() {
       $slider.empty();
       $(".endstone select.current-end").empty();

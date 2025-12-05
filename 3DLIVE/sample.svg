@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600">
+  <rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5" />
+  <g stroke="#646464" stroke-width="1">
+    <circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff" />
+    <circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff" />
+    <circle cx="150.0" cy="160.0" r="40.0" fill="#a0ffc0" />
+    <circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff" />
+    <line x1="0" y1="40.0" x2="300.0" y2="40.0" />
+    <line x1="0" y1="160.0" x2="300.0" y2="160.0" />
+    <line x1="0" y1="580.0" x2="300.0" y2="580.0" />
+    <line x1="150.0" y1="40.0" x2="150.0" y2="580.0" />
+  </g>
+  <g fill="#ff0000" stroke="#ff0000" stroke-width="0.5" stroke-opacity=".6" fill-opacity="0" class="CUR_os">
+    <circle cx="247.0" cy="173.4" r="8.65" />
+  </g>
+  <g fill="#ff0000" stroke="black" stroke-width="1">
+    <circle cx="11.8" cy="10.0" r="8.65" />
+    <circle cx="29.4" cy="10.0" r="8.65" />
+    <circle cx="47.0" cy="10.0" r="8.65" />
+    <circle cx="64.6" cy="10.0" r="8.65" />
+    <circle cx="82.2" cy="10.0" r="8.65" />
+    <circle cx="15.0" cy="594.4" r="4.06" />
+    <circle cx="5.0" cy="585.6" r="4.06" />
+    <circle cx="5.0" cy="594.4" r="4.06" />
+  </g>
+  <g fill="#ffe600" stroke="black" stroke-width="1">
+    <circle cx="288.2" cy="10.0" r="8.65" />
+    <circle cx="270.6" cy="10.0" r="8.65" />
+    <circle cx="253.0" cy="10.0" r="8.65" />
+    <circle cx="235.4" cy="10.0" r="8.65" />
+    <circle cx="8.6" cy="197.6" r="8.65" />
+    <circle cx="281.4" cy="175.0" r="8.65" class="CUR_cs" />
+    <circle cx="281.4" cy="175.0" r="1.44" stroke-width="3" />
+    <circle cx="295.0" cy="585.6" r="4.06" />
+    <circle cx="295.0" cy="594.4" r="4.06" />
+  </g>
+</svg>

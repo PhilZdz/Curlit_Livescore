@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Realistic Curling Sheet</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Include Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Include fflate.min.js -->
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/libs/fflate.min.js"></script>
+    <!-- Include FBXLoader -->
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/FBXLoader.js"></script>
+    <!-- Include OrbitControls -->
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
+    <script>
+        // Initialize scene, camera, and renderer
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x87CEEB); // Sky blue background
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Add OrbitControls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.1;
+
+        // Add lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff); // White light
+        scene.add(ambientLight);
+        // const light = new THREE.PointLight(0xffffff, 1, 100);
+        // light.position.set(10, 10, 10);
+        // scene.add(light);
+
+        // Load Curling Sheet FBX
+        const fbxLoader = new THREE.FBXLoader();
+        fbxLoader.load('objects/sheet.fbx', (object) => {
+            object.scale.set(0.1, 0.4, 0.1); // Adjust scale if needed
+            scene.add(object);
+        });
+
+        // Curling Stone Dimensions
+        const stoneDiameter = 0.28; // 28 cm
+        const stoneHeight = 0.115; // 11.5 cm
+
+        // Load Curling Stone FBX Models and Arrange in Two Rows
+        const textureLoader = new THREE.TextureLoader();
+        const stones = []; // Array to store stones for interaction
+
+        for (let i = 0; i < 16; i++) {
+            fbxLoader.load('objects/stone.fbx', (object) => {
+                // Determine the row (0 or 1) and assign a texture
+                const row = Math.floor(i / 8); // Row 0 or 1
+                const texturePath = row === 1
+                    ? 'textures/stoneYellow.png' // Row 1: Yellow stones
+                    : 'textures/stoneRed.png';   // Row 0: Red stones
+
+                const stoneTexture = textureLoader.load(texturePath);
+
+                // Traverse object to apply the texture
+                object.traverse((child) => {
+                    if (child.isMesh) {
+                        child.material = new THREE.MeshStandardMaterial({ map: stoneTexture }); // Apply texture
+                    }
+                });
+
+                // Arrange stones realistically
+                const positionIndex = i % 8;  // Determine position within the row
+                object.position.set(
+                    positionIndex * 3 - 10.5, // Adjust X position (-10.5 to 10.5 for realistic spacing)
+                    stoneHeight / 2,         // Y position (above the sheet)
+                    row * 4 - 2              // Z position (row spacing)
+                );
+                object.scale.set(0.1, 0.1, 0.1); // Scale to realistic dimensions
+                scene.add(object);
+                stones.push(object); // Add stone to the array for raycasting
+            });
+        }
+
+        // Set the camera position
+        camera.position.set(0, 15, 30);
+        camera.lookAt(0, 0, 0);
+
+        // Animate the scene
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); // Update the OrbitControls
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle click events
+        window.addEventListener('click', (event) => {
+            // Normalize mouse coordinates to [-1, 1]
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            // Perform raycasting
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(stones, true); // Recursive mode enabled
+
+            if (intersects.length > 0) {
+                const clickedStone = intersects[0].object; // Get the first intersected object
+
+                // Focus on the clicked stone
+                const targetPosition = clickedStone.position.clone();
+                camera.position.set(
+                    targetPosition.x + 5,
+                    targetPosition.y + 5,
+                    targetPosition.z + 10
+                );
+                controls.target.set(targetPosition.x, targetPosition.y, targetPosition.z);
+                controls.update();
+            }
+        });
+    </script>
+</body>
+</html>
