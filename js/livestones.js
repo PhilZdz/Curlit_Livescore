@@ -1,4 +1,4 @@
-  // Version 1.4rc4 from 5.12.25
+  // Version 1.4rc5 from 6.12.25
   
   $(document).ready(function () {
 							  
@@ -176,7 +176,7 @@
       // Header
       tile.find('.matchup-tile').attr('class', `matchup-tile ${result.status}`);
   
-      tile.find('span.sheet').text(result.sheet);
+      tile.find('select.sheet').val(result.sheet);
   
       let $leftText = tile.find('span.left-text');
       var leftText = result.gamesTitle;
@@ -1049,8 +1049,19 @@
 
         // If timeout active, highlight it
         if (timeOut != null) {
-          $headerTile.find(".home .team-clock").toggleClass("active", timeOut.rowValueRed == "1");
-          $headerTile.find(".away .team-clock").toggleClass("active", timeOut.rowValueYellow == "1");
+          if (timeOut.rowValueRed == "1") {
+            $headerTile.find(".home .team-clock").toggleClass("timeout active", true);
+          }
+          else {
+            $headerTile.find(".home .team-clock").removeClass("active");
+          }
+
+          if (timeOut.rowValueYellow == "1") {
+            $headerTile.find(".away .team-clock").toggleClass("timeout active", true);
+          }
+          else {
+            $headerTile.find(".away .team-clock").removeClass("active");
+          }
         }
 
       }
@@ -1107,6 +1118,21 @@
       fitCompetitorNames();
     });
   
+
+    $(document).on("change", '.header-content .sheet', function() {
+        
+        var newSheetValue = $(this).val();
+
+        var currentUrl = new URL(window.location.href);
+        var searchParams = currentUrl.searchParams;
+
+        searchParams.set('Sheet', newSheetValue);
+
+        currentUrl.search = searchParams.toString();
+        
+        window.location.href = currentUrl.href;
+    });
+
   
     $(document).on('change', "select.current-end", function () {
       goToHistory(parseInt($(this).val()) + 1, 99);
@@ -1196,8 +1222,8 @@
         
         var landingStatIndex = latestGameStatus != null ? getStatIndexFromStatus(latestGameStatus) : null;
 
-        goToStat(landingStatIndex != null ? landingStatIndex : 0);
-        animateAllStats(landingStatIndex != null ? landingStatIndex : 0);
+        goToStat(landingStatIndex != null && landingStatIndex != -1 ? landingStatIndex : 0);
+        animateAllStats(landingStatIndex != null && landingStatIndex != -1 ? landingStatIndex : 0);
       }
       else if (target == "scoreboard") {
   
