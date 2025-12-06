@@ -1,9 +1,9 @@
-  // Version 1.4rc1 from 4.12.25
+  // Version 1.4rc4 from 5.12.25
   
   $(document).ready(function () {
 							  
-    // const apiUrl = "https://livescores.worldcurling.org/curlitsse";
-    const apiUrl = "http://sse.curlit.local:5057";
+    const apiUrl = "https://livescores.worldcurling.org/curlitsse";
+    //const apiUrl = "http://sse.curlit.local:5057";
     // const apiUrl = "https://curlit.com/curlitsse";
   
     const curlTasks = {
@@ -71,6 +71,8 @@
     // ------------------- //
     // ----- RESULTS ----- //
     // ------------------- //
+    var latestGameStatus;
+    
     function startConnectionResults() {
       let resultConnection = new signalR.HubConnectionBuilder()
         .withUrl(`${apiUrl}/notificationHub`, { withCredentials: false })
@@ -148,17 +150,24 @@
   
     }
   
+    function getLetterFromIndex(index) {
+      // Ensure the input is within the valid range (1 to 26)
+      if (index < 1 || index > 26) {
+        return "Invalid Index";
+      }
+
+      const asciiCode = 'A'.charCodeAt(0) + (index - 1);
+      return String.fromCharCode(asciiCode);
+    }
   
-      function renderTileData(data) {
-      var result = data.find(g => g.sheet == sheet);
+    function renderTileData(data) {
+        
+      var result = data.find(g => g.sheet == (sheet != null && sheet != "" ? sheet : getLetterFromIndex(gameId)));
   
       if (result) {
+        latestGameStatus = result.status;
         feedTileUI($gameTile, result);
       }
-      else {
-        debugger;
-        // TODO Place an error in the DOM. But this should never happen.
-      };
     }
   
   
@@ -355,8 +364,7 @@
     // ------------------ //
     // ----- STONES ----- //
     // ------------------ //
-    const signalGroupStoneName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${gameId}-STONE`;
-  
+    const signalGroupStoneName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${sheet != null && sheet != "" ? sheet : gameId}-STONE`;
     var shotData, latestLiveData, latestStatsData, statsData;
   
     function startConnectionStones() {
@@ -365,6 +373,7 @@
         .build();
   
       stoneConnection.on("StoneUpdated", function (data) {
+
         latestLiveData = data;
         latestStatsData = data.stats;
 
@@ -377,6 +386,7 @@
           updateLiveData(data);
         }
                   
+        // TODO if we change the status, maybe switch the stat that we're on to the status related one
         if ($("#is_stats").is(":checked")) {
           goToStat(current);
         }
@@ -536,6 +546,8 @@
   
       if (statsData.length > 0) {
         refreshStatList();
+
+        // TODO if we change the status, maybe switch the stat that we're on to the status related one
         goToStat(current);
       }
     }
@@ -1021,6 +1033,7 @@
       var $headerTile = $("#game-tile .matchup-tile .summary");
       var timeOutRemaining = shotData.gameInfo.rows.find(r => r.rowTitle == "TIMEOUT_REMAINING");
       var timeRemaining = shotData.gameInfo.rows.find(r => r.rowTitle == "TIME_REMAINING");
+      var timeOut = shotData.gameInfo.rows.find(r => r.rowTitle == "TIMEOUT");
 
       // reset the timeout indicators (maybe)
       // $headerTile.find(".home .team-clock").removeClass("timeout active");
@@ -1029,21 +1042,17 @@
         $headerTile.find(".home .team-clock").html(timeRemaining.rowValueRed);
         $headerTile.find(".away .team-clock").html(timeRemaining.rowValueYellow);
 
-        if (timeOutRemaining != null && timeRemaining.rowValueRed!="") {
-          if (timeOutRemaining.rowValueRed == "1") {
-            $headerTile.find(".home .team-clock").addClass("timeout");
-          }
-          else {
-            $headerTile.find(".home .team-clock").removeClass("timeout");
-          }
-
-        if (timeOutRemaining.rowValueYellow == "1" && timeRemaining.rowValueYellow!="") {
-            $headerTile.find(".away .team-clock").addClass("timeout");
-          }
-          else {
-            $headerTile.find(".away .team-clock").removeClass("timeout");
-          }
+        if (timeOutRemaining != null) {
+          $headerTile.find(".home .team-clock").toggleClass("timeout", timeOutRemaining.rowValueRed == "1");
+          $headerTile.find(".away .team-clock").toggleClass("timeout", timeOutRemaining.rowValueYellow == "1");
         }
+
+        // If timeout active, highlight it
+        if (timeOut != null) {
+          $headerTile.find(".home .team-clock").toggleClass("active", timeOut.rowValueRed == "1");
+          $headerTile.find(".away .team-clock").toggleClass("active", timeOut.rowValueYellow == "1");
+        }
+
       }
 
     
@@ -1184,9 +1193,11 @@
         if ($h2h.is(':visible')) {
           $h2h.css('display', 'flex');
         }
-  
-        goToStat(0);
-        animateAllStats(0);
+        
+        var landingStatIndex = latestGameStatus != null ? getStatIndexFromStatus(latestGameStatus) : null;
+
+        goToStat(landingStatIndex != null ? landingStatIndex : 0);
+        animateAllStats(landingStatIndex != null ? landingStatIndex : 0);
       }
       else if (target == "scoreboard") {
   
@@ -1206,6 +1217,30 @@
     });
   
   
+    function getStatIndexFromStatus(status) {
+      let statTitle;
+
+      switch (status.toUpperCase()) {
+          case 'PLANNED':
+          case 'SCHEDULED':
+          case 'PREPARING':
+          case 'RESCHEDULED':
+          case 'POSTPONED':
+          case 'CANCELLED':
+          case 'DELAYED':
+              statTitle = "Line-ups";
+              break;
+          case 'GETTING READY':
+          case 'READY':
+              statTitle = "Last Stone Draw";
+              break;
+          default:
+              statTitle = "Game";
+              break;
+      }
+
+      return latestStatsData.findIndex(item => item.statName === statTitle);
+    }
   
     // ------------ //
     // Stats Slider //

@@ -1,4 +1,4 @@
-﻿/* Version 1.4rc1 from 4.12.25  */
+﻿/* Version 1.4rc4 from 5.12.25  */
 
 #loader {
     background-image: url(../img/curloading.gif);
@@ -230,14 +230,14 @@
 
 .container-wide.tile-l .matchup-tile .home span.score.lsce::before, 
 .container-wide.tile-l .matchup-tile .away span.score.lsce::after {
-  content: "*";
+  content: "•";
   position: absolute;
-  top: 25%;
+  top: 29%;
   font-size: 0.7em;
   font-weight: bold;
   text-align: center;
   line-height: 14px;
-  border-radius: 4px;
+  border-radius: 4px; 
 }
 
 .container-wide.tile-l .matchup-tile .home span.score.lsce::before {
@@ -512,6 +512,7 @@ td.lsfe {
 }
 
 
+
 .home .team-clock {
   left: 45%;
   padding-right: 20px;
@@ -522,6 +523,12 @@ td.lsfe {
   padding-left: 20px;
 }
 
+
+.container-wide.tile-l .matchup-tile.unofficial span.team-clock,
+.container-wide.tile-l .matchup-tile.official span.team-clock,
+.container-wide.tile-l .matchup-tile.done span.team-clock {
+  display: none;
+}
 
 .home .team-clock.timeout::after,
 .away .team-clock.timeout::before {
@@ -1014,10 +1021,10 @@ info-right span {
 }
 
 .slider-wrapper.odd {
-  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+  box-shadow: 0 0 12px rgba(255, 0, 0, 1);
 }
 .slider-wrapper.even {
-  box-shadow: 0 0 12px rgba(255, 255, 0, 0.6);
+  box-shadow: 0 0 12px rgba(255, 255, 0, 1);
 }
 
 

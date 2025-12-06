@@ -9,7 +9,7 @@ $(document).ready(function () {
     var eventId = 2;
     var sessionId = 1;
     var gameId = 1;
-    var endId = 5;
+    var endId = 0;
     var currentEndIndex;
     var currentEndStoneList;
     var currentEndStoneIndex;
