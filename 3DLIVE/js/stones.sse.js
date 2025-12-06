@@ -5,11 +5,11 @@ $(document).ready(function () {
 
     const params = new URLSearchParams(window.location.search);
     var season = "2526";
-    var competition = "ECCA";
-    var eventId = 1;
-    var sessionId = 49;
+    var competition = "OQE";
+    var eventId = 2;
+    var sessionId = 1;
     var gameId = 1;
-    var endId = 11;
+    var endId = 5;
     var currentEndIndex;
     var currentEndStoneList;
     var currentEndStoneIndex;
