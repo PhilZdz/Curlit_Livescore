@@ -524,12 +524,6 @@ td.lsfe {
 }
 
 
-.container-wide.tile-l .matchup-tile.unofficial span.team-clock,
-.container-wide.tile-l .matchup-tile.official span.team-clock,
-.container-wide.tile-l .matchup-tile.done span.team-clock {
-  display: none;
-}
-
 .home .team-clock.timeout::after,
 .away .team-clock.timeout::before {
   content: "T";
