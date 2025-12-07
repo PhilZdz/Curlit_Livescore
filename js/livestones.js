@@ -1,4 +1,4 @@
-  // Version 1.4rc5 from 6.12.25
+  // Version 1.4rc6 from 6.12.25
   
   $(document).ready(function () {
 							  
@@ -892,7 +892,20 @@
         // Animate each row
         $rows.each(function (idx) {
           const $row = $(this);
-          $row.find(".label").html(displayRowTitle(currentStats.rows[idx].rowTitle));
+          var rowTitle = currentStats.rows[idx].rowTitle;
+          $row.find(".label").html(displayRowTitle(rowTitle));
+          
+          // Show the players names on stat labels
+          var lineupNames = statsData.find(stat => stat.statName === "Line-ups");
+          
+          if (lineupNames != null && lineupNames.rows != null && lineupNames.rows.length > 0) {
+            var posLineup = lineupNames.rows.find(lineup => lineup.rowTitle == rowTitle);
+
+            if (posLineup != null) {
+              $row.find(".label-left").html(posLineup.rowValueRed != "" ? renderBestFit(posLineup.rowValueRed) : "");
+              $row.find(".label-right").html(posLineup.rowValueYellow != "" ? renderBestFit(posLineup.rowValueYellow) : "");
+            }
+          }
   
           $row.data('left', currentStats.rows[idx].rowValueRed);
           $row.data('right', currentStats.rows[idx].rowValueYellow);
@@ -955,6 +968,7 @@
     
             // Special case, LSD
             if (currentStats.rows[idx].rowValueMax == -1) {
+              $row.find(".label-left, .label-right").html("");
               leftPct = rightPct = 50;
             }
           }
@@ -1000,6 +1014,7 @@
           $row.find(".label").html(currentStats.rows[idx].rowTitle);
   
           // Reset bars
+          $row.find(".label-left, .label-right").html("");
           $row.find(".bar-left, .bar-right").css("width", "0");
   
           $row.find(".info-left").html(currentStats.rows[idx].rowInfoRed);

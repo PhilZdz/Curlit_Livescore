@@ -1,4 +1,4 @@
-﻿/* Version 1.4rc5 from 6.12.25  */
+﻿/* Version 1.4rc6 from 6.12.25  */
 
 #loader {
     background-image: url(../img/curloading.gif);
@@ -881,6 +881,7 @@
 
 
 .stat-row {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -910,6 +911,30 @@
             position: absolute;
             right: 33%;
         }
+
+        .stat-row .label-left,
+        .stat-row .label-right {
+          font-size: 65%;
+          z-index: 5;
+          position: relative;
+          line-height: 0px;
+          margin-top: 2px;
+          margin-bottom: 3px;
+          color: lightgray;
+        }
+
+        .stat-row .label-left {
+            text-align: left;
+            position: absolute;
+            left: 6%;
+        }
+
+        .stat-row .label-right {
+            text-align: right;
+            position: absolute;
+            right: 6%;
+        }
+
 
     .stat-row .unit {
         font-size: 70%;
@@ -1562,6 +1587,15 @@ input:checked + .btn-slider {
     display: none;
 }
 
+.label-left .shortName,
+.label-right .shortName {
+    display: block;
+}
+.label-left .longName,
+.label-right .longName {
+    display: none;
+}
+
 @media screen and (max-width: 480px) {
 
     .text-line .longName,
@@ -1572,6 +1606,14 @@ input:checked + .btn-slider {
     .text-line .shortName,
     .bar-line .shortName {
         display: block;
+    }
+
+    .stat-row .label-left {
+        left: 11%!important;
+    }
+
+    .stat-row .label-right {
+        right: 11%!important;
     }
 }
 
