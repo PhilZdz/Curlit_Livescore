@@ -1,10 +1,10 @@
-  // Version 1.4rc6 from 6.12.25
+  // Version 1.4rc7 from 8.12.25
   
   $(document).ready(function () {
 							  
-    const apiUrl = "https://livescores.worldcurling.org/curlitsse";
+    //const apiUrl = "https://livescores.worldcurling.org/curlitsse";
     //const apiUrl = "http://sse.curlit.local:5057";
-    // const apiUrl = "https://curlit.com/curlitsse";
+    const apiUrl = "https://curlit.com/curlitsse";
   
     const curlTasks = {
       0: "Draw",
@@ -161,7 +161,6 @@
     }
   
     function renderTileData(data) {
-        
       var result = data.find(g => g.sheet == (sheet != null && sheet != "" ? sheet : getLetterFromIndex(gameId)));
   
       if (result) {
@@ -373,7 +372,6 @@
         .build();
   
       stoneConnection.on("StoneUpdated", function (data) {
-        
         if (data == null || data.sheet != sheet) {
           return;
         }

@@ -1,15 +1,16 @@
 $(document).ready(function () {
     // Version 1.3rc8 from 29.11.25
-    const apiUrl = "https://livescores.worldcurling.org/curlitsse";
-    // const apiUrl = "http://sse.curlit.local:5057";
+    //const apiUrl = "https://livescores.worldcurling.org/curlitsse";
+    const apiUrl = "http://sse.curlit.local:5057";
 
     const params = new URLSearchParams(window.location.search);
     var season = "2526";
     var competition = "OQE";
-    var eventId = 2;
-    var sessionId = 1;
+    var eventId = 0;
+    var sessionId = 0;
     var gameId = 1;
-    var endId = 0;
+    var sheet = 'A';
+    var endId = 5;
     var currentEndIndex;
     var currentEndStoneList;
     var currentEndStoneIndex;
@@ -81,6 +82,9 @@ $(document).ready(function () {
             }
             if (gameId != null) {
                 urlParams["gameId"] = gameId;
+            }
+            if (sheet != null) {
+                urlParams["sheet"] = sheet;
             }
             if (endId != null) {
                 urlParams["endId"] = endId;
