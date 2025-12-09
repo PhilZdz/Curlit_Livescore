@@ -373,6 +373,10 @@
         .build();
   
       stoneConnection.on("StoneUpdated", function (data) {
+        
+        if (data == null || data.sheet != sheet) {
+          return;
+        }
 
         latestLiveData = data;
         latestStatsData = data.stats;
@@ -635,7 +639,7 @@
       // add the next svg for a smarted swipe
       if (shotData.stones.length >= currentIndex) {
         // $(".svg-container").eq(index+1).html(shotData[currentIndex].svg + `<div class="svg-touch-overlay"></div>`);
-        // makeSVGResponsive($(".svg-container").eq(index - 1).find("svg"));
+          makeSVGResponsive($(".svg-container").eq(index - 1).find("svg"));
         makeSVGResponsive($(".svg-container").eq(index + 1).find("svg"));
       }
   
