@@ -926,19 +926,19 @@
         .stat-row .label-left {
             text-align: left;
             position: absolute;
-            left: 6%;
+            left: 8%;
         }
 
         .stat-row .label-right {
             text-align: right;
             position: absolute;
-            right: 6%;
+            right: 8%;
         }
 
 
     .stat-row .unit {
         font-size: 70%;
-        margin-left: 2px;
+        margin-left: 1px;
     }
 
 /* Horizontal line: values + bar */
@@ -1050,21 +1050,30 @@ info-right span {
         border-radius: 2px;
     }
 
+
+.count-left,
+.count-right {
+    width: 15px;
+    text-align: center;
+    font-size: 60%;
+    flex-shrink: 0;
+}    
+
 .value-left,
 .value-right {
-    width: 20px;
-    text-align: center;
+    width: 30px;
     font-size: 75%;
     flex-shrink: 0;
+    text-align: right;
 }
 
 .value-left {
-    margin-right: 1rem;
+    /* margin-right: 1rem; */
     direction: rtl;
 }
 
 .value-right {
-    margin-left: 1rem;
+    /* margin-left: 1rem; */
     direction: ltr;
 }
 
@@ -1609,11 +1618,13 @@ input:checked + .btn-slider {
     }
 
     .stat-row .label-left {
-        left: 11%!important;
+        left: 15% !important;
+        font-size: 60%;
     }
 
     .stat-row .label-right {
-        right: 11%!important;
+        right: 15% !important;
+        font-size: 60%;
     }
 }
 
@@ -1628,5 +1639,13 @@ input:checked + .btn-slider {
 
     .header-content .left-text {
         margin-left: 3% !important;
+    }
+
+    .stat-row .label-left {
+        left: 11% !important;
+    }
+
+    .stat-row .label-right {
+        right: 11% !important;
     }
 }

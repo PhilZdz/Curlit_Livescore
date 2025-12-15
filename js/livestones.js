@@ -2,9 +2,9 @@
   
   $(document).ready(function () {
 							  
-    //const apiUrl = "https://livescores.worldcurling.org/curlitsse";
+    const apiUrl = "https://livescores.worldcurling.org/curlitsse";
     //const apiUrl = "http://sse.curlit.local:5057";
-    const apiUrl = "https://curlit.com/curlitsse";
+    //const apiUrl = "https://curlit.com/curlitsse";
   
     const curlTasks = {
       0: "Draw",
@@ -183,12 +183,19 @@
       $leftText.removeClass("shortSessionName");
       // Special case - shorten the session title if it contains Women's Round Robin (only on smaller devices)
       var sequenceToStrip = "Women's Round Robin";
+      var sequenceToStrip2 = " Round Robin";
       if (leftText.length > 28 && leftText.indexOf(sequenceToStrip) != -1) {
         leftText = leftText.replace(sequenceToStrip, "Women's <span class='wideScreenText'>Round Robin</span>");
+      }
+      else if (leftText.length > 40 && leftText.indexOf(sequenceToStrip2) != -1) {
+        leftText = leftText.replace(sequenceToStrip2, "");
+        $leftText.addClass("longText");
       }
       else if (leftText.length > 20) {
         $leftText.addClass("longText");
       }
+
+
       $leftText.html(leftText);
   
   
@@ -589,15 +596,23 @@
     }
 
     function goTo(index, isManual = false) {
+      var stoneCount = 16;
+      
+      // PZ Temp workaround, we want to have the # of stones in SSE
+      var lineupNames = statsData.find(stat => stat.statName === "Line-ups");
+          
+      if (lineupNames != null) {
+        stoneCount = lineupNames.rows.length == 2 ? 10 : 16;
+    }
 
       // If index=-1, navigate to the previous end
       if (index == -1) {
         if (currentEnd > 1) {
-          goToHistory(currentEnd - 1, 16);
+          goToHistory(currentEnd - 1, stoneCount);
         }
         return;
       }
-      if (index > 15) {
+      if (index > stoneCount - 1) {
         if (currentEnd < latestLiveData.stones[0].endID) {
           goToHistory(currentEnd + 1);
         }
@@ -970,8 +985,14 @@
     
             // Special case, LSD
             if (currentStats.rows[idx].rowValueMax == -1) {
+              $row.find(".count-left").html('');
+              $row.find(".count-right").html('');
               $row.find(".label-left, .label-right").html("");
               leftPct = rightPct = 50;
+            }
+            else {
+              $row.find(".bar-left").html('');
+              $row.find(".bar-right").html('');
             }
           }
 
@@ -1000,8 +1021,17 @@
   
           // Animate
           setTimeout(() => {
-            $row.find(".bar-left").html(barValueRed != null && barValueRed != "0" ? renderBestFit(barValueRed) : "");
-            $row.find(".bar-right").html(barValueYellow != null && barValueYellow != "0" ? renderBestFit(barValueYellow) : "");
+            if (currentStats.rows[idx].rowValueMax == -1) {
+              $row.find(".bar-left").html(barValueRed != null && barValueRed != "0" ? renderBestFit(barValueRed) : "");
+              $row.find(".bar-right").html(barValueYellow != null && barValueYellow != "0" ? renderBestFit(barValueYellow) : "");
+            }
+            else {
+              $row.find(".count-left").html(barValueRed != null && barValueRed != "0" ? barValueRed : "");
+              $row.find(".count-right").html(barValueYellow != null && barValueYellow != "0" ? barValueYellow : "");
+              $row.find(".bar-left").css("width", leftPct + "%");
+              $row.find(".bar-right").css("width", rightPct + "%");
+            }
+            
             $row.find(".bar-left").css("width", leftPct + "%");
             $row.find(".bar-right").css("width", rightPct + "%");
           }, 100);

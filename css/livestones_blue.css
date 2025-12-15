@@ -62,3 +62,8 @@ svg rect {
 .header-content select:focus {
   background-color: var(--bg_color)!important;
 }
+
+.count-left,
+.count-right {
+  color: #cecece;
+}
