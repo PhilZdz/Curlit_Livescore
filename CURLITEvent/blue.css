@@ -1,0 +1,257 @@
+@import url('livescores_dark.css');
+:root {
+    --text_color: white;
+    --bg_color: #051739;
+    --fav_color: #003FAF;
+    --high-color: #003FAF;
+    --bgdarker_color: rgb(18, 23, 44);
+}
+
+body {
+    background-color: var(--bg_color);
+    color: var(--text_color);
+}
+
+a:link {
+    color: var(--text_color);
+}
+
+a:active {
+    color: var(--text_color);
+}
+
+a:visited {
+    color: var(--text_color);
+}
+
+a:hover {
+    color: #add8e6;
+    text-decoration: underline;
+}
+
+table {
+    border-color: rgb(192, 192, 192);
+}
+
+h1 {
+    color: var(--text_color);
+}
+
+h2 {
+    color: var(--text_color);
+}
+
+h3 {
+    color: var(--text_color);
+}
+
+h4 {
+    color: var(--text_color);
+}
+
+h5 {
+    color: var(--text_color);
+}
+
+h6 {
+    color: var(--text_color);
+}
+
+button {
+    border: 4px ridge #FFFF00;
+    background-color: #283360;
+    color: #FFFF00;
+}
+
+input {
+    background-color: var(--bg_color);
+    color: #f5f5f5;
+    border-color: gray;
+}
+
+.aspinput {
+    background-color: var(--bg_color);
+    color: #f5f5f5;
+    border-color: gray;
+}
+
+label {
+    color: rgb(12, 0, 0);
+}
+
+textarea {
+    color: black;
+}
+
+fieldset {
+    color: var(--text_color);
+}
+
+legend {
+    color: rgb(153, 153, 204);
+}
+
+select {
+    color: var(--text_color);
+    background-color: var(--bg_color);
+}
+
+caption {
+    color: rgb(153, 153, 204);
+}
+
+th {
+    color: var(--text_color);
+}
+
+#catch {
+    color: yellow;
+}
+
+.clsMenu {
+    border-right: gray thin outset;
+    border-top: silver thin outset;
+    border-left: silver thin outset;
+    border-bottom: gray thin outset;
+    background-color: var(--fav_color);
+}
+
+    .clsMenu A {
+        color: var(--text_color);
+        text-decoration: none;
+    }
+
+        .clsMenu A:hover {
+            color: #283360;
+            background-color: #dcdcdc;
+            text-decoration: none;
+        }
+
+.favTeam {
+    background-color: var(--fav_color);
+}
+
+.bottombuttonSelected {
+    background-color: var(--fav_color);
+}
+
+.bottombuttonlongSelected {
+    background-color: var(--fav_color);
+}
+
+.sbtn, .nbtn {
+    border: 1px ridge grey;
+    background-color: var(--fav_color);
+}
+
+.sdrp {
+    border: 1px ridge grey;
+    background-color: var(--fav_color);
+}
+
+.sbtnSelected {
+    border: 1px ridge #FFFFFF;
+    background-color: var(--fav_color);
+}
+
+.sbtnBlue, .xsbtnBlue {
+    border: 1px ridge grey;
+    background-color: var(--fav_color);
+    color: var(--text_color);
+}
+
+.sbtnWhite, .xsbtnWhite {
+    border: 1px ridge grey;
+    background-color: #F8F8F8;
+    color: #000080;
+}
+
+.sbtnBig, .xsbtnBig {
+    border: 1px ridge grey;
+    background-color: var(--text_color);
+    color: black;
+}
+.bigIcon, input.bigIcon {
+    background-color: var(--fav_color);
+    fill: var(--text_color);
+}
+svg {
+    fill: var(--bg_color);
+}
+
+text {
+    fill: white;
+}
+
+path {
+    stroke: white;
+    fill: transparent;
+}
+
+.svgbgDarker {
+    fill: rgb(18, 23, 44);
+}
+
+#head-to-head {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+#currentShot {
+    background: rgb(18, 23, 44);
+    /* color: #333; */
+}
+
+svg rect {
+    fill: rgba(255, 255, 255, 0.1);
+    stroke: white;
+}
+
+#head-to-head .headers {
+    color: #051739;
+    background: white;
+}
+  
+
+#head-to-head .headers.expanded .header-item {
+    border-bottom: 1px solid #eee;
+    background: #fafafa;
+  }
+
+  /* Style the track (the background) */
+#head-to-head .headers::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  /* Style the thumb (the draggable handle) */
+#head-to-head .headers::-webkit-scrollbar-thumb {
+  background-color: #051739;
+  border: 3px solid #f1f1f1; 
+}#003FAF
+  
+  /* Add a hover effect on the thumb */
+#head-to-head .headers::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+#currentShot table select {
+    border: 1px solid gray;
+}
+
+#currentShot .select-wrapper::after {
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+}
+
+
+#slider.connected:empty::before {
+    background: #152035;
+    color: #fff;
+}
+
+.header-content .sheet {
+    background: rgba(162, 162, 162, 0.33);
+}
+
+.header-content select:focus {
+    background-color: var(--bg_color) !important;
+}
