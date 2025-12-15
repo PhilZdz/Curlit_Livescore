@@ -64,3 +64,8 @@
   background-color: var(--bg_color)!important;
   color: black;
 }
+
+.count-left,
+.count-right {
+  color: #898989!important;
+}

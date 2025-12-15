@@ -1,4 +1,4 @@
-  // Version 1.4rc7 from 8.12.25
+  // Version 1.4rc10 from 14.12.25
   
   $(document).ready(function () {
 							  

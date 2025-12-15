@@ -1,4 +1,4 @@
-﻿/* Version 1.4rc6 from 6.12.25  */
+﻿/* Version 1.4rc10 from 14.12.25  */
 
 #loader {
     background-image: url(../img/curloading.gif);
@@ -914,31 +914,32 @@
 
         .stat-row .label-left,
         .stat-row .label-right {
-          font-size: 65%;
-          z-index: 5;
-          position: relative;
-          line-height: 0px;
-          margin-top: 2px;
-          margin-bottom: 3px;
-          color: lightgray;
+            font-size: 60%;
+            z-index: 5;
+            position: relative;
+            line-height: 0px;
+            margin-top: 2px;
+            margin-bottom: 3px;
+            color: lightgray;
+            top: -50%;
         }
 
         .stat-row .label-left {
             text-align: left;
             position: absolute;
-            left: 8%;
+            left: 0;
         }
 
         .stat-row .label-right {
             text-align: right;
             position: absolute;
-            right: 8%;
+            right: 0;
         }
 
 
     .stat-row .unit {
         font-size: 70%;
-        margin-left: 1px;
+        margin-left: 2px;
     }
 
 /* Horizontal line: values + bar */
@@ -1054,10 +1055,16 @@ info-right span {
 .count-left,
 .count-right {
     width: 15px;
-    text-align: center;
+    text-align: right;
     font-size: 60%;
     flex-shrink: 0;
 }    
+
+.count-left,
+.count-right {
+    margin-right: 1%;
+    margin-left: 1%;
+}
 
 .value-left,
 .value-right {
@@ -1082,7 +1089,7 @@ info-right span {
     flex: 1;
     height: 15px;
     /* background: #333; */
-    overflow: hidden;
+    overflow: visible;
 }
 
 .bar-left,
@@ -1618,12 +1625,12 @@ input:checked + .btn-slider {
     }
 
     .stat-row .label-left {
-        left: 15% !important;
+        /* left: 15% !important; */
         font-size: 60%;
     }
 
     .stat-row .label-right {
-        right: 15% !important;
+        /* right: 15% !important; */
         font-size: 60%;
     }
 }
@@ -1641,11 +1648,8 @@ input:checked + .btn-slider {
         margin-left: 3% !important;
     }
 
-    .stat-row .label-left {
-        left: 11% !important;
-    }
-
+    .stat-row .label-left,
     .stat-row .label-right {
-        right: 11% !important;
+      top: -60%!important;
     }
 }
