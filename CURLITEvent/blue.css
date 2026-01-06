@@ -199,7 +199,7 @@ path {
 #currentShot {
     background: rgb(18, 23, 44);
     /* color: #333; */
-}
+  }
 
 svg rect {
     fill: rgba(255, 255, 255, 0.1);
@@ -226,7 +226,7 @@ svg rect {
 #head-to-head .headers::-webkit-scrollbar-thumb {
   background-color: #051739;
   border: 3px solid #f1f1f1; 
-}#003FAF
+}
   
   /* Add a hover effect on the thumb */
 #head-to-head .headers::-webkit-scrollbar-thumb:hover {
@@ -241,8 +241,6 @@ svg rect {
   border-right: 2px solid #ffffff;
   border-bottom: 2px solid #ffffff;
 }
-
-
 #slider.connected:empty::before {
     background: #152035;
     color: #fff;
@@ -254,4 +252,13 @@ svg rect {
 
 .header-content select:focus {
     background-color: var(--bg_color) !important;
+}
+
+.count-left,
+.count-right {
+    color: #cecece;
+}
+
+.stat-row .label-left, .stat-row .label-right {
+    color: lightgray;
 }

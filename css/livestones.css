@@ -588,25 +588,25 @@
     }
 
 @keyframes redBlink {
-  /* At the start (0%) and end (100%) of the cycle, alpha is 1 (fully opaque) */
-  0%, 100% {
-    border: 1px solid red; /* Opaque red border */
-  }
-  /* Halfway through the cycle (50%), alpha is 0 (fully transparent) */
-  50% {
-    border: 1px solid rgba(255, 0, 0, 0);
-  }
+    /* At the start (0%) and end (100%) of the cycle, alpha is 1 (fully opaque) */
+    0%, 100% {
+        border: 1px solid red; /* Opaque red border */
+    }
+    /* Halfway through the cycle (50%), alpha is 0 (fully transparent) */
+    50% {
+        border: 1px solid rgba(255, 0, 0, 0);
+    }
 }
 
 @keyframes yellowBlink {
-  /* At the start (0%) and end (100%) of the cycle, alpha is 1 (fully opaque) */
-  0%, 100% {
-    border: 1px solid #d7d702;
-  }
-  /* Halfway through the cycle (50%), alpha is 0 (fully transparent) */
-  50% {
-    border: 1px solid rgba(255, 0, 0, 0);
-  }
+    /* At the start (0%) and end (100%) of the cycle, alpha is 1 (fully opaque) */
+    0%, 100% {
+        border: 1px solid #d7d702;
+    }
+    /* Halfway through the cycle (50%), alpha is 0 (fully transparent) */
+    50% {
+        border: 1px solid rgba(255, 0, 0, 0);
+    }
 }
 
 
@@ -617,17 +617,17 @@
 
 
 .home .team-clock.active::after {
-  animation-name: redBlink;
-  animation-duration: 3s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
+    animation-name: redBlink;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
 }
 
 .away .team-clock.active::before {
-  animation-name: yellowBlink;
-  animation-duration: 3s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
+    animation-name: yellowBlink;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
 }
 
 .home .team-clock.active::after {
@@ -704,9 +704,9 @@
         cursor: pointer;
     }
 
-    #head-to-head .header-item.active {
-        opacity: 1;
-    }
+        #head-to-head .header-item.active {
+            opacity: 1;
+        }
 
 
     /* Expanded menu mode */
@@ -912,29 +912,28 @@
             right: 33%;
         }
 
-        .stat-row .label-left,
-        .stat-row .label-right {
-            font-size: 60%;
-            z-index: 5;
-            position: relative;
-            line-height: 0px;
-            margin-top: 2px;
-            margin-bottom: 3px;
-            color: lightgray;
-            top: -50%;
-        }
+    .stat-row .label-left,
+    .stat-row .label-right {
+        font-size: 60%;
+        z-index: 5;
+        position: relative;
+        line-height: 0px;
+        margin-top: 2px;
+        margin-bottom: 3px;
+        top: -50%;
+    }
 
-        .stat-row .label-left {
-            text-align: left;
-            position: absolute;
-            left: 0;
-        }
+    .stat-row .label-left {
+        text-align: left;
+        position: absolute;
+        left: 0;
+    }
 
-        .stat-row .label-right {
-            text-align: right;
-            position: absolute;
-            right: 0;
-        }
+    .stat-row .label-right {
+        text-align: right;
+        position: absolute;
+        right: 0;
+    }
 
 
     .stat-row .unit {
@@ -1058,7 +1057,7 @@ info-right span {
     text-align: right;
     font-size: 60%;
     flex-shrink: 0;
-}    
+}
 
 .count-left,
 .count-right {
@@ -1607,6 +1606,7 @@ input:checked + .btn-slider {
 .label-right .shortName {
     display: block;
 }
+
 .label-left .longName,
 .label-right .longName {
     display: none;
@@ -1641,7 +1641,7 @@ input:checked + .btn-slider {
     }
 
     .header-content .sheet {
-      width: 5% !important;
+        width: 5% !important;
     }
 
     .header-content .left-text {
@@ -1650,6 +1650,6 @@ input:checked + .btn-slider {
 
     .stat-row .label-left,
     .stat-row .label-right {
-      top: -60%!important;
+        top: -60% !important;
     }
 }

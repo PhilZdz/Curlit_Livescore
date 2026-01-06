@@ -5,7 +5,7 @@
 <asp:Content ID="ContentStyle" ContentPlaceHolderID="HeaderStyleTop" runat="Server">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
     <script src="../Scripts/jquery-3.7.1.min.js"></script>
-    <script src="../Scripts/livestones.js?v=1.3rc6"></script>
+    <script src="../Scripts/livestones.js?v=1.4rc10"></script>
     <link href="../CSS/bootstrap.min.css" rel="stylesheet">
     <link href="../CSS/livescores.css?v=1.3alpha3c" rel="stylesheet" type="text/css" />
     <link href="../CSS/livestones.css?v=1.3alpha3c" rel="stylesheet" type="text/css" />
@@ -39,13 +39,13 @@
                     <header>
                         <div class="header-content">
                             <div class="select-wrapper" style="margin-left: 2px;">
-                              <select title="sheet" name="sheet" class="sheet">
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                              </select>
-                            </div>
+                                <select title="sheet" name="sheet" class="sheet">
+                                  <option value="A">A</option>
+                                  <option value="B">B</option>
+                                  <option value="C">C</option>
+                                  <option value="D">D</option>
+                                </select>
+                              </div>
 
                             <span class="left-text"></span>
 
@@ -96,45 +96,47 @@
 
                             <!-- Game center -->
                             <div id="game-center">
-                                <div id="top-stats">
-                                    <div id="head-to-head">
-                                        <div class="headers">
-                                            <div class="headers-slider">
-                                            </div>
-                                        </div>
-                                        <button type="button" class="header-arrow header-prev">&lt;</button>
-                                        <button type="button" class="header-arrow header-next">&gt;</button>
-
-                                        <div class="team-left"></div>
-                                        <div class="team-right"></div>
-
-                                        <div class="stats-container">
-                                            <div class="stat-row-template" data-left="0" data-right="0">
-                                                <div class="label"></div>
-                                                <div class="label-left"></div>
-                                                <div class="label-right"></div>
-                                                <div class="text-line">
-                                                    <div class="info-left"></div>
-                                                    <div class="text-left"></div>
-                                                    <div class="text-right"></div>
-                                                    <div class="info-right"></div>
-                                                </div>
-                                                <div class="bar-line">
-                                                    <div class="value-left"></div>
-                                                    <div class="mirror-bar">
-                                                        <div class="bar-left"></div>
-                                                        <div class="bar-right"></div>
-                                                    </div>
-                                                    <div class="value-right"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="swipe-feedback left"></div>
-                                        <div class="swipe-feedback right"></div>
-                                        
-                                        <div class="index-buttons" id="indexButtonsStats"></div>
+                              <div id="top-stats">
+                                <div id="head-to-head">
+                                  <div class="headers">
+                                    <div class="headers-slider">
                                     </div>
+                                  </div>
+                                  <button type="button" class="header-arrow header-prev">&lt;</button>
+                                  <button type="button" class="header-arrow header-next">&gt;</button>
+
+                                  <div class="team-left"></div>
+                                  <div class="team-right"></div>
+
+                                  <div class="stats-container">
+                                    <div class="stat-row-template" data-left="0" data-right="0">
+                                      <div class="label"></div>
+                                      <div class="text-line">
+                                        <div class="info-left"></div>
+                                        <div class="text-left"></div>
+                                        <div class="text-right"></div>
+                                        <div class="info-right"></div>
+                                      </div>
+                                      <div class="bar-line">
+                                        <div class="value-left"></div>
+                                        <div class="count-left"></div>
+                                        <div class="mirror-bar">
+                                          <div class="label-left"></div>
+                                          <div class="bar-left"></div>
+                                          <div class="bar-right"></div>
+                                          <div class="label-right"></div>
+                                        </div>
+                                        <div class="count-right"></div>
+                                        <div class="value-right"></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="swipe-feedback left"></div>
+                                  <div class="swipe-feedback right"></div>
+                                
+                                  <div class="index-buttons" id="indexButtonsStats"></div>
                                 </div>
+                              </div>
 
 
 
@@ -260,7 +262,7 @@
         </div>
 
         <p class="xxsl">
-           Swipe left and right to select previous stones or different stats. Trial Version!
-        </p>
+            Swipe left and right to select previous stones or different stats. Trial Version!
+         </p>
 </asp:Content>
 
