@@ -1,4 +1,4 @@
-/* Version 1.13rc6 from 25.11.25  */
+/* Version 1.5rc2 from 5.1.26  */
 /* body {
   max-width: 1200px;
   position: absolute;
@@ -537,6 +537,7 @@
 
 .tile-s .matchup-tile table.scoreboard tr td:not(.noc):not(.lsfe):not(.score) {
     border-left: 0.5px solid #dfdfdf;
+    border-right: 0.5px solid #dfdfdf;
 }
 
 .tile-s .matchup-tile table.scoreboard tr:nth-child(odd) td:nth-child(3),
@@ -581,7 +582,7 @@
     }
 
 .matchup-tile table.scoreboard span.powerplay {
-    border-radius: 50%;
+    border-radius: 30%;
     box-sizing: border-box;
     width: 24px;
     height: 100%;

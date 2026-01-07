@@ -1,0 +1,47 @@
+.matchup-tile {
+    border: 1px solid #898989;
+    background-color: #051739;
+    color: #efefef;
+}
+
+.matchup-tile .summary {
+    color: #efefef;
+    background-color: #051739;;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.matchup-tile span.team-history {
+    color: #c0c0c0;
+}
+
+/* LSCE */
+.matchup-tile table.scoreboard tr:nth-child(odd) td.hammer:not(:nth-child(-n+3))::before {
+    background-color: white;
+}
+
+.matchup-tile table.scoreboard tr:nth-child(even)
+td.hammer:not(:nth-child(-n+3))::before {
+    background-color: white;
+}
+
+.matchup-tile table.scoreboard tr:nth-child(even)
+td.hammer:not(:nth-child(-n+3)):has(span.powerplay)::before {
+    background-color: black;
+}
+
+
+.matchup-tile table.scoreboard tr:nth-child(even) td span.powerplay {
+    color: black;
+}
+.matchup-tile .details {
+    color: #898989;
+}
+
+.matchup-tile table.scoreboard th {
+    color: white;
+}
+
+/* Sheet name */
+.header-content .sheet {
+    background: rgba(162,162,162, 0.33);
+}

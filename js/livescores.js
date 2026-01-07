@@ -1,7 +1,8 @@
+// Version 1.5rc3 from 6.1.26
+
 $(document).ready(function () {
-    // Version 1.8 from 30.4.25
-    //const apiUrl = "https://livescores.worldcurling.org/curlitsse";
-    const apiUrl = "http://sse.curlit.local:5057";
+    const apiUrl = "https://livescores.worldcurling.org/curlitsse";
+    //const apiUrl = "http://sse.curlit.local:5057";
 
     const params = new URLSearchParams(window.location.search);
     const pathSegments = window.location.pathname.split("/");
@@ -19,13 +20,10 @@ $(document).ready(function () {
     if (document.getElementById('ContentMain_HiddenSessionID') != null)
         sessionId = document.getElementById('ContentMain_HiddenSessionID').value ?? 0;
 
-    // TODO PZ Remove that
-    eventId = sessionId = 1;
-
     const competitionCode = pathSegments[1] ?? competition;
 
     // The name of the group that sign
-    const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}`;
+    const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-0`;
 
     const $container = $('#scoreboard');
     const $template = $('#template');
@@ -35,7 +33,7 @@ $(document).ready(function () {
     var nbGames = 0;
 
     function startConnection() {
-        let connection = new signalR.HubConnectionBuilder()
+        const connection = new signalR.HubConnectionBuilder()
             .withUrl(`${apiUrl}/notificationHub`, { withCredentials: false })
             .build();
 
@@ -86,7 +84,6 @@ $(document).ready(function () {
                 .then(response => response.json())
                 .then(function (data) {
                     // Hide the loader and show the session title
-                    $('#slider').empty();
                     $("#loader").hide();
 
                     // Build the scoreboard
@@ -101,7 +98,7 @@ $(document).ready(function () {
                 });
         }).catch(function (err) {
             setOnlineHeader(false);
-            // TODO write an error in the DOM
+            console.error(err.toString())
             setTimeout(startConnection, 5000);
         });
 
@@ -342,10 +339,6 @@ $(document).ready(function () {
         awayDetails.find('td.score span').text(result.awayTeam.total);
     }
 
-
-
-    startConnection();
-
     function setOnlineHeader(online) {
         var updateIcon;
         if (document.getElementById('RefreshButton') != null)
@@ -363,7 +356,6 @@ $(document).ready(function () {
                 updateIcon.src = "../general/offline.png";
         }
     }
+
+    startConnection();
 });
-
-
-
