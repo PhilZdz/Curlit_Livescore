@@ -1,4 +1,4 @@
-// Version 1.5rc3 from 6.1.26
+// Version 1.5rc4 from 8.1.26
 
 $(document).ready(function () {
     const apiUrl = "https://livescores.worldcurling.org/curlitsse";
@@ -256,19 +256,19 @@ $(document).ready(function () {
 
         // LSFE
         thead.append(`<th class="lsfe"></th>`);
-        homeRow.append(`<td class="lsfe">${result.homeTeam.lsfe == true ? "*" : ""}</td>`)
-        awayRow.append(`<td class="lsfe">${result.awayTeam.lsfe == true ? "*" : ""}</td>`)
+        homeRow.append(`<td class="lsfe">${result.homeTeam.lsfe == true ? "✱" : ""}</td>`)
+        awayRow.append(`<td class="lsfe">${result.awayTeam.lsfe == true ? "✱" : ""}</td>`)
 
         // LSD (only on desktop)
         if (result.homeTeam.lsd.total != null) {
             thead.append(`<th class="lsd-lsfe" colspan=3>LSD/LSFE</th>`);
-            homeRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.homeTeam.lsd.total != null ? Number(result.homeTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.homeTeam.lsfe == true ? "*" : ""}</td>`)
-            awayRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.awayTeam.lsd.total != null ? Number(result.awayTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.awayTeam.lsfe == true ? "*" : ""}</td>`)
+            homeRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.homeTeam.lsd.total != null ? Number(result.homeTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.homeTeam.lsfe == true ? "✱" : ""}</td>`)
+            awayRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.awayTeam.lsd.total != null ? Number(result.awayTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.awayTeam.lsfe == true ? "✱" : ""}</td>`)
         }
         else {
             thead.append(`<th class="lsd-lsfe" colspan=2>LSFE</th><th></th>`);
-            homeRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.homeTeam.lsfe == true ? "*" : ""}</td><td></td>`)
-            awayRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.awayTeam.lsfe == true ? "*" : ""}</td><td></td>`)
+            homeRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.homeTeam.lsfe == true ? "✱" : ""}</td><td></td>`)
+            awayRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.awayTeam.lsfe == true ? "✱" : ""}</td><td></td>`)
         }
 
         // ENDS
@@ -325,14 +325,14 @@ $(document).ready(function () {
         }
 
         homeDetails.find('td.noc').text(result.homeTeam.noc);
-        homeDetails.find('td.lsfe').text(`${result.homeTeam.lsfe == true ? "*" : ""}`);
+        homeDetails.find('td.lsfe').text(`${result.homeTeam.lsfe == true ? "✱" : ""}`);
         homeDetails.find('td').eq(2).text(result.homeTeam.lsd.cw != null ? Number(result.homeTeam.lsd.cw).toFixed(1) : null);
         homeDetails.find('td').eq(3).text(result.homeTeam.lsd.ccw != null ? Number(result.homeTeam.lsd.ccw).toFixed(1) : null);
         homeDetails.find('td.lsd').text(result.homeTeam.lsd.total != null ? `${Number(result.homeTeam.lsd.total).toFixed(1)}cm` : null);
         homeDetails.find('td.score span').text(result.homeTeam.total);
 
         awayDetails.find('td.noc').text(result.awayTeam.noc);
-        awayDetails.find('td.lsfe').text(`${result.awayTeam.lsfe == true ? "*" : ""}`);
+        awayDetails.find('td.lsfe').text(`${result.awayTeam.lsfe == true ? "✱" : ""}`);
         awayDetails.find('td').eq(2).text(result.awayTeam.lsd.cw != null ? Number(result.awayTeam.lsd.cw).toFixed(1) : null);
         awayDetails.find('td').eq(3).text(result.awayTeam.lsd.ccw != null ? Number(result.awayTeam.lsd.ccw).toFixed(1) : null);
         awayDetails.find('td.lsd').text(result.awayTeam.lsd.total != null ? `${Number(result.awayTeam.lsd.total).toFixed(1)}cm` : null);

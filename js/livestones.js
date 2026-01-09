@@ -1,4 +1,4 @@
-// Version 1.5rc3 from 6.1.25
+// Version 1.5rc4 from 8.1.25
 
 $(document).ready(function () {
 
@@ -71,6 +71,7 @@ $(document).ready(function () {
     // ----- RESULTS ----- //
     // ------------------- //
     var latestGameStatus;
+    var doStats;
 
     function startConnectionResults() {
         let resultConnection = new signalR.HubConnectionBuilder()
@@ -78,6 +79,10 @@ $(document).ready(function () {
             .build();
 
         resultConnection.on("ReceiveMessage", function (resultList) {
+
+            // Arrange the initial display
+            refreshDoStats(resultList);
+
             // Refresh the tiles
             renderTileData(resultList);
 
@@ -133,6 +138,9 @@ $(document).ready(function () {
                     $("#loader").hide();
                     $("#game-tile").show();
 
+                    // Arrange the initial display
+                    refreshDoStats(data);
+
                     // Build the header
                     renderTileData(data);
 
@@ -159,22 +167,53 @@ $(document).ready(function () {
         return String.fromCharCode(asciiCode);
     }
 
+    function refreshDoStats(data) {
+        var result = data.find(g => g.sheet == (sheet != null && sheet != "" ? sheet : getLetterFromIndex(gameId)));
+
+        if (result) {
+            doStats = result.doStats;
+        }
+    }
+
+
+
     function renderTileData(data) {
         var result = data.find(g => g.sheet == (sheet != null && sheet != "" ? sheet : getLetterFromIndex(gameId)));
 
         if (result) {
             latestGameStatus = result.status;
+            refreshSheetList($gameTile, result);
             feedTileUI($gameTile, result);
         }
     }
 
 
+    function refreshSheetList(tile, result){
+
+        var $sheet = tile.find('select.sheet');
+        var values = $sheet.find('option').map(function () { return $(this).val(); }).get();
+
+        // If the values have changed, re-build the select
+        if (JSON.stringify(values) != JSON.stringify(result.allSheets)) {
+            $sheet.empty();
+            
+            $.each(result.allSheets, function(_, value) {
+                $sheet.append($("<option>", {
+                    value: value,
+                    text: value
+                }));
+            });
+        }
+
+        if ($sheet.val() != result.sheet) {
+            $sheet.val(result.sheet);
+        }
+    }
+
     // TODO this method should be moved to a common JS between result/stones
     function feedTileUI(tile, result) {
         // Header
         tile.find('.matchup-tile').attr('class', `matchup-tile ${result.status}`);
-
-        tile.find('select.sheet').val(result.sheet);
 
         let $leftText = tile.find('span.left-text');
         var leftText = result.gamesTitle;
@@ -274,19 +313,19 @@ $(document).ready(function () {
 
         // LSFE
         thead.append(`<th class="lsfe"></th>`);
-        homeRow.append(`<td class="lsfe">${result.homeTeam.lsfe == true ? "*" : ""}</td>`)
-        awayRow.append(`<td class="lsfe">${result.awayTeam.lsfe == true ? "*" : ""}</td>`)
+        homeRow.append(`<td class="lsfe">${result.homeTeam.lsfe == true ? "✱" : ""}</td>`)
+        awayRow.append(`<td class="lsfe">${result.awayTeam.lsfe == true ? "✱" : ""}</td>`)
 
         // LSD (only on desktop)
         if (result.homeTeam.lsd.total != null) {
             thead.append(`<th class="lsd-lsfe" colspan=3>LSD/LSFE</th>`);
-            homeRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.homeTeam.lsd.total != null ? Number(result.homeTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.homeTeam.lsfe == true ? "*" : ""}</td>`)
-            awayRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.awayTeam.lsd.total != null ? Number(result.awayTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.awayTeam.lsfe == true ? "*" : ""}</td>`)
+            homeRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.homeTeam.lsd.total != null ? Number(result.homeTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.homeTeam.lsfe == true ? "✱" : ""}</td>`)
+            awayRow.append(`<td class="lsd-lsfe" colspan=2><span>${result.awayTeam.lsd.total != null ? Number(result.awayTeam.lsd.total).toFixed(1) + "cm" : ""}</span></td><td class="lsd-lsfe">${result.awayTeam.lsfe == true ? "✱" : ""}</td>`)
         }
         else {
             thead.append(`<th class="lsd-lsfe" colspan=2>LSFE</th><th></th>`);
-            homeRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.homeTeam.lsfe == true ? "*" : ""}</td><td></td>`)
-            awayRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.awayTeam.lsfe == true ? "*" : ""}</td><td></td>`)
+            homeRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.homeTeam.lsfe == true ? "✱" : ""}</td><td></td>`)
+            awayRow.append(`<td class="lsd-lsfe-center" colspan=2><span>${result.awayTeam.lsfe == true ? "✱" : ""}</td><td></td>`)
         }
 
         // ENDS
@@ -343,14 +382,14 @@ $(document).ready(function () {
         }
 
         homeDetails.find('td.noc').text(result.homeTeam.noc);
-        homeDetails.find('td.lsfe').text(`${result.homeTeam.lsfe == true ? "*" : ""}`);
+        homeDetails.find('td.lsfe').text(`${result.homeTeam.lsfe == true ? "✱" : ""}`);
         homeDetails.find('td').eq(2).text(result.homeTeam.lsd.cw != null ? Number(result.homeTeam.lsd.cw).toFixed(1) : null);
         homeDetails.find('td').eq(3).text(result.homeTeam.lsd.ccw != null ? Number(result.homeTeam.lsd.ccw).toFixed(1) : null);
         homeDetails.find('td.lsd').text(result.homeTeam.lsd.total != null ? `${Number(result.homeTeam.lsd.total).toFixed(1)}cm` : null);
         homeDetails.find('td.score span').text(result.homeTeam.total);
 
         awayDetails.find('td.noc').text(result.awayTeam.noc);
-        awayDetails.find('td.lsfe').text(`${result.awayTeam.lsfe == true ? "*" : ""}`);
+        awayDetails.find('td.lsfe').text(`${result.awayTeam.lsfe == true ? "✱" : ""}`);
         awayDetails.find('td').eq(2).text(result.awayTeam.lsd.cw != null ? Number(result.awayTeam.lsd.cw).toFixed(1) : null);
         awayDetails.find('td').eq(3).text(result.awayTeam.lsd.ccw != null ? Number(result.awayTeam.lsd.ccw).toFixed(1) : null);
         awayDetails.find('td.lsd').text(result.awayTeam.lsd.total != null ? `${Number(result.awayTeam.lsd.total).toFixed(1)}cm` : null);
@@ -389,6 +428,7 @@ $(document).ready(function () {
             if (data.stones.length == 0) {
                 resetViewport();
             }
+            adjustGameCenterDisplay();
 
             if ($("#is_live").is(":checked")) {
                 updateLiveData(data);
@@ -454,6 +494,8 @@ $(document).ready(function () {
 
                     updateLiveData(data);
 
+                    adjustGameCenterDisplay();
+
                     setOnlineHeader(true);
 
                     // Subscribe to real time updates
@@ -466,6 +508,26 @@ $(document).ready(function () {
             setTimeout(startConnectionStones, 5000);
         });
 
+    }
+
+    function adjustGameCenterDisplay() {
+
+        // If doStats is not defined, try to fetch it from the latest live data
+        if (doStats != null && !doStats) {
+            $('#game-content').hide();
+
+
+            if (!$('table.scoreboard').is(':visible')) {
+                $('table.scoreboard').show().css('display', 'table');
+            }
+
+            if (!$('#head-to-head').is(':visible')) {
+                $('#head-to-head').show().css('display', 'flex');
+                goToStat(0);
+                animateAllStats(0);
+            }
+            
+        }
     }
 
     function resetViewport() {
@@ -1260,7 +1322,7 @@ $(document).ready(function () {
         var target = $(this).data("target");
 
         if (target == "stats") {
-            var $h2h = $('#head-to-head')
+            var $h2h = $('#head-to-head');
             $h2h.slideToggle(500);
             if ($h2h.is(':visible')) {
                 $h2h.css('display', 'flex');

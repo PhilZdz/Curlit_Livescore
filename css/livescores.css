@@ -1,4 +1,4 @@
-/* Version 1.5rc2 from 5.1.26  */
+/* Version 1.5rc4 from 8.1.26  */
 /* body {
   max-width: 1200px;
   position: absolute;
@@ -69,7 +69,7 @@
         border-bottom-right-radius: 4px;
         left: -10px;
         top: 0px;
-        width: 14px;
+        width: 24px;
         text-align: center;
         font-weight: bold;
         padding-left: 1px;
@@ -78,7 +78,7 @@
     .header-content .left-text {
         max-width: 35%;
         font-stretch: normal;
-        margin-left: 6px;
+        margin-left: 15px;
     }
 
     .header-content .condensed {
@@ -682,6 +682,14 @@
         margin-top: -1px;
         margin-left: 0px;
     }
+
+    .header-content .sheet {
+        width: 14px !important;
+    }
+
+    .header-content .left-text {
+        margin-left: 6px !important;
+    }
 }
 
 /* Adjust font size for mobile devices in landscape mode */
@@ -707,6 +715,8 @@
     }
 
     .matchup-tile table.scoreboard th.lsd-lsfe,
+    .matchup-tile.scheduled table.scoreboard td.lsd-lsfe-center,
+    .matchup-tile.preparing table.scoreboard td.lsd-lsfe-center,
     .matchup-tile.running table.scoreboard td.lsd-lsfe,
     .matchup-tile.unofficial table.scoreboard td.lsd-lsfe,
     .matchup-tile.official table.scoreboard td.lsd-lsfe,
