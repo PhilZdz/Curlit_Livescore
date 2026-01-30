@@ -1,4 +1,4 @@
-/* Version 1.5rc4 from 8.1.26  */
+/* Version 1.6rc2 from 30.1.26  */
 /* body {
   max-width: 1200px;
   position: absolute;
@@ -129,6 +129,7 @@
     padding: 0;
     margin: 1px 0;
     min-width: 360px;
+    cursor:pointer;
 }
 
 

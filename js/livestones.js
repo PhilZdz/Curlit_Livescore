@@ -1,4 +1,4 @@
-// Version 1.5rc4 from 8.1.25
+// Version 1.6rc2 from 30.1.25
 
 $(document).ready(function () {
 
@@ -44,6 +44,7 @@ $(document).ready(function () {
     var gameId = getIntParam("GameId", 0);
     var sheet = params.get("Sheet", "");
     var isDebug = getIntParam("Debug");
+    var isTestMode = getIntParam("TestMode", 0);
 
     if (document.getElementById('ContentMain_HiddenSeason') != null && document.getElementById('ContentMain_HiddenSeason') != "")
         season = document.getElementById('ContentMain_HiddenSeason').value;
@@ -56,7 +57,8 @@ $(document).ready(function () {
 
     const competitionCode = pathSegments[1] ?? competition;
 
-    const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${sheet != null && sheet != "" ? sheet : gameId}`;
+
+    const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${sheet != null && sheet != "" ? sheet : gameId}-${isTestMode}`;
 
 
     const $sessionHeader = $('#session-header');
@@ -71,7 +73,6 @@ $(document).ready(function () {
     // ----- RESULTS ----- //
     // ------------------- //
     var latestGameStatus;
-    var doStats;
 
     function startConnectionResults() {
         let resultConnection = new signalR.HubConnectionBuilder()
@@ -79,10 +80,6 @@ $(document).ready(function () {
             .build();
 
         resultConnection.on("ReceiveMessage", function (resultList) {
-
-            // Arrange the initial display
-            refreshDoStats(resultList);
-
             // Refresh the tiles
             renderTileData(resultList);
 
@@ -118,6 +115,13 @@ $(document).ready(function () {
             if (sheet != null) {
                 urlParams["sheet"] = sheet;
             }
+            // If none specified, default to game 1
+            if (sheet == null && gameId == null) {
+                gameId = 1;
+            }
+            if (isTestMode != null) {
+                urlParams["testMode"] = isTestMode == 1;
+            }
 
             var callUrl = `${apiUrl}/Result/LiveResults`
 
@@ -137,9 +141,6 @@ $(document).ready(function () {
                     // Hide the loader and show the session title
                     $("#loader").hide();
                     $("#game-tile").show();
-
-                    // Arrange the initial display
-                    refreshDoStats(data);
 
                     // Build the header
                     renderTileData(data);
@@ -167,18 +168,9 @@ $(document).ready(function () {
         return String.fromCharCode(asciiCode);
     }
 
-    function refreshDoStats(data) {
-        var result = data.find(g => g.sheet == (sheet != null && sheet != "" ? sheet : getLetterFromIndex(gameId)));
-
-        if (result) {
-            doStats = result.doStats;
-        }
-    }
-
-
 
     function renderTileData(data) {
-        var result = data.find(g => g.sheet == (sheet != null && sheet != "" ? sheet : getLetterFromIndex(gameId)));
+        var result = (sheet != null && sheet != "") ? data.find(g => g.sheet == sheet) : data.find(g => g.gameID == gameId);
 
         if (result) {
             latestGameStatus = result.status;
@@ -188,7 +180,7 @@ $(document).ready(function () {
     }
 
 
-    function refreshSheetList(tile, result){
+    function refreshSheetList(tile, result) {
 
         var $sheet = tile.find('select.sheet');
         var values = $sheet.find('option').map(function () { return $(this).val(); }).get();
@@ -196,8 +188,8 @@ $(document).ready(function () {
         // If the values have changed, re-build the select
         if (JSON.stringify(values) != JSON.stringify(result.allSheets)) {
             $sheet.empty();
-            
-            $.each(result.allSheets, function(_, value) {
+
+            $.each(result.allSheets, function (_, value) {
                 $sheet.append($("<option>", {
                     value: value,
                     text: value
@@ -408,7 +400,7 @@ $(document).ready(function () {
     // ------------------ //
     // ----- STONES ----- //
     // ------------------ //
-    const signalGroupStoneName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${sheet != null && sheet != "" ? sheet : gameId}-STONE`;
+    const signalGroupStoneName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${sheet != null && sheet != "" ? sheet : gameId}-${isTestMode}-STONE`;
     var shotData, latestLiveData, latestStatsData, statsData;
 
     function startConnectionStones() {
@@ -428,7 +420,8 @@ $(document).ready(function () {
             if (data.stones.length == 0) {
                 resetViewport();
             }
-            adjustGameCenterDisplay();
+
+            adjustGameCenterDisplay(data.doStats);
 
             if ($("#is_live").is(":checked")) {
                 updateLiveData(data);
@@ -467,6 +460,9 @@ $(document).ready(function () {
             if (sheet != null) {
                 urlParams["sheet"] = sheet;
             }
+            if (isTestMode != null) {
+                urlParams["testMode"] = isTestMode == 1;
+            }
 
             var callUrl = `${apiUrl}/Stone/LiveStones`
 
@@ -494,7 +490,7 @@ $(document).ready(function () {
 
                     updateLiveData(data);
 
-                    adjustGameCenterDisplay();
+                    adjustGameCenterDisplay(data.doStats);
 
                     setOnlineHeader(true);
 
@@ -510,8 +506,7 @@ $(document).ready(function () {
 
     }
 
-    function adjustGameCenterDisplay() {
-
+    function adjustGameCenterDisplay(doStats) {
         // If doStats is not defined, try to fetch it from the latest live data
         if (doStats != null && !doStats) {
             $('#game-content').hide();
@@ -526,7 +521,7 @@ $(document).ready(function () {
                 goToStat(0);
                 animateAllStats(0);
             }
-            
+
         }
     }
 
@@ -1126,7 +1121,15 @@ $(document).ready(function () {
             return;
         }
         else {
-            statList = newStatList
+
+            var LSD = "Last Stone Draw";
+
+            // Special case : the old Stat List did not contain LSD and the new one does, set it as Current
+            if (statList != null && !statList.includes(LSD) && newStatList.includes(LSD)) {
+                current = newStatList.indexOf(LSD);
+            }
+
+            statList = newStatList;
             $statSlider.empty();
 
             statsData.forEach(stat => {

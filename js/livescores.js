@@ -1,4 +1,4 @@
-// Version 1.5rc4 from 8.1.26
+// Version 1.6rc2 from 30.1.26
 
 $(document).ready(function () {
     const apiUrl = "https://livescores.worldcurling.org/curlitsse";
@@ -10,6 +10,7 @@ $(document).ready(function () {
     var competition = params.get("Competition");
     var eventId = params.get("EventID") ?? 0;
     var sessionId = params.get("SessionID") ?? 0;
+    var isTestMode = params.get("TestMode") ?? 0;
 
     if (document.getElementById('ContentMain_HiddenSeason') != null)
         season = document.getElementById('ContentMain_HiddenSeason').value;
@@ -22,8 +23,9 @@ $(document).ready(function () {
 
     const competitionCode = pathSegments[1] ?? competition;
 
+
     // The name of the group that sign
-    const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-0`;
+    const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-0-${isTestMode}`;
 
     const $container = $('#scoreboard');
     const $template = $('#template');
@@ -66,6 +68,9 @@ $(document).ready(function () {
             }
             if (sessionId != null) {
                 urlParams["sessionId"] = sessionId;
+            }
+            if (isTestMode != null) {
+                urlParams["testMode"] = isTestMode == 1;
             }
 
             var callUrl = `${apiUrl}/Result/LiveResults`
@@ -211,7 +216,7 @@ $(document).ready(function () {
         }
 
         tile.find('.right-area .btnStats').attr("href", `/${competitionCode}/aspnet/currentstats.aspx?EventID=${result.eventID}&Sheet=${result.sheet}`);
-        tile.find('.right-area .btnGraphics').attr("href", `/${competitionCode}/aspnet/livegraphics.aspx?EventID=${result.eventID}&Sheet=${result.sheet}`);
+        tile.find('.right-area .btnGraphics').attr("href", `/${competitionCode}/aspnet/GameCenter.aspx?EventID=${result.eventID}&Sheet=${result.sheet}`);
 
         if (result.doStats == true) {
             tile.find('.right-area .btnStats img').attr("src", `../general/proc-button.svg`);
@@ -358,4 +363,24 @@ $(document).ready(function () {
     }
 
     startConnection();
+
+
+
+    // ------------------ //
+    // ----- EVENTS ----- //
+    // ------------------ //
+    $(document).on("click", ".row", function () {
+        const dataId = $(this).data('id');
+
+        if (!$(e.target).closest('.btnStats, .btnGraphics').length) {
+            if (dataId) {
+                var sheet = $(this).find('.sheet').first().text();
+
+                if (eventId && sheet) {
+                    window.location.href = `/${competitionCode}/aspnet/GameCenter.aspx?EventID=${eventId}&Sheet=${sheet}`;
+                }
+            }
+        }
+    });
+
 });
