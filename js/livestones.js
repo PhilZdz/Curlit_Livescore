@@ -1,4 +1,4 @@
-// Version 1.6rc2 from 30.1.25
+// Version 1.6rc3 from 30.1.25
 
 $(document).ready(function () {
 
@@ -116,7 +116,7 @@ $(document).ready(function () {
                 urlParams["sheet"] = sheet;
             }
             // If none specified, default to game 1
-            if (sheet == null && gameId == null) {
+            if (sheet == null && (gameId == null || gameId == 0)) {
                 gameId = 1;
             }
             if (isTestMode != null) {
@@ -421,7 +421,7 @@ $(document).ready(function () {
                 resetViewport();
             }
 
-            adjustGameCenterDisplay(data.doStats);
+            adjustGameCenterDisplay(data.doStats, data.gameInfo);
 
             if ($("#is_live").is(":checked")) {
                 updateLiveData(data);
@@ -460,6 +460,10 @@ $(document).ready(function () {
             if (sheet != null) {
                 urlParams["sheet"] = sheet;
             }
+            // If none specified, default to game 1
+            if (sheet == null && (gameId == null || gameId == 0)) {
+                gameId = 1;
+            }
             if (isTestMode != null) {
                 urlParams["testMode"] = isTestMode == 1;
             }
@@ -490,7 +494,7 @@ $(document).ready(function () {
 
                     updateLiveData(data);
 
-                    adjustGameCenterDisplay(data.doStats);
+                    adjustGameCenterDisplay(data.doStats, data.gameInfo);
 
                     setOnlineHeader(true);
 
@@ -506,9 +510,9 @@ $(document).ready(function () {
 
     }
 
-    function adjustGameCenterDisplay(doStats) {
+    function adjustGameCenterDisplay(doStats, gameInfo) {
         // If doStats is not defined, try to fetch it from the latest live data
-        if (doStats != null && !doStats) {
+        if (gameInfo != null && doStats != null && !doStats) {
             $('#game-content').hide();
 
 
