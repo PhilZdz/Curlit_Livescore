@@ -1,8 +1,8 @@
-// Version 1.6rc2 from 30.1.26
+// Version 1.6rc5 from 2.2.26
 
 $(document).ready(function () {
-    const apiUrl = "https://livescores.worldcurling.org/curlitsse";
-    //const apiUrl = "http://sse.curlit.local:5057";
+    //const apiUrl = "https://livescores.worldcurling.org/curlitsse";
+    const apiUrl = "http://sse.curlit.local:5057";
 
     const params = new URLSearchParams(window.location.search);
     const pathSegments = window.location.pathname.split("/");
@@ -25,7 +25,7 @@ $(document).ready(function () {
 
 
     // The name of the group that sign
-    const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-0-${isTestMode}`;
+    const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-0-${(isTestMode ? "True" : "False")}`;
 
     const $container = $('#scoreboard');
     const $template = $('#template');
@@ -191,9 +191,15 @@ $(document).ready(function () {
         $leftText.removeClass("longText");
         $leftText.removeClass("shortSessionName");
         // Special case - shorten the session title if it contains Women's Round Robin (only on smaller devices)
-        var sequenceToStrip = "Women's Round Robin";
-        if (leftText.length > 28 && leftText.indexOf(sequenceToStrip) != -1) {
-            leftText = leftText.replace(sequenceToStrip, "Women's <span class='wideScreenText'>Round Robin</span>");
+        var sequencesToStrip = ["Women's Round Robin", "Mixed Doubles Round Robin"];
+        var sequenceToStrip2 = " Round Robin";
+        if (leftText.length > 28 && sequencesToStrip.some(item => leftText.includes(item))) {
+            leftText = leftText.replace(sequenceToStrip2, " <span class='wideScreenText'>Round Robin</span>");
+            $leftText.addClass("longText");
+        }
+        else if (leftText.length > 40 && leftText.indexOf(sequenceToStrip2) != -1) {
+            leftText = leftText.replace(sequenceToStrip2, "");
+            $leftText.addClass("longText");
         }
         else if (leftText.length > 20) {
             $leftText.addClass("longText");
@@ -209,10 +215,10 @@ $(document).ready(function () {
         }
 
         let $rightComment = tile.find('.right-area .me-1');
-        $rightComment.removeClass("longText");
+        $rightComment.removeClass("longTextRight");
         $rightComment.html(result.gameComment);
         if (result.gameComment != null && result.gameComment != '' && result.gameComment.length > 14) {
-            $rightComment.addClass("longText");
+            $rightComment.addClass("longTextRight");
         }
 
         tile.find('.right-area .btnStats').attr("href", `/${competitionCode}/aspnet/currentstats.aspx?EventID=${result.eventID}&Sheet=${result.sheet}`);

@@ -1,4 +1,4 @@
-/* Version 1.6rc2 from 30.1.26  */
+/* Version 1.6rc5 from 2.2.26  */
 /* body {
   max-width: 1200px;
   position: absolute;
@@ -129,7 +129,7 @@
     padding: 0;
     margin: 1px 0;
     min-width: 360px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 
@@ -199,7 +199,8 @@
     display: none !important;
 }
 
-.header-content span.longText {
+.header-content span.longText,
+.header-content span.longTextRight {
     transform: scaleX(1);
 }
 
@@ -643,6 +644,11 @@
         transform: scaleX(0.75);
         transform-origin: left;
     }
+
+    .header-content span.longTextRight {
+        transform: scaleX(0.75);
+        transform-origin: right;
+    }
 }
 
 /* Adjust font size based on screen width */
@@ -671,6 +677,12 @@
     .header-content span.longText {
         transform: scaleX(0.75);
         transform-origin: left;
+        font-size: 3vw !important;
+    }
+
+    .header-content span.longTextRight {
+        transform: scaleX(0.75);
+        transform-origin: right;
         font-size: 3vw !important;
     }
 
@@ -730,11 +742,11 @@
         display: table-cell !important;
     }
 
-    .container-wide.tile-m table.scoreboard thead, 
-    .container-wide.tile-s table.scoreboard thead, 
-    .matchup-tile.planned table.scoreboard thead, 
-    .matchup-tile.scheduled table.scoreboard thead, 
-    .matchup-tile.preparing table.scoreboard thead { 
+    .container-wide.tile-m table.scoreboard thead,
+    .container-wide.tile-s table.scoreboard thead,
+    .matchup-tile.planned table.scoreboard thead,
+    .matchup-tile.scheduled table.scoreboard thead,
+    .matchup-tile.preparing table.scoreboard thead {
         display: table-header-group !important;
     }
 
