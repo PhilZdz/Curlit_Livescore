@@ -1,4 +1,4 @@
-// Version 1.6rc3 from 30.1.25
+// Version 1.6rc5 from 2.2.25
 
 $(document).ready(function () {
 
@@ -56,9 +56,7 @@ $(document).ready(function () {
         sessionId = document.getElementById('ContentMain_HiddenSessionID').value ?? 0;
 
     const competitionCode = pathSegments[1] ?? competition;
-
-
-    const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${sheet != null && sheet != "" ? sheet : gameId}-${isTestMode}`;
+    const signalGroupName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${sheet != null && sheet != "" ? sheet : gameId}-${(isTestMode ? "True" : "False")}`;
 
 
     const $sessionHeader = $('#session-header');
@@ -212,10 +210,11 @@ $(document).ready(function () {
         $leftText.removeClass("longText");
         $leftText.removeClass("shortSessionName");
         // Special case - shorten the session title if it contains Women's Round Robin (only on smaller devices)
-        var sequenceToStrip = "Women's Round Robin";
+        var sequencesToStrip = ["Women's Round Robin", "Mixed Doubles Round Robin"];
         var sequenceToStrip2 = " Round Robin";
-        if (leftText.length > 28 && leftText.indexOf(sequenceToStrip) != -1) {
-            leftText = leftText.replace(sequenceToStrip, "Women's <span class='wideScreenText'>Round Robin</span>");
+        if (leftText.length > 28 && sequencesToStrip.some(item => leftText.includes(item))) {
+            leftText = leftText.replace(sequenceToStrip2, " <span class='wideScreenText'>Round Robin</span>");
+            $leftText.addClass("longText");
         }
         else if (leftText.length > 40 && leftText.indexOf(sequenceToStrip2) != -1) {
             leftText = leftText.replace(sequenceToStrip2, "");
@@ -224,8 +223,6 @@ $(document).ready(function () {
         else if (leftText.length > 20) {
             $leftText.addClass("longText");
         }
-
-
         $leftText.html(leftText);
 
 
@@ -237,10 +234,10 @@ $(document).ready(function () {
         }
 
         let $rightComment = tile.find('.right-area .me-1');
-        $rightComment.removeClass("longText");
+        $rightComment.removeClass("longTextRight");
         $rightComment.html(result.gameComment);
         if (result.gameComment != null && result.gameComment != '' && result.gameComment.length > 14) {
-            $rightComment.addClass("longText");
+            $rightComment.addClass("longTextRight");
         }
 
         tile.find('.right-area .btnStats').attr("href", `/${competitionCode}/aspnet/currentstats.aspx?EventID=${result.eventID}&Sheet=${result.sheet}`);
@@ -400,7 +397,7 @@ $(document).ready(function () {
     // ------------------ //
     // ----- STONES ----- //
     // ------------------ //
-    const signalGroupStoneName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${sheet != null && sheet != "" ? sheet : gameId}-${isTestMode}-STONE`;
+    const signalGroupStoneName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${sheet != null && sheet != "" ? sheet : gameId}-${(isTestMode? "True": "False" )}-STONE`;
     var shotData, latestLiveData, latestStatsData, statsData;
 
     function startConnectionStones() {
@@ -574,6 +571,9 @@ $(document).ready(function () {
             if (sheet != null) {
                 urlParams["sheet"] = sheet;
             }
+            if (isTestMode != null) {
+                urlParams["testMode"] = isTestMode == 1;
+            }
 
             urlParams["endId"] = endId;
 
@@ -622,7 +622,7 @@ $(document).ready(function () {
     }
 
 
-
+    
 
     let $indexButtonsContainer;
     let $indexButtonsStatsContainer;

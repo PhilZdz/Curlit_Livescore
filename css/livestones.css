@@ -1,4 +1,4 @@
-﻿/* Version 1.4rc10 from 14.12.25  */
+﻿/* Version 1.5rc6 from 14.2.25  */
 
 #loader {
     background-image: url(../img/curloading.gif);
@@ -898,7 +898,7 @@
         position: relative;
         line-height: 0px;
         margin-top: 2px;
-        margin-bottom: 3px;
+        margin-bottom: 4px;
         color: lightgray;
     }
 
@@ -1650,6 +1650,6 @@ input:checked + .btn-slider {
 
     .stat-row .label-left,
     .stat-row .label-right {
-        top: -60% !important;
+        top: -50% !important;
     }
 }
