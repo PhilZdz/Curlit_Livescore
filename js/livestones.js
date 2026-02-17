@@ -1416,6 +1416,8 @@ $(document).ready(function () {
 
         controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
+        controls.minPolarAngle = 0;          // can't go above the top
+        controls.maxPolarAngle = Math.PI / 2; // can't go below the horizon
 
         raycaster = new THREE.Raycaster();
         mouse = new THREE.Vector2();
