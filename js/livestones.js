@@ -1399,8 +1399,6 @@ $(document).ready(function () {
     // ------- 3D -------- //
     // ------------------- //
     function initThree($container, width, height) {
-        // scene = new THREE.Scene();
-        // scene.background = new THREE.Color(0x87CEEB);
         scene.background = new THREE.Color(getBodyBackColor());
 
         camera = new THREE.OrthographicCamera(
@@ -1438,7 +1436,7 @@ $(document).ready(function () {
         // Reset the camera position
         camera.position.set(0, 100, 0);
         controls.target.set(0, 0, 0);
-        camera.zoom = 1;
+        camera.zoom = 0.95;
         camera.updateProjectionMatrix(); 
         controls.update();
 
@@ -1668,6 +1666,18 @@ $(document).ready(function () {
             $scb.slideToggle(500);
             if ($scb.is(':visible')) {
                 $scb.css('display', 'table');
+            }
+        }        
+        else if (target == "3d") {
+            var $svg = $('.slider-wrapper');
+
+            if (!$container.is(':visible')) {
+                $container.css('display', 'block');
+                $svg.css('display', 'none');
+            }
+            else {
+                $container.css('display', 'none');
+                $svg.css('display', 'block');
             }
         }
         else if (target == "live") {

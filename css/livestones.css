@@ -1138,7 +1138,7 @@ info-right span {
 #game-content {
     flex: 1;
     display: flex;
-    /* min-height: 47vh; */
+    min-height: 50vh;
 }
 
 #viewport3d {
@@ -1665,11 +1665,13 @@ input:checked + .btn-slider {
 }
 
 
-.slider-wrapper,
 #viewport3d {
-    width: 30%!important;
+    display: none;
+    overflow: hidden;
 }
 
-#currentShot {
-    width:35%!important;
+canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
 }
