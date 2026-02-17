@@ -1439,6 +1439,7 @@ $(document).ready(function () {
         camera.position.set(0, 100, 0);
         controls.target.set(0, 0, 0);
         camera.zoom = 1;
+        
         camera.updateProjectionMatrix(); 
         controls.update();
 
