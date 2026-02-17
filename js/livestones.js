@@ -1,4 +1,4 @@
-// Version 1.6rc5 from 2.2.25
+// Version 1.6rc7 from 17.2.25
 
 $(document).ready(function () {
 
@@ -423,10 +423,10 @@ $(document).ready(function () {
 
     // var yellowHex = "#ffdc00"
     var redHex = "#ff0000";
-    const redStoneTexture = textureLoader.load('3d/textures/stoneRedText.png');
-    const yellowStoneTexture = textureLoader.load('3d/textures/stoneYellowText.png');
-    const cRedStoneTexture = textureLoader.load('3d/textures/stoneRedTextC.png');
-    const cYellowStoneTexture = textureLoader.load('3d/textures/stoneYellowTextC.png');
+    const redStoneTexture = textureLoader.load('assets/textures/stoneRedText.png');
+    const yellowStoneTexture = textureLoader.load('assets/textures/stoneYellowText.png');
+    const cRedStoneTexture = textureLoader.load('assets/textures/stoneRedTextC.png');
+    const cYellowStoneTexture = textureLoader.load('assets/textures/stoneYellowTextC.png');
 
     const normalRed = new THREE.MeshStandardMaterial({ map: redStoneTexture, side: THREE.DoubleSide});
     const normalYellow = new THREE.MeshStandardMaterial({ map: yellowStoneTexture, side: THREE.DoubleSide });
@@ -435,7 +435,7 @@ $(document).ready(function () {
     
     let baseStoneModel = null;
 
-    fbxLoader.load('3d/objects/stone4.fbx', (model) => {
+    fbxLoader.load('assets/objects/stone4.fbx', (model) => {
         baseStoneModel = model;
     });
     // End 3D assets initialization
@@ -1439,7 +1439,7 @@ $(document).ready(function () {
         camera.position.set(0, 100, 0);
         controls.target.set(0, 0, 0);
         camera.zoom = 1;
-        
+
         camera.updateProjectionMatrix(); 
         controls.update();
 
