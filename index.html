@@ -15,6 +15,16 @@
   <link id="scoretheme" rel="stylesheet" type="text/css" href="css/livescores_blue.css">
   <script src="js/livestones.js"></script>
 
+  <!-- 3d integration -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Include fflate.min.js -->
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/libs/fflate.min.js"></script>
+  <!-- Include FBXLoader -->
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/FBXLoader.js"></script>
+  <!-- Include OrbitControls -->
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
+    
+
   <!-- livescores.worldcurling integration -->
   <link rel="stylesheet" type="text/css" href="https://livescores.worldcurling.org/pg/CSS/curlit.css">
   <link id="csstheme" rel="stylesheet" type="text/css" href="https://livescores.worldcurling.org/pg/CSS/blue.css">
@@ -52,33 +62,6 @@
               </div>
             </td>
 
-            <td colspan="2" valign="top">
-              <div class="ads">
-                <script async=""
-                  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5185342983582094"
-                  crossorigin="anonymous" data-checked-head="true"></script>
-                <!-- Livesscores Fixed Top Mobile -->
-                <ins class="adsbygoogle"
-                  style="display:inline-block;width:300px;height:50px;max-width:300px;max-height:50px"
-                  data-ad-client="ca-pub-5185342983582094" data-ad-slot="5246586343" data-adsbygoogle-status="done"
-                  data-ad-status="filled">
-                  <div id="aswift_1_host"
-                    style="border: none; height: 50px; width: 300px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block;">
-                    <iframe id="aswift_1" name="aswift_1" browsingtopics="true"
-                      style="left:0;position:absolute;top:0;border:0;width:300px;height:50px;min-height:auto;max-height:none;min-width:auto;max-width:none;"
-                      sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
-                      width="300" height="50" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0"
-                      allowtransparency="true" scrolling="no" allow="attribution-reporting; run-ad-auction"
-                      src="https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-5185342983582094&amp;output=html&amp;h=50&amp;slotname=5246586343&amp;adk=3818688844&amp;adf=1065735220&amp;pi=t.ma~as.5246586343&amp;w=300&amp;lmt=1759095847&amp;format=300x50&amp;url=https%3A%2F%2Flivescores.worldcurling.org%2Fwjcc%2Faspnet%2Flivescores%3FEventID%3D0&amp;wgl=1&amp;aieuf=1&amp;uach=WyIiLCIiLCIiLCIiLCIiLG51bGwsMCxudWxsLCIiLG51bGwsMF0.&amp;abgtt=6&amp;dt=1759095847714&amp;bpp=1&amp;bdt=871&amp;idt=35&amp;shv=r20250924&amp;mjsv=m202509240101&amp;ptt=9&amp;saldr=aa&amp;abxe=1&amp;cookie=ID%3D89742d43926c26e1%3AT%3D1759095294%3ART%3D1759095690%3AS%3DALNI_MZ3XIjYdCwKjWOl_BFSSGdNb90Enw&amp;gpic=UID%3D0000115b1e642069%3AT%3D1759095294%3ART%3D1759095690%3AS%3DALNI_MYa2SaRtlKviJj7RvTAK1Fn4K9m9g&amp;eo_id_str=ID%3Daf13dddedab0f9ba%3AT%3D1759095294%3ART%3D1759095690%3AS%3DAA-AfjYsIY76SrHb6AS_6sS2Pc-A&amp;prev_fmts=0x0&amp;nras=1&amp;correlator=1181418584061&amp;frm=20&amp;pv=1&amp;u_tz=-420&amp;u_his=5&amp;u_h=844&amp;u_w=390&amp;u_ah=844&amp;u_aw=390&amp;u_cd=24&amp;u_sd=3&amp;dmc=8&amp;adx=78&amp;ady=1&amp;biw=390&amp;bih=844&amp;scr_x=0&amp;scr_y=0&amp;eid=31094694%2C31094858%2C95371967%2C31094877&amp;oid=2&amp;pvsid=7623583919662320&amp;tmod=102910210&amp;uas=0&amp;nvt=1&amp;ref=https%3A%2F%2Flivescores.worldcurling.org%2Fwjcc%2F&amp;fc=1920&amp;brdim=0%2C0%2C0%2C0%2C390%2C0%2C390%2C844%2C394%2C853&amp;vis=1&amp;rsz=%7C%7CeE%7C&amp;abl=CS&amp;pfx=0&amp;fu=1024&amp;bc=31&amp;bz=0.99&amp;td=1&amp;tdf=2&amp;nt=1&amp;bisch=1&amp;blev=1&amp;ifi=2&amp;uci=a!2&amp;fsb=1&amp;dtd=42"
-                      data-google-container-id="a!2" tabindex="0" title="Advertisement" aria-label="Advertisement"
-                      data-google-query-id="CPjc1dm2_I8DFX0MdgYdNnITLg" data-load-complete="true"></iframe>
-                  </div>
-                </ins>
-                <script>
-                  (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-              </div>
-            </td>
           </tr>
           <tr>
             <td valign="top" colspan="3" align="left" class="favTeam">
@@ -234,6 +217,9 @@
                                   <div class="index-buttons" id="indexButtons"></div>
                                 </div>
 
+                                <div id="viewport3d">
+                                </div>
+
                                 <div id="currentShot">
 
                                   <div class="shotInfo">
@@ -367,31 +353,6 @@
           </tr>
           <tr>
             <td colspan="3" valign="top" class="xxsc">
-              <div class="ads">
-                <p class="xxsc">&nbsp;</p>
-                <script async=""
-                  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5185342983582094"
-                  crossorigin="anonymous" data-checked-head="true"></script>
-                <!-- Livesscores Fixed Bottom Mobile -->
-                <ins class="adsbygoogle" style="display:inline-block;width:300px;height:100px"
-                  data-ad-client="ca-pub-5185342983582094" data-ad-slot="9378033934" data-adsbygoogle-status="done"
-                  data-ad-status="filled">
-                  <div id="aswift_2_host"
-                    style="border: none; height: 100px; width: 300px; margin: 0px; padding: 0px; position: relative; visibility: visible; background-color: transparent; display: inline-block;">
-                    <iframe id="aswift_2" name="aswift_2" browsingtopics="true"
-                      style="left:0;position:absolute;top:0;border:0;width:300px;height:100px;min-height:auto;max-height:none;min-width:auto;max-width:none;"
-                      sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
-                      width="300" height="100" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0"
-                      allowtransparency="true" scrolling="no" allow="attribution-reporting; run-ad-auction"
-                      src="https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-5185342983582094&amp;output=html&amp;h=100&amp;slotname=9378033934&amp;adk=1096931777&amp;adf=3280555190&amp;pi=t.ma~as.9378033934&amp;w=300&amp;lmt=1759095847&amp;format=300x100&amp;url=https%3A%2F%2Flivescores.worldcurling.org%2Fwjcc%2Faspnet%2Flivescores%3FEventID%3D0&amp;wgl=1&amp;aieuf=1&amp;uach=WyIiLCIiLCIiLCIiLCIiLG51bGwsMCxudWxsLCIiLG51bGwsMF0.&amp;abgtt=6&amp;dt=1759095847714&amp;bpp=1&amp;bdt=871&amp;idt=48&amp;shv=r20250924&amp;mjsv=m202509240101&amp;ptt=9&amp;saldr=aa&amp;abxe=1&amp;cookie=ID%3D89742d43926c26e1%3AT%3D1759095294%3ART%3D1759095690%3AS%3DALNI_MZ3XIjYdCwKjWOl_BFSSGdNb90Enw&amp;gpic=UID%3D0000115b1e642069%3AT%3D1759095294%3ART%3D1759095690%3AS%3DALNI_MYa2SaRtlKviJj7RvTAK1Fn4K9m9g&amp;eo_id_str=ID%3Daf13dddedab0f9ba%3AT%3D1759095294%3ART%3D1759095690%3AS%3DAA-AfjYsIY76SrHb6AS_6sS2Pc-A&amp;prev_fmts=0x0%2C300x50&amp;nras=1&amp;correlator=1181418584061&amp;frm=20&amp;pv=1&amp;u_tz=-420&amp;u_his=5&amp;u_h=844&amp;u_w=390&amp;u_ah=844&amp;u_aw=390&amp;u_cd=24&amp;u_sd=3&amp;dmc=8&amp;adx=47&amp;ady=534&amp;biw=390&amp;bih=844&amp;scr_x=0&amp;scr_y=0&amp;eid=31094694%2C31094858%2C95371967%2C31094877&amp;oid=2&amp;pvsid=7623583919662320&amp;tmod=102910210&amp;uas=0&amp;nvt=1&amp;ref=https%3A%2F%2Flivescores.worldcurling.org%2Fwjcc%2F&amp;fc=1920&amp;brdim=0%2C0%2C0%2C0%2C390%2C0%2C390%2C844%2C394%2C853&amp;vis=1&amp;rsz=%7C%7CeE%7C&amp;abl=CS&amp;pfx=0&amp;fu=1024&amp;bc=31&amp;bz=0.99&amp;td=1&amp;tdf=2&amp;nt=1&amp;bisch=1&amp;blev=1&amp;ifi=3&amp;uci=a!3&amp;fsb=1&amp;dtd=52"
-                      data-google-container-id="a!3" tabindex="0" title="Advertisement" aria-label="Advertisement"
-                      data-google-query-id="CMeH1tm2_I8DFd4XzAQdFuI8Yg" data-load-complete="true"></iframe>
-                  </div>
-                </ins>
-                <script>
-                  (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-              </div>
             </td>
           </tr>
           <tr>

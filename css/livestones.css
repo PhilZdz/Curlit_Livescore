@@ -1141,6 +1141,16 @@ info-right span {
     /* min-height: 47vh; */
 }
 
+#viewport3d {
+    width: 55%;
+    height: auto;
+    overflow: hidden;
+    position: relative;
+    /* background: white; */
+    border-bottom-left-radius: 5px;
+    margin-right: 6px;
+}
+
 .slider-wrapper {
     width: 55%;
     height: 55%;
@@ -1652,4 +1662,14 @@ input:checked + .btn-slider {
     .stat-row .label-right {
         top: -50% !important;
     }
+}
+
+
+.slider-wrapper,
+#viewport3d {
+    width: 30%!important;
+}
+
+#currentShot {
+    width:35%!important;
 }
