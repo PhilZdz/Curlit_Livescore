@@ -1138,7 +1138,7 @@ info-right span {
 #game-content {
     flex: 1;
     display: flex;
-    min-height: 50vh;
+    /* min-height: 50vh; */
 }
 
 #viewport3d {
@@ -1148,6 +1148,7 @@ info-right span {
     position: relative;
     /* background: white; */
     border-bottom-left-radius: 5px;
+    aspect-ratio: 1 / 2;
     margin-right: 6px;
 }
 
