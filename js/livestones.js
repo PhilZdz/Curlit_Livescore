@@ -1399,7 +1399,6 @@ $(document).ready(function () {
     // ------- 3D -------- //
     // ------------------- //
     function initThree($container, width, height) {
-
         // scene = new THREE.Scene();
         // scene.background = new THREE.Color(0x87CEEB);
         scene.background = new THREE.Color(getBodyBackColor());
@@ -1531,7 +1530,30 @@ $(document).ready(function () {
 
     $(window).on('resize', function () {
         fitCompetitorNames();
+        onOrientationChange();
     });
+
+    // function onOrientationChange() {
+    //     const width = window.innerWidth;
+    //     const height = window.innerHeight;
+
+    //     // Update renderer size
+    //     renderer.setSize(width, height);
+    //     renderer.setPixelRatio(window.devicePixelRatio);
+
+    //     // Update camera aspect ratio
+    //     camera.aspect = width / height;
+    //     camera.updateProjectionMatrix();
+    // }
+
+    function onOrientationChange() {
+        const width = $container.width();
+        const height = $container.height();
+
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+    }
 
 
     $(document).on("change", '.header-content .sheet', function () {
@@ -1840,26 +1862,6 @@ $(document).ready(function () {
                 updateIcon.src = "../general/offline.png";
         }
     }
-
-
-    window.addEventListener('resize', () => {
-        // Update camera aspect ratio to match the new window size
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix(); // Recalculate the projection matrix
-
-        // Adjust renderer size to fill the new window dimensions
-        renderer.setSize(window.innerWidth, window.innerHeight);
-
-        // Optional: If you're using an orthographic camera, maintain consistent proportions
-        if (camera.isOrthographicCamera) {
-            const aspect = window.innerWidth / window.innerHeight;
-            camera.left = -aspect * viewSize / 2;
-            camera.right = aspect * viewSize / 2;
-            camera.top = viewSize / 2 + 340 * (viewSize / window.innerHeight), // top shifted upward
-                camera.bottom = -viewSize / 2 + 340 * (viewSize / window.innerHeight), // bottom shifted upward
-                camera.updateProjectionMatrix();
-        }
-    });
 
 
     // Animate camera transition
