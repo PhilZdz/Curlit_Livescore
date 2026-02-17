@@ -1438,7 +1438,7 @@ $(document).ready(function () {
         // Reset the camera position
         camera.position.set(0, 100, 0);
         controls.target.set(0, 0, 0);
-        camera.zoom = 0.95;
+        camera.zoom = 1;
         camera.updateProjectionMatrix(); 
         controls.update();
 
