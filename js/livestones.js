@@ -2,9 +2,9 @@
 
 $(document).ready(function () {
 
-    //const apiUrl = "https://livescores.worldcurling.org/curlitsse";
+    const apiUrl = "https://livescores.worldcurling.org/curlitsse";
     //const apiUrl = "http://sse.curlit.local:5057";
-    const apiUrl = "https://curlit.com/curlitsse";
+    //const apiUrl = "https://curlit.com/curlitsse";
 
     const curlTasks = {
         0: "Draw",
@@ -45,6 +45,11 @@ $(document).ready(function () {
     var sheet = params.get("Sheet", "");
     var isDebug = getIntParam("Debug");
     var isTestMode = getIntParam("TestMode", 0);
+    var show3d = getIntParam("Show3D", 0);
+
+    if (show3d == 0) {
+        $("#command3d").hide();
+    }
 
     if (document.getElementById('ContentMain_HiddenSeason') != null && document.getElementById('ContentMain_HiddenSeason') != "")
         season = document.getElementById('ContentMain_HiddenSeason').value;
@@ -74,7 +79,7 @@ $(document).ready(function () {
 
     function startConnectionResults() {
         let resultConnection = new signalR.HubConnectionBuilder()
-            .withUrl(`${apiUrl}/notificationHub`, { withCredentials: false, transport: signalR.HttpTransportType.WebSockets  })
+            .withUrl(`${apiUrl}/notificationHub`, { withCredentials: false, transport: signalR.HttpTransportType.WebSockets })
             .build();
 
         resultConnection.on("ReceiveMessage", function (resultList) {
@@ -397,7 +402,7 @@ $(document).ready(function () {
     // ------------------ //
     // ----- STONES ----- //
     // ------------------ //
-    const signalGroupStoneName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${sheet != null && sheet != "" ? sheet : gameId}-${(isTestMode? "True": "False" )}-STONE`;
+    const signalGroupStoneName = `${competition != null ? competition : "TEST"}-${eventId}-${sessionId}-${sheet != null && sheet != "" ? sheet : gameId}-${(isTestMode ? "True" : "False")}-STONE`;
     var shotData, latestLiveData, latestStatsData, statsData, latestSvg;
     var sheetInitialized = false;
     var offsetX = 0;
@@ -415,7 +420,9 @@ $(document).ready(function () {
 
     var spotLight;
 
-    var controls, camera, renderer, raycaster, mouse; 
+    var controls, camera, renderer, raycaster, mouse;
+    let baseAngle = 0;
+    let currentAngle = 0;
     var isAnimating = false; // Prevent multiple animations
 
     var textureLoader = new THREE.TextureLoader();
@@ -423,23 +430,23 @@ $(document).ready(function () {
 
     // var yellowHex = "#ffdc00"
     var redHex = "#ff0000";
-    const redStoneTexture = textureLoader.load('assets/textures/stoneRedText.png');
-    const yellowStoneTexture = textureLoader.load('assets/textures/stoneYellowText.png');
-    const cRedStoneTexture = textureLoader.load('assets/textures/stoneRedTextC.png');
-    const cYellowStoneTexture = textureLoader.load('assets/textures/stoneYellowTextC.png');
+    const redStoneTexture = textureLoader.load('../general/stoneRedText.png');
+    const yellowStoneTexture = textureLoader.load('../general/stoneYellowText.png');
+    const cRedStoneTexture = textureLoader.load('../general/stoneRedTextC.png');
+    const cYellowStoneTexture = textureLoader.load('../general/stoneYellowTextC.png');
 
-    const normalRed = new THREE.MeshStandardMaterial({ map: redStoneTexture, side: THREE.DoubleSide});
+    const normalRed = new THREE.MeshStandardMaterial({ map: redStoneTexture, side: THREE.DoubleSide });
     const normalYellow = new THREE.MeshStandardMaterial({ map: yellowStoneTexture, side: THREE.DoubleSide });
     const brightRed = new THREE.MeshStandardMaterial({ map: redStoneTexture, side: THREE.DoubleSide });
     const brightYellow = new THREE.MeshStandardMaterial({ map: yellowStoneTexture, side: THREE.DoubleSide });
-    
+
     let baseStoneModel = null;
 
-    fbxLoader.load('assets/objects/stone4.fbx', (model) => {
+    fbxLoader.load('../general/stone4.fbx', (model) => {
         baseStoneModel = model;
     });
     // End 3D assets initialization
-        
+
 
 
 
@@ -674,7 +681,7 @@ $(document).ready(function () {
     }
 
 
-    
+
 
     let $indexButtonsContainer;
     let $indexButtonsStatsContainer;
@@ -806,16 +813,19 @@ $(document).ready(function () {
 
         fitCompetitorNames();
 
-        
+
         // 3D - render the stone viewport
-        
+        if (show3d == 0) {
+            return;
+        }
+
         if (latestSvg == shotInfo.svg) {
             return;
         }
         latestSvg = shotInfo.svg;
 
         var svgData = parseSVGData(shotInfo.svg);
-        
+
         // If we changed sheet, clear and rebuild
         if (!sheetInitialized) {
 
@@ -1349,16 +1359,16 @@ $(document).ready(function () {
         // Extract data from each group
         const parsedGroups = groups.map((group, index) => {
             const circles = Array.from(group.querySelectorAll("circle"))
-            .filter(circle => circle.getAttribute("stroke-width") == null)
-            .map(circle => ({
-                cx: parseFloat(circle.getAttribute("cx")) * scale,
-                cy: parseFloat(circle.getAttribute("cy")) * scale,
-                r: parseFloat(circle.getAttribute("r")) * scale,
-                fill: circle.getAttribute("fill"),
-                stroke: circle.getAttribute("stroke"),
-                strokeWidth: parseFloat(circle.getAttribute("stroke-width")) * scale,
-                class: circle.getAttribute("class") || null
-            }));
+                .filter(circle => circle.getAttribute("stroke-width") == null)
+                .map(circle => ({
+                    cx: parseFloat(circle.getAttribute("cx")) * scale,
+                    cy: parseFloat(circle.getAttribute("cy")) * scale,
+                    r: parseFloat(circle.getAttribute("r")) * scale,
+                    fill: circle.getAttribute("fill"),
+                    stroke: circle.getAttribute("stroke"),
+                    strokeWidth: parseFloat(circle.getAttribute("stroke-width")) * scale,
+                    class: circle.getAttribute("class") || null
+                }));
 
             // First one is the sheet
             if (index == 0) {
@@ -1436,16 +1446,16 @@ $(document).ready(function () {
 
     function buildSheet(svgData) {
         // Reset the camera position
-        camera.position.set(0, 100, 0);
+        camera.position.set(0, 100, 200);
         controls.target.set(0, 0, 0);
-        camera.zoom = 1;
+        camera.zoom = 0.75;
 
-        camera.updateProjectionMatrix(); 
+        camera.updateProjectionMatrix();
         controls.update();
 
         scene.children
-        .filter(obj => obj instanceof THREE.SpotLight)
-        .forEach(light => scene.remove(light));
+            .filter(obj => obj instanceof THREE.SpotLight)
+            .forEach(light => scene.remove(light));
 
         if (sheetMesh) {
             scene.remove(sheetMesh);
@@ -1462,15 +1472,67 @@ $(document).ready(function () {
         addSVGElementsToPlane(sheetMesh, svgData.groups[0]);
 
         scene.add(sheetMesh);
+
+        rotateAndZoom(90, 1600);
     }
 
     function getBodyBackColor() {
         var rgb = $('body').css('background-color');
 
-        return parseInt(rgb.match(/\d+/g).map(function(x) {
+        return parseInt(rgb.match(/\d+/g).map(function (x) {
             return ("0" + parseInt(x).toString(16)).slice(-2);
         }).join(""), 16);
     }
+
+    function rotateAndZoom(degrees = 30, duration = 800) {
+
+        if (!controls || !camera) return;
+
+        const pivot = controls.target.clone();
+        const startTime = performance.now();
+
+        // --- ROTATION SETUP ---
+        const offset = camera.position.clone().sub(pivot);
+        const radius = offset.length();
+
+        const startAngle = Math.atan2(offset.x, offset.z);
+        const targetAngle = startAngle + THREE.MathUtils.degToRad(degrees);
+
+        // --- ZOOM SETUP ---
+        const startZoom = camera.zoom;
+        const targetZoom = 1;
+
+        function animate() {
+
+            const elapsed = performance.now() - startTime;
+            const t = Math.min(elapsed / duration, 1);
+
+            // smooth ease out
+            const ease = t * (2 - t);
+
+            // ---- ROTATE ----
+            const currentAngle = startAngle + (targetAngle - startAngle) * ease;
+
+            //camera.position.x = pivot.x + radius * Math.sin(currentAngle);
+            camera.position.z = pivot.z + radius * Math.cos(currentAngle);
+
+            camera.lookAt(pivot);
+
+            // ---- ZOOM ----
+            camera.zoom = startZoom + (targetZoom - startZoom) * ease;
+            camera.updateProjectionMatrix();
+
+            controls.update();
+
+            if (t < 1) {
+                requestAnimationFrame(animate);
+            }
+        }
+
+        animate();
+    }
+
+
 
 
     function setupClickHandler($container) {
@@ -1512,7 +1574,7 @@ $(document).ready(function () {
 
 
     function refreshStoneData(svgData) {
-        if (stones != null) {            
+        if (stones != null) {
             stones.forEach((stone) => {
                 scene.remove(stone); // Remove each stone from the scene
             });
@@ -1521,7 +1583,7 @@ $(document).ready(function () {
         stones = [];
 
         var stoneGroups = svgData.groups.filter(g => g.id != "SheetDefinition" && g.class != "CUR_os");
-        
+
         Object.values(stoneGroups).forEach(stoneGp => {
             placeStones(scene, stones, stoneGp.circles, stoneGroup, spotLight, stoneGp.fill, stoneGp.stroke, (stoneGp.class == "CUR_osr" || stoneGp.class == "CUR_osy"));
         });
@@ -1670,7 +1732,7 @@ $(document).ready(function () {
             if ($scb.is(':visible')) {
                 $scb.css('display', 'table');
             }
-        }        
+        }
         else if (target == "3d") {
             var $svg = $('.slider-wrapper');
 
@@ -1914,7 +1976,7 @@ $(document).ready(function () {
         var geometry = new THREE.PlaneGeometry(rectData.width, rectData.height);
 
         var frostedMaterial = new THREE.MeshStandardMaterial({
-            color: 0x051739,// 0xf7fdff,
+            color: 0xf7fdff,
             roughness: 0.7,
             metalness: 0.4,
             transparent: true,
@@ -1990,87 +2052,87 @@ $(document).ready(function () {
 
             const stone = baseStoneModel.clone(true);
 
-                if (!Number.isNaN(circle.strokeWidth)) {
-                    return;
-                }
+            if (!Number.isNaN(circle.strokeWidth)) {
+                return;
+            }
 
-                // Traverse and optimize loaded object
-                stone.traverse((child) => {
-                    if (child.isMesh) {
-                        if (circle.class == "CUR_cs") {
-                            // Create a spotlight
-                            spotLight = new THREE.SpotLight(0xffffff, 1); // White light with intensity 1
-                        
-
-                            spotLight.position.set(10, 60, 10); // Position the spotlight above the scene
-                            spotLight.angle = Math.PI / 164; // Set the spread of the spotlight
-                            spotLight.penumbra = 0.2; // Add softness to the light's edges
-                            spotLight.castShadow = true; // Enable shadow casting
-                            spotLight.name == "light";
-                            // spotLight.material = currentStoneMat;
-
-                            // Add the spotlight to the scene
-                            scene.add(spotLight);
+            // Traverse and optimize loaded object
+            stone.traverse((child) => {
+                if (child.isMesh) {
+                    if (circle.class == "CUR_cs") {
+                        // Create a spotlight
+                        spotLight = new THREE.SpotLight(0xffffff, 1); // White light with intensity 1
 
 
-                            // Create a target for the spotlight
-                            const lightTarget = new THREE.Object3D();
-                            lightTarget.position.set(circle.cx - offsetX, 0, circle.cy - offsetY); // Define the target's x, y, z position
-                            lightTarget.name == "light";
-                            scene.add(lightTarget);
+                        spotLight.position.set(10, 60, 10); // Position the spotlight above the scene
+                        spotLight.angle = Math.PI / 164; // Set the spread of the spotlight
+                        spotLight.penumbra = 0.2; // Add softness to the light's edges
+                        spotLight.castShadow = true; // Enable shadow casting
+                        spotLight.name == "light";
+                        // spotLight.material = currentStoneMat;
 
-                            // Set the spotlight to target the custom coordinates
-                            spotLight.target = lightTarget;
-                            stoneMat = fill == redHex ? brightRed : brightYellow;                 
+                        // Add the spotlight to the scene
+                        scene.add(spotLight);
 
-                            animateStone(child); // Start the animation
 
-                        }
-                        else {
-                            // debugger;
-                            stoneMat = fill == redHex ? normalRed : normalYellow; 
-                        }
+                        // Create a target for the spotlight
+                        const lightTarget = new THREE.Object3D();
+                        lightTarget.position.set(circle.cx - offsetX, 0, circle.cy - offsetY); // Define the target's x, y, z position
+                        lightTarget.name == "light";
+                        scene.add(lightTarget);
 
-                        
-                        if (isTakenout) {
-                            var transparentMaterial = stoneMat.clone(); // Clone the material
-                            transparentMaterial.transparent = true;     // Enable transparency
-                            transparentMaterial.opacity = 0.2;          // Set the desired opacity
-                            
-                            child.material = transparentMaterial;
-                        }
-                        else {
-                            child.material = stoneMat;
-                        }
+                        // Set the spotlight to target the custom coordinates
+                        spotLight.target = lightTarget;
+                        stoneMat = fill == redHex ? brightRed : brightYellow;
 
-                        child.geometry.computeVertexNormals();
-                        child.castShadow = true; // Enable shadows if needed
-                        child.receiveShadow = true;
+                        animateStone(child); // Start the animation
+
                     }
-                });
+                    else {
+                        // debugger;
+                        stoneMat = fill == redHex ? normalRed : normalYellow;
+                    }
 
 
-                var stoneSc = 0.015 * circle.r / 8.5; // PZ Originally 8.65, but looked inaccurate
+                    if (isTakenout) {
+                        var transparentMaterial = stoneMat.clone(); // Clone the material
+                        transparentMaterial.transparent = true;     // Enable transparency
+                        transparentMaterial.opacity = 0.2;          // Set the desired opacity
 
-                // Scale the stone object to match the scene
-                stone.scale.set(stoneSc, stoneSc, stoneSc);
-                // Position the stone at the circle's coordinates (invert Y-axis)
-                stone.position.set(circle.cx - offsetX, 0, circle.cy - offsetY); // Adjust Z if necessary
-                stone.tag = `st_${stroke}_${fill}_${circle.cx}_${circle.cy}_${circle.r}`;
+                        child.material = transparentMaterial;
+                    }
+                    else {
+                        child.material = stoneMat;
+                    }
 
-                stones.push(stone); // Add stone to the array for raycasting
-                stoneGroup.add(stone);
+                    child.geometry.computeVertexNormals();
+                    child.castShadow = true; // Enable shadows if needed
+                    child.receiveShadow = true;
+                }
+            });
 
-                // Add the stone to the scene
-                scene.add(stone);
 
-                idx++;
+            var stoneSc = 0.015 * circle.r / 8.5; // PZ Originally 8.65, but looked inaccurate
+
+            // Scale the stone object to match the scene
+            stone.scale.set(stoneSc, stoneSc, stoneSc);
+            // Position the stone at the circle's coordinates (invert Y-axis)
+            stone.position.set(circle.cx - offsetX, 0, circle.cy - offsetY); // Adjust Z if necessary
+            stone.tag = `st_${stroke}_${fill}_${circle.cx}_${circle.cy}_${circle.r}`;
+
+            stones.push(stone); // Add stone to the array for raycasting
+            stoneGroup.add(stone);
+
+            // Add the stone to the scene
+            scene.add(stone);
+
+            idx++;
         });
 
         return stoneGroup;
     }
 
-    
+
     function animateStone(child) {
         requestAnimationFrame(() => animateStone(child));// Continuously call the animation loop
 
@@ -2121,16 +2183,16 @@ $(document).ready(function () {
         // Extract data from each group
         const parsedGroups = groups.map((group, index) => {
             const circles = Array.from(group.querySelectorAll("circle"))
-            .filter(circle => circle.getAttribute("stroke-width") == null)
-            .map(circle => ({
-                cx: parseFloat(circle.getAttribute("cx")) * scale,
-                cy: parseFloat(circle.getAttribute("cy")) * scale,
-                r: parseFloat(circle.getAttribute("r")) * scale,
-                fill: circle.getAttribute("fill"),
-                stroke: circle.getAttribute("stroke"),
-                strokeWidth: parseFloat(circle.getAttribute("stroke-width")) * scale,
-                class: circle.getAttribute("class") || null
-            }));
+                .filter(circle => circle.getAttribute("stroke-width") == null)
+                .map(circle => ({
+                    cx: parseFloat(circle.getAttribute("cx")) * scale,
+                    cy: parseFloat(circle.getAttribute("cy")) * scale,
+                    r: parseFloat(circle.getAttribute("r")) * scale,
+                    fill: circle.getAttribute("fill"),
+                    stroke: circle.getAttribute("stroke"),
+                    strokeWidth: parseFloat(circle.getAttribute("stroke-width")) * scale,
+                    class: circle.getAttribute("class") || null
+                }));
 
             // First one is the sheet
             if (index == 0) {

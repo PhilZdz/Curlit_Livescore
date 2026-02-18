@@ -1669,6 +1669,7 @@ input:checked + .btn-slider {
 #viewport3d {
     display: none;
     overflow: hidden;
+    cursor: move!important;
 }
 
 canvas {
