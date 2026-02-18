@@ -1423,15 +1423,70 @@ $(document).ready(function () {
         renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         $container.html(renderer.domElement);
+                
+        controls = new THREE.MapControls(camera, renderer.domElement);
 
-        controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        controls.minPolarAngle = 0;          // can't go above the top
-        controls.maxPolarAngle = Math.PI / 2; // can't go below the horizon
-        controls.touches = {
-            ONE: THREE.TOUCH.PAN,
-            TWO: THREE.TOUCH.ROTATE
+        controls.dampingFactor = 0.05;
+
+        // Keep rotation limited (or disable entirely)
+        controls.minPolarAngle = 0;
+        controls.maxPolarAngle = Math.PI / 2;
+
+        // Zoom speed (important for orthographic)
+        controls.zoomSpeed = 0.4;
+
+        // Pan speed
+        controls.panSpeed = 0.4;
+
+        // Smooth zooming
+        controls.enableZoom = true;
+        controls.enablePan = true;
+
+
+        // Manual two-finger pinch-to-dolly patch
+        const minDistance = 10;
+        let prevTouches = [];
+
+        renderer.domElement.addEventListener('touchstart', (e) => {
+        prevTouches = Array.from(e.touches);
+        });
+
+        renderer.domElement.addEventListener('touchmove', (e) => {
+        if (e.touches.length !== 2) return;
+
+        const t0 = e.touches[0];
+        const t1 = e.touches[1];
+        const p0 = prevTouches[0];
+        const p1 = prevTouches[1];
+
+        if (p0 && p1) {
+            const prevDist = Math.hypot(p0.clientX - p1.clientX, p0.clientY - p1.clientY);
+            const currDist = Math.hypot(t0.clientX - t1.clientX, t0.clientY - t1.clientY);
+            const distDelta = currDist - prevDist;
+
+            if (Math.abs(distDelta) > 0.5) {
+            const direction = new THREE.Vector3();
+            direction.subVectors(controls.target, camera.position).normalize();
+
+            const newPos = camera.position.clone().addScaledVector(direction, distDelta * 0.5);
+            if (newPos.distanceTo(controls.target) > minDistance) {
+                camera.position.copy(newPos);
+            }
+
+            controls.update();
+            }
         }
+
+        prevTouches = [t0, t1];
+        }, { passive: true });
+
+        renderer.domElement.addEventListener('touchend', () => {
+        prevTouches = [];
+        });
+
+
+
 
         raycaster = new THREE.Raycaster();
         mouse = new THREE.Vector2();
