@@ -1,4 +1,4 @@
-﻿/* Version 1.6rc7 from 17.2.25  */
+﻿/* Version 1.6rc8 from 18.2.25  */
 
 #loader {
     background-image: url(../img/curloading.gif);
@@ -206,19 +206,17 @@
 .matchup-tile.preparing .details,
 .matchup-tile.running .details,
 .matchup-tile.unofficial .details,
+.matchup-tile.ready .details,
 .matchup-tile.official .details,
 .matchup-tile.unofficial .details,
 .matchup-tile.scheduled .details-content,
 .matchup-tile.preparing .details-content,
+.matchup-tile.ready .details-content,
 .matchup-tile.running .details-content,
 .matchup-tile.unofficial .details-content,
 .matchup-tile.official .details-content,
 .matchup-tile.unofficial .details-content {
-    display: none;
-}
-
-.container-wide.tile-l .matchup-tile.ready .details {
-    display: block;
+    display: none!important;
 }
 
 .container-wide.tile-m .matchup-tile.ready .details,

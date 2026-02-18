@@ -1428,6 +1428,10 @@ $(document).ready(function () {
         controls.enableDamping = true;
         controls.minPolarAngle = 0;          // can't go above the top
         controls.maxPolarAngle = Math.PI / 2; // can't go below the horizon
+        controls.touches = {
+            ONE: THREE.TOUCH.PAN,
+            TWO: THREE.TOUCH.ROTATE
+        }
 
         raycaster = new THREE.Raycaster();
         mouse = new THREE.Vector2();

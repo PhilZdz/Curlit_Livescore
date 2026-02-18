@@ -1,8 +1,8 @@
-// Version 1.6rc5 from 2.2.26
+// Version 1.6rc8 from 18.2.26
 
 $(document).ready(function () {
-    //const apiUrl = "https://livescores.worldcurling.org/curlitsse";
-    const apiUrl = "http://sse.curlit.local:5057";
+    const apiUrl = "https://livescores.worldcurling.org/curlitsse";
+    //const apiUrl = "http://sse.curlit.local:5057";
 
     const params = new URLSearchParams(window.location.search);
     const pathSegments = window.location.pathname.split("/");
@@ -221,8 +221,8 @@ $(document).ready(function () {
             $rightComment.addClass("longTextRight");
         }
 
-        tile.find('.right-area .btnStats').attr("href", `/${competitionCode}/aspnet/currentstats.aspx?EventID=${result.eventID}&Sheet=${result.sheet}`);
-        tile.find('.right-area .btnGraphics').attr("href", `/${competitionCode}/aspnet/GameCenter.aspx?EventID=${result.eventID}&Sheet=${result.sheet}`);
+        tile.find('.right-area .btnStats').attr("href", `/${competitionCode}/aspnet/currentstats.aspx?EventID=${result.eventID}&Sheet=${result.sheet}&SessionID=${result.sessionID}`);
+        tile.find('.right-area .btnGraphics').attr("href", `/${competitionCode}/aspnet/GameCenter.aspx?EventID=${result.eventID}&Sheet=${result.sheet}&SessionID=${result.sessionID}`);
 
         if (result.doStats == true) {
             tile.find('.right-area .btnStats img').attr("src", `../general/proc-button.svg`);
@@ -383,7 +383,7 @@ $(document).ready(function () {
                 var sheet = $(this).find('.sheet').first().text();
 
                 if (eventId && sheet) {
-                    window.location.href = `/${competitionCode}/aspnet/GameCenter.aspx?EventID=${eventId}&Sheet=${sheet}`;
+                    window.location.href = `/${competitionCode}/aspnet/GameCenter.aspx?EventID=${eventId}&Sheet=${sheet}&SessionID=${sessionId}`;
                 }
             }
         }
