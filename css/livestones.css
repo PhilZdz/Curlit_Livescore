@@ -1140,15 +1140,18 @@ info-right span {
 }
 
 #viewport3d {
-    width: 55%;
-    height: auto;
+    width: 100%;
     overflow: hidden;
     position: relative;
-    /* background: white; */
     border-bottom-left-radius: 5px;
-    aspect-ratio: 1 / 2;
     margin-right: 6px;
+    height: 100%;
 }
+
+#viewport3d, #slider {
+    grid-area: 1 / 1;
+}
+
 
 .slider-wrapper {
     width: 55%;
@@ -1158,6 +1161,7 @@ info-right span {
     /* background: white; */
     border-bottom-left-radius: 5px;
     margin-right: 6px;
+    display: flex;
 }
 
     .slider-wrapper.odd {

@@ -22,9 +22,7 @@
   <!-- Include FBXLoader -->
   <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/FBXLoader.js"></script>
   <!-- Include OrbitControls -->
-  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/MapControls.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/camera-controls/dist/camera-controls.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
     
 
   <!-- livescores.worldcurling integration -->
@@ -208,6 +206,12 @@
                               <!-- Game content -->
                               <div id="game-content">
                                 <div class="slider-wrapper">
+                                  
+                                  <!-- 3D viewport -->
+                                  <div id="viewport3d">
+                                  </div>
+
+                                  <!-- 2D SVG -->
                                   <div class="slider" id="slider"></div>
 
                                   <!-- arrows -->
@@ -217,9 +221,7 @@
                                     class="nav-arrow right">&#10095;</button>
 
                                   <div class="index-buttons" id="indexButtons"></div>
-                                </div>
 
-                                <div id="viewport3d">
                                 </div>
 
                                 <div id="currentShot">

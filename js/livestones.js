@@ -45,7 +45,7 @@ $(document).ready(function () {
     var sheet = params.get("Sheet", "");
     var isDebug = getIntParam("Debug");
     var isTestMode = getIntParam("TestMode", 0);
-    var show3d = getIntParam("Show3D", 0);
+    var show3d = getIntParam("Show3D", 1);
 
     if (show3d == 0) {
         $("#command3d").hide();
@@ -824,7 +824,7 @@ $(document).ready(function () {
         }
         latestSvg = shotInfo.svg;
 
-        var svgData = parseSVGData(shotInfo.svg);
+        var svgData = parseSVGData(latestSvg);
 
         // If we changed sheet, clear and rebuild
         if (!sheetInitialized) {
@@ -1416,7 +1416,7 @@ $(document).ready(function () {
             width / height * 30,
             30,
             -30,
-            0.1,
+            -2000,
             1000
         );
 
@@ -1512,10 +1512,6 @@ $(document).ready(function () {
         camera.updateProjectionMatrix();
         controls.update();
 
-        scene.children
-            .filter(obj => obj instanceof THREE.SpotLight)
-            .forEach(light => scene.remove(light));
-
         if (sheetMesh) {
             scene.remove(sheetMesh);
             sheetMesh.traverse(child => {
@@ -1546,6 +1542,8 @@ $(document).ready(function () {
     function rotateAndZoom(degrees = 30, duration = 800) {
 
         if (!controls || !camera) return;
+
+        controls.enabled = false; // disable controls during animation
 
         const pivot = controls.target.clone();
         const startTime = performance.now();
@@ -1581,10 +1579,29 @@ $(document).ready(function () {
             camera.zoom = startZoom + (targetZoom - startZoom) * ease;
             camera.updateProjectionMatrix();
 
-            controls.update();
-
-            if (t < 1) {
+            if (t < 0.9) {
                 requestAnimationFrame(animate);
+            } else {
+            // Recreate controls from scratch to wipe any stale internal state
+                controls.dispose();
+                controls = new THREE.MapControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+                controls.dampingFactor = 0.05;
+                controls.minPolarAngle = 0;
+                controls.maxPolarAngle = Math.PI / 2;
+                controls.zoomSpeed = 0.4;
+                controls.panSpeed = 0.4;
+                controls.enableZoom = true;
+                controls.enablePan = true;
+
+                // Now set the final state
+                camera.position.set(0, 100, 0);
+                camera.up.set(0, 1, 0);
+                camera.zoom = targetZoom;
+                camera.updateProjectionMatrix();
+
+                controls.target.set(0, 0, 0);
+                controls.update();
             }
         }
 
@@ -1633,6 +1650,12 @@ $(document).ready(function () {
 
 
     function refreshStoneData(svgData) {
+
+        // Clear the spotlights
+        scene.children
+            .filter(obj => obj instanceof THREE.SpotLight)
+            .forEach(light => scene.remove(light));
+
         if (stones != null) {
             stones.forEach((stone) => {
                 scene.remove(stone); // Remove each stone from the scene
@@ -1793,15 +1816,22 @@ $(document).ready(function () {
             }
         }
         else if (target == "3d") {
-            var $svg = $('.slider-wrapper');
+            var $svg = $('#slider');
+            // var $svg = $('.slider-wrapper');
 
             if (!$container.is(':visible')) {
-                $container.css('display', 'block');
+                $container.css('display', 'flex');
                 $svg.css('display', 'none');
+
+                // If the sheet has already been initialized, just trigger the animation
+                if (sheetInitialized) {
+                    var svgData = parseSVGData(latestSvg);
+                    buildSheet(svgData);
+                }
             }
             else {
                 $container.css('display', 'none');
-                $svg.css('display', 'block');
+                $svg.css('display', 'flex');
             }
         }
         else if (target == "live") {
@@ -2035,11 +2065,11 @@ $(document).ready(function () {
         var geometry = new THREE.PlaneGeometry(rectData.width, rectData.height);
 
         var frostedMaterial = new THREE.MeshStandardMaterial({
-            color: 0xf7fdff,
+            color: 0xffffff,
             roughness: 0.7,
             metalness: 0.4,
             transparent: true,
-            opacity: 0.25
+            opacity: 0.1
         });
 
 
@@ -2216,81 +2246,7 @@ $(document).ready(function () {
     }
 
 
-    function parseSVGData(svgString) {
-        // Create a DOM parser
-        const parser = new DOMParser();
-        const scale = 0.1;
-        const svgDoc = parser.parseFromString(svgString, "image/svg+xml");
-
-
-        const rects = Array.from(svgDoc.querySelectorAll("rect"));
-
-        // Parse <rect> elements
-        const parsedRects = rects.map(rect => ({
-            x: parseFloat(rect.getAttribute("x")) * scale,
-            y: parseFloat(rect.getAttribute("y")) * scale,
-            width: parseFloat(rect.getAttribute("width")) * scale,
-            height: parseFloat(rect.getAttribute("height")) * scale,
-            fill: rect.getAttribute("fill"),
-            stroke: rect.getAttribute("stroke"),
-            strokeWidth: parseFloat(rect.getAttribute("stroke-width"))
-        }));
-
-        // Get all <g> groups
-        const groups = Array.from(svgDoc.querySelectorAll("g"));
-
-        // Extract data from each group
-        const parsedGroups = groups.map((group, index) => {
-            const circles = Array.from(group.querySelectorAll("circle"))
-                .filter(circle => circle.getAttribute("stroke-width") == null)
-                .map(circle => ({
-                    cx: parseFloat(circle.getAttribute("cx")) * scale,
-                    cy: parseFloat(circle.getAttribute("cy")) * scale,
-                    r: parseFloat(circle.getAttribute("r")) * scale,
-                    fill: circle.getAttribute("fill"),
-                    stroke: circle.getAttribute("stroke"),
-                    strokeWidth: parseFloat(circle.getAttribute("stroke-width")) * scale,
-                    class: circle.getAttribute("class") || null
-                }));
-
-            // First one is the sheet
-            if (index == 0) {
-                // Extract lines in this group
-                const lines = Array.from(group.querySelectorAll("line")).map(line => ({
-                    x1: parseFloat(line.getAttribute("x1")) * scale,
-                    y1: parseFloat(line.getAttribute("y1")) * scale,
-                    x2: parseFloat(line.getAttribute("x2")) * scale,
-                    y2: parseFloat(line.getAttribute("y2")) * scale,
-                    stroke: line.getAttribute("stroke"),
-                    strokeWidth: parseFloat(line.getAttribute("stroke-width")) * scale
-                }));
-
-                return {
-                    id: "SheetDefinition",
-                    circles,
-                    lines
-                };
-            }
-            else {
-                return {
-                    fill: group.getAttribute("fill"),
-                    stroke: group.getAttribute("stroke"),
-                    class: group.getAttribute("class"),
-                    circles
-                };
-            }
-
-        });
-
-        return {
-            sheet: parsedRects[0],
-            groups: parsedGroups
-        };
-    }
-
-
-
-
+    
 
 
     // --------------------- //
