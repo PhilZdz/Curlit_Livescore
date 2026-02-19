@@ -1439,6 +1439,9 @@ $(document).ready(function () {
         // Pan speed
         controls.panSpeed = 0.4;
 
+        // Rotate speed
+        controls.rotateSpeed = 2;
+
         // Smooth zooming
         controls.enableZoom = true;
         controls.enablePan = true;
