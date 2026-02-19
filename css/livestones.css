@@ -1,4 +1,7 @@
 ﻿/* Version 1.6rc10 from 19.2.25  */
+body {
+    overscroll-behavior: none;
+}
 
 #loader {
     background-image: url(../img/curloading.gif);
@@ -1672,6 +1675,8 @@ input:checked + .btn-slider {
     display: none;
     overflow: hidden;
     cursor: move!important;
+    overscroll-behavior: none;
+    touch-action: none;
 }
 
 canvas {
