@@ -1,4 +1,4 @@
-/* Version 1.6rc5 from 2.2.26  */
+/* Version 1.6rc10 from 2.2.26  */
 /* body {
   max-width: 1200px;
   position: absolute;
@@ -759,6 +759,7 @@
     }
 
     .matchup-tile table.scoreboard th.lsfe,
+    .matchup-tile.preparing table.scoreboard td.lsfe,
     .matchup-tile.running table.scoreboard td.lsfe,
     .matchup-tile.unofficial table.scoreboard td.lsfe,
     .matchup-tile.official table.scoreboard td.lsfe,

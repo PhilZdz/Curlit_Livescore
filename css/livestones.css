@@ -1,4 +1,4 @@
-﻿/* Version 1.6rc8 from 18.2.25  */
+﻿/* Version 1.6rc10 from 19.2.25  */
 
 #loader {
     background-image: url(../img/curloading.gif);
@@ -1136,7 +1136,7 @@ info-right span {
 #game-content {
     flex: 1;
     display: flex;
-    /* min-height: 50vh; */
+    min-height: 50vh;
 }
 
 #viewport3d {

@@ -1,4 +1,4 @@
-// Version 1.6rc7 from 17.2.25
+// Version 1.6rc9 from 19.2.25
 
 $(document).ready(function () {
 
