@@ -1,4 +1,4 @@
-// Version 1.6rc9 from 19.2.25
+// Version 1.6rc11 from 19.2.25
 
 $(document).ready(function () {
 
@@ -1494,8 +1494,14 @@ $(document).ready(function () {
         raycaster = new THREE.Raycaster();
         mouse = new THREE.Vector2();
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
-        scene.add(ambientLight);
+        
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        dirLight.position.set(100, 200, 100); // top-right-front
+        scene.add(dirLight);
+
+        const fillLight = new THREE.DirectionalLight(0xffffff, 0.4); // softer fill from opposite side
+        fillLight.position.set(-100, 50, -100);
+        scene.add(fillLight);
 
         // setupClickHandler($container);
 
@@ -2128,7 +2134,7 @@ $(document).ready(function () {
                 new THREE.Vector3(-line.x1 + offsetX, -line.y1 + offsetY, 0.01),
                 new THREE.Vector3(-line.x2 + offsetX, -line.y2 + offsetY, 0.01)
             ]);
-            var material = new THREE.LineBasicMaterial({ color: "black", linewidth: 1, depthWrite: false });
+            var material = new THREE.LineBasicMaterial({ color: 0x646464, linewidth: 1, depthWrite: false });
             var lineMesh = new THREE.Line(geometry, material);
             lineMesh.renderOrder = index + 1 + circles.length; // Higher index = drawn later/on top
             lineMesh.tag = "svgElement";
