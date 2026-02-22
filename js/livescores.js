@@ -1,4 +1,4 @@
-// Version 1.6rc8 from 18.2.26
+// Version 1.6rc13 from 22.2.26
 
 $(document).ready(function () {
     const apiUrl = "https://livescores.worldcurling.org/curlitsse";
@@ -221,7 +221,9 @@ $(document).ready(function () {
             $rightComment.addClass("longTextRight");
         }
 
-        tile.find('.right-area .btnStats').attr("href", `/${competitionCode}/aspnet/currentstats.aspx?EventID=${result.eventID}&Sheet=${result.sheet}&SessionID=${result.sessionID}`);
+        var statsPage = result.status == "official" ? "sessionstats" : "currentstats";
+
+        tile.find('.right-area .btnStats').attr("href", `/${competitionCode}/aspnet/${statsPage}.aspx?EventID=${result.eventID}&Sheet=${result.sheet}&SessionID=${result.sessionID}`);
         tile.find('.right-area .btnGraphics').attr("href", `/${competitionCode}/aspnet/GameCenter.aspx?EventID=${result.eventID}&Sheet=${result.sheet}&SessionID=${result.sessionID}`);
 
         if (result.doStats == true) {
@@ -381,9 +383,11 @@ $(document).ready(function () {
         if (!$(e.target).closest('.btnStats, .btnGraphics').length) {
             if (dataId) {
                 var sheet = $(this).find('.sheet').first().text();
+                
+                const [dataEvent, dataSession] = dataId.split("-");
 
-                if (eventId && sheet) {
-                    window.location.href = `/${competitionCode}/aspnet/GameCenter.aspx?EventID=${eventId}&Sheet=${sheet}&SessionID=${sessionId}`;
+                if (dataEvent && dataSession && sheet) {
+                    window.location.href = `/${competitionCode}/aspnet/GameCenter.aspx?EventID=${dataEvent}&Sheet=${sheet}&SessionID=${dataSession}`;
                 }
             }
         }
