@@ -1,4 +1,4 @@
-// Version 1.6rc11 from 19.2.25
+// Version 1.6rc12 from 20.2.25
 
 $(document).ready(function () {
 
@@ -410,6 +410,7 @@ $(document).ready(function () {
 
     // 3D assets initialization
     var threeInitialized = false;
+    var position3dSet = false;
     var stones = []; // Array to store stones for 
     var animationStart = null;
     const $container = $('#viewport3d');
@@ -1513,14 +1514,6 @@ $(document).ready(function () {
     let sheetMesh = null;
 
     function buildSheet(svgData) {
-        // Reset the camera position
-        camera.position.set(0, 100, 200);
-        controls.target.set(0, 0, 0);
-        camera.zoom = 0.75;
-
-        camera.updateProjectionMatrix();
-        controls.update();
-
         if (sheetMesh) {
             scene.remove(sheetMesh);
             sheetMesh.traverse(child => {
@@ -1537,7 +1530,18 @@ $(document).ready(function () {
 
         scene.add(sheetMesh);
 
-        rotateAndZoom(90, 1600);
+        if (!position3dSet) {
+            // Reset the camera position
+            camera.position.set(0, 100, 200);
+            controls.target.set(0, 0, 0);
+            camera.zoom = 0.75;
+
+            camera.updateProjectionMatrix();
+            controls.update();
+
+            position3dSet = true;
+            rotateAndZoom(90, 1600);
+        }
     }
 
     function getBodyBackColor() {
@@ -1825,6 +1829,7 @@ $(document).ready(function () {
             }
         }
         else if (target == "3d") {
+            position3dSet = false;
             var $svg = $('#slider');
             // var $svg = $('.slider-wrapper');
 
