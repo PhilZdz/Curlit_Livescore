@@ -2,8 +2,8 @@
 
 $(document).ready(function () {
 
-    //const apiUrl = "https://livescores.worldcurling.org/curlitsse";
-    const apiUrl = "http://sse.curlit.local:5057";
+    const apiUrl = "https://livescores.worldcurling.org/curlitsse";
+    //const apiUrl = "http://sse.curlit.local:5057";
     //const apiUrl = "https://curlit.com/curlitsse";
 
     const curlTasks = {
