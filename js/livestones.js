@@ -1,9 +1,9 @@
-// Version 1.6rc12 from 20.2.25
+// Version 1.7rc2 from 2.3.26
 
 $(document).ready(function () {
 
-    const apiUrl = "https://livescores.worldcurling.org/curlitsse";
-    //const apiUrl = "http://sse.curlit.local:5057";
+    //const apiUrl = "https://livescores.worldcurling.org/curlitsse";
+    const apiUrl = "http://sse.curlit.local:5057";
     //const apiUrl = "https://curlit.com/curlitsse";
 
     const curlTasks = {
@@ -68,6 +68,7 @@ $(document).ready(function () {
     const $slider = $('#slider');
     const $gameTile = $('#game-tile');
     let current = 0;
+    let doStats = true;
 
     $('table.scoreboard').hide();
     $('#head-to-head').hide();
@@ -177,6 +178,7 @@ $(document).ready(function () {
 
         if (result) {
             latestGameStatus = result.status;
+            doStats = result.doStats;
             refreshSheetList($gameTile, result);
             feedTileUI($gameTile, result);
         }
@@ -258,6 +260,10 @@ $(document).ready(function () {
 
         if (result.doGraphics == false) {
             tile.find('.right-area .btnGraphics').hide();
+        }
+
+        if (result.doTime == false) {
+            tile.find('.team-clock').hide();
         }
 
         // Home team
@@ -475,7 +481,7 @@ $(document).ready(function () {
                 resetViewport();
             }
 
-            adjustGameCenterDisplay(data.doStats, data.gameInfo);
+            adjustGameCenterDisplay(data.gameInfo);
 
             if ($("#is_live").is(":checked")) {
                 updateLiveData(data);
@@ -548,7 +554,7 @@ $(document).ready(function () {
 
                     updateLiveData(data);
 
-                    adjustGameCenterDisplay(data.doStats, data.gameInfo);
+                    adjustGameCenterDisplay(data.gameInfo);
 
                     setOnlineHeader(true);
 
@@ -564,10 +570,7 @@ $(document).ready(function () {
 
     }
 
-    function adjustGameCenterDisplay(doStats, gameInfo) {
-        // TODO PZ Remove that
-        return;
-
+    function adjustGameCenterDisplay(gameInfo) {
         // If doStats is not defined, try to fetch it from the latest live data
         if (gameInfo != null && doStats != null && !doStats) {
             $('#game-content').hide();
@@ -585,6 +588,7 @@ $(document).ready(function () {
 
         }
     }
+
 
     function resetViewport() {
         $("#slider").empty();
@@ -1424,7 +1428,7 @@ $(document).ready(function () {
         renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         $container.html(renderer.domElement);
-                
+
         controls = new THREE.MapControls(camera, renderer.domElement);
 
         controls.enableDamping = true;
@@ -1453,40 +1457,40 @@ $(document).ready(function () {
         let prevTouches = [];
 
         renderer.domElement.addEventListener('touchstart', (e) => {
-        prevTouches = Array.from(e.touches);
+            prevTouches = Array.from(e.touches);
         });
 
         renderer.domElement.addEventListener('touchmove', (e) => {
-        if (e.touches.length !== 2) return;
+            if (e.touches.length !== 2) return;
 
-        const t0 = e.touches[0];
-        const t1 = e.touches[1];
-        const p0 = prevTouches[0];
-        const p1 = prevTouches[1];
+            const t0 = e.touches[0];
+            const t1 = e.touches[1];
+            const p0 = prevTouches[0];
+            const p1 = prevTouches[1];
 
-        if (p0 && p1) {
-            const prevDist = Math.hypot(p0.clientX - p1.clientX, p0.clientY - p1.clientY);
-            const currDist = Math.hypot(t0.clientX - t1.clientX, t0.clientY - t1.clientY);
-            const distDelta = currDist - prevDist;
+            if (p0 && p1) {
+                const prevDist = Math.hypot(p0.clientX - p1.clientX, p0.clientY - p1.clientY);
+                const currDist = Math.hypot(t0.clientX - t1.clientX, t0.clientY - t1.clientY);
+                const distDelta = currDist - prevDist;
 
-            if (Math.abs(distDelta) > 0.5) {
-            const direction = new THREE.Vector3();
-            direction.subVectors(controls.target, camera.position).normalize();
+                if (Math.abs(distDelta) > 0.5) {
+                    const direction = new THREE.Vector3();
+                    direction.subVectors(controls.target, camera.position).normalize();
 
-            const newPos = camera.position.clone().addScaledVector(direction, distDelta * 0.5);
-            if (newPos.distanceTo(controls.target) > minDistance) {
-                camera.position.copy(newPos);
+                    const newPos = camera.position.clone().addScaledVector(direction, distDelta * 0.5);
+                    if (newPos.distanceTo(controls.target) > minDistance) {
+                        camera.position.copy(newPos);
+                    }
+
+                    controls.update();
+                }
             }
 
-            controls.update();
-            }
-        }
-
-        prevTouches = [t0, t1];
+            prevTouches = [t0, t1];
         }, { passive: true });
 
         renderer.domElement.addEventListener('touchend', () => {
-        prevTouches = [];
+            prevTouches = [];
         });
 
 
@@ -1495,7 +1499,7 @@ $(document).ready(function () {
         raycaster = new THREE.Raycaster();
         mouse = new THREE.Vector2();
 
-        
+
         const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
         dirLight.position.set(100, 200, 100); // top-right-front
         scene.add(dirLight);
@@ -1595,7 +1599,7 @@ $(document).ready(function () {
             if (t < 0.9) {
                 requestAnimationFrame(animate);
             } else {
-            // Recreate controls from scratch to wipe any stale internal state
+                // Recreate controls from scratch to wipe any stale internal state
                 controls.dispose();
                 controls = new THREE.MapControls(camera, renderer.domElement);
                 controls.enableDamping = true;
@@ -2260,7 +2264,7 @@ $(document).ready(function () {
     }
 
 
-    
+
 
 
     // --------------------- //
