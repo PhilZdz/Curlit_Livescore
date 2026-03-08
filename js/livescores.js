@@ -1,4 +1,4 @@
-// Version 1.6rc13 from 22.2.26
+// Version 1.8rc1 from 8.3.26
 
 $(document).ready(function () {
     const apiUrl = "https://livescores.worldcurling.org/curlitsse";
@@ -191,7 +191,7 @@ $(document).ready(function () {
         $leftText.removeClass("longText");
         $leftText.removeClass("shortSessionName");
         // Special case - shorten the session title if it contains Women's Round Robin (only on smaller devices)
-        var sequencesToStrip = ["Women's Round Robin", "Mixed Doubles Round Robin"];
+        var sequencesToStrip = ["Women's Round Robin", "Mixed Doubles Round Robin", "Mixed Team Round Robin", "Men's Round Robin"];
         var sequenceToStrip2 = " Round Robin";
         if (leftText.length > 28 && sequencesToStrip.some(item => leftText.includes(item))) {
             leftText = leftText.replace(sequenceToStrip2, " <span class='wideScreenText'>Round Robin</span>");
