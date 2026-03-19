@@ -1,0 +1,920 @@
+:root {
+    --text_color: #051739;
+    --bg_color: white;
+    --fav_color: #ECFAFE;
+    --bgdarker_color: #f2f2f2;
+}
+
+body {
+    font-family: Arial, Sans-Serif;
+    font-size: small;
+    width: 100%;
+    margin: 0;
+}
+
+img {
+    border: none
+}
+
+p {
+    font-family: Arial, Sans-Serif;
+    font-size: small;
+    margin-top: 1pt;
+    margin-bottom: 1pt;
+}
+
+a {
+    text-decoration: underline;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    a:visited {
+        text-decoration: underline;
+    }
+
+Menu2, Menu {
+    z-index: 90;
+}
+
+.HighPriorityCol {
+    width: 70%;
+}
+
+.LowPriorityCol {
+    background-color: var(--fav_color);
+    min-width: 300px;
+    width: 300px;
+}
+
+.NotLowPriorityCol {
+    display: none;
+}
+
+@media screen and (max-width: 1600px) {
+    .LowPriorityCol {
+        min-width: 160px;
+        width: 160px;
+    }
+}
+
+@media screen and (max-width: 1022px) {
+    .LowPriorityCol {
+        display: none;
+    }
+
+    .NotLowPriorityCol {
+        display: initial;
+        width: 2%;
+    }
+
+    .HighPriorityCol {
+        width: 100%;
+    }
+}
+/*h1
+{
+	font-family:  Arial, Sans-Serif;
+	font-size: x-large;
+	font-weight: bold;
+}
+h2
+{
+	font-family:  Arial, Sans-Serif;
+	font-size: x-large;
+	font-weight: bold;
+}
+h3
+{
+	font-family:  Arial, Sans-Serif;
+	font-size: large;
+}
+h4
+{
+	font-family:  Arial, Sans-Serif;
+	font-size: medium;
+	font-weight: bold;
+}
+h5
+{
+	font-family:  Arial, Sans-Serif;
+	font-size: small;
+}
+h6
+{
+	font-family:  Arial, Sans-Serif;
+	font-size: x-small;
+}
+// from bootstrap:  */
+h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+    font-family: Arial, Sans-Serif;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+h1, .h1 {
+    font-size: calc(1.375rem + 1.5vw);
+}
+
+@media (min-width: 1200px) {
+    h1, .h1 {
+        font-size: 2.5rem;
+    }
+}
+
+h2, .h2 {
+    font-size: calc(1.325rem + 0.9vw);
+}
+
+@media (min-width: 1200px) {
+    h2, .h2 {
+        font-size: 2rem;
+    }
+}
+
+h3, .h3 {
+    font-size: calc(1.3rem + 0.6vw);
+}
+
+@media (min-width: 1200px) {
+    h3, .h3 {
+        font-size: 1.75rem;
+    }
+}
+
+h4, .h4 {
+    font-size: calc(1.275rem + 0.3vw);
+}
+
+@media (min-width: 1200px) {
+    h4, .h4 {
+        font-size: 1.5rem;
+    }
+}
+
+h5, .h5 {
+    font-size: 1.25rem;
+}
+
+h6, .h6 {
+    font-size: 1rem;
+}
+/*End from Bootstrap*/
+label {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    font-style: normal;
+}
+
+legend {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    font-style: normal;
+}
+
+marquee {
+    font-family: Arial, Sans-Serif;
+    font-size: medium;
+}
+
+button {
+    padding-left: 3pt;
+    padding-right: 3pt;
+    padding-top: 3pt;
+    padding-bottom: 3pt;
+    cursor: pointer;
+}
+
+.aspbutton {
+    cursor: pointer;
+}
+/*for Apple*/
+input[type="button"],
+input[type="submit"] {
+    -webkit-appearance: none;
+    border-radius: 0;
+}
+
+input {
+}
+
+.aspinput {
+}
+
+select {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    font-style: normal;
+    border-style: solid;
+    border-width: 1px;
+}
+
+table {
+    font-family: Arial, Sans-Serif;
+    font-size: small;
+    font-size: 1vw; /*clamp(4pxl, 1vw, 100px);*/
+    margin-right: 1px;
+}
+
+@media only screen and (max-width: 600px) {
+    table {
+        font-size: 2.2vw;
+    }
+}
+
+td {
+    white-space: nowrap;
+}
+
+TH {
+    white-space: nowrap;
+    font-weight: bold;
+    margin-bottom: 1ex;
+    text-align: left;
+}
+
+textarea {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    font-style: normal;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.xxxsl {
+    font-family: Small Fonts, Arial, Sans-Serif;
+    font-size: 6pt;
+    text-align: left;
+    text-decoration: none;
+}
+
+@media (min-width: 600px) {
+    .xxxsl {
+        font-size: xx-small;
+    }
+}
+
+.xxsl {
+    font-family: Arial, Sans-Serif;
+    font-size: xx-small;
+    text-align: left;
+    text-decoration: none;
+}
+
+.xxsly {
+    font-family: Arial, Sans-Serif;
+    font-size: xx-small;
+    text-align: left;
+    text-decoration: none;
+}
+
+.xxsc {
+    font-family: Arial, Sans-Serif;
+    font-size: xx-small;
+    text-align: center;
+    text-decoration: none;
+}
+
+.xxsr {
+    font-family: Arial, Sans-Serif;
+    font-size: xx-small;
+    text-align: right;
+    text-decoration: none;
+}
+
+@media (min-width: 600px) {
+    .xxsl, .xxsly, .xxsc, .xxsr {
+        font-size: x-small !important;
+    }
+}
+
+.xsl, .txsl, .txsr, .xslb {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    text-align: left;
+    text-decoration: none;
+}
+
+@media (min-width: 600px) {
+    .xsl, .txsl, .txsr, .xslb {
+        font-size: small !important;
+    }
+}
+
+.txsl, .txsr {
+    font-size: smaller;
+}
+
+.txsr {
+    text-align: right;
+}
+
+/*@media only screen and (max-width: 600px) {
+    .txsl {
+        font-size: 1.8vw;
+    }
+}*/
+
+.xslb {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    font-weight: bold;
+    text-align: left;
+    text-decoration: none;
+}
+
+.xsl0 {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    text-align: left;
+    text-decoration: none;
+    margin-top: 0px;
+}
+
+.xsc, .xsc_HideSS {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    text-align: center;
+    text-decoration: none;
+}
+
+.main, .mainNow {
+    font-family: Arial, Sans-Serif;
+    font-size: small;
+    text-align: center;
+    text-decoration: none;
+    padding: 6px 0px 12px 0px;
+}
+
+.mainNow {
+    font-size: medium;
+    font-weight: bold;
+}
+
+.xsr {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    text-align: right;
+    text-decoration: none;
+}
+
+@media (min-width: 600px) {
+    .xsr, .xslb, .xsl0, .xsc, .xsc_HideSS {
+        font-size: small !important;
+    }
+}
+
+.sl, .slb {
+    font-family: Arial, Sans-Serif;
+    font-size: small;
+    text-align: left;
+    text-decoration: none;
+}
+
+.slb {
+    font-weight: bold;
+}
+
+.slcode {
+    font-family: Arial, Sans-Serif;
+    font-size: small;
+    text-align: left;
+    text-decoration: none;
+}
+
+.sc {
+    font-family: Arial, Sans-Serif;
+    font-size: small;
+    text-align: center;
+    text-decoration: none;
+}
+
+.sr {
+    font-family: Arial, Sans-Serif;
+    font-size: small;
+    text-align: right;
+    text-decoration: none;
+}
+
+.ml, .mlb {
+    font-family: Arial, Sans-Serif;
+    font-size: medium;
+    text-align: left;
+    text-decoration: none;
+}
+
+.mlb {
+    font-weight: bold;
+}
+
+.mc, .mcb {
+    font-family: Arial, Sans-Serif;
+    font-size: medium;
+    text-align: center;
+    text-decoration: none;
+}
+
+.mcb {
+    font-weight: bold;
+}
+
+.mr {
+    font-family: Arial, Sans-Serif;
+    font-size: medium;
+    text-align: right;
+    text-decoration: none;
+}
+
+.ll, .llb {
+    font-family: Arial, Sans-Serif;
+    font-size: large;
+    text-align: left;
+    text-decoration: none;
+}
+
+.llb {
+    font-weight: bold;
+}
+
+.lc, .lcb {
+    font-family: Arial, Sans-Serif;
+    font-size: large;
+    text-align: center;
+    text-decoration: none;
+}
+
+.lcb {
+    font-weight: bold;
+}
+
+
+.lr {
+    font-family: Arial, Sans-Serif;
+    font-size: large;
+    text-align: right;
+    text-decoration: none;
+}
+
+.xll {
+    font-family: Arial, Sans-Serif;
+    font-size: x-large;
+    text-align: left;
+    font-weight: bold;
+}
+
+.xlc {
+    font-family: Arial, Sans-Serif;
+    font-size: x-large;
+    text-align: center;
+    font-weight: bold;
+}
+
+.xlr {
+    font-family: Arial, Sans-Serif;
+    font-size: x-large;
+    text-align: right;
+    font-weight: bold;
+}
+
+.tdh3 {
+    font-family: Arial, Sans-Serif;
+    font-size: medium;
+    font-weight: bold;
+    text-align: left;
+    border: 0px;
+    padding-top: 12pt;
+    padding-bottom: 6pt;
+}
+
+.tdnb {
+    border: 0px;
+}
+
+.bottombutton {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    width: 60pt;
+    height: 18pt;
+}
+
+.bottombuttonlong {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    width: 76pt;
+    height: 18pt;
+}
+
+.bottombuttonSelected {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    width: 60pt;
+    height: 18pt;
+}
+
+.bottombuttonlongSelected {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    width: 76pt;
+    height: 18pt;
+}
+
+.sdrp {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    width: 30pt;
+    height: 18pt;
+    border: 1px ridge white;
+    text-align: left;
+    padding: 0
+}
+
+.sbtn, .nbtn {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    width: 18pt;
+    height: 18pt;
+    border: 1px ridge white;
+    text-align: center;
+    padding: 0
+}
+
+.nbtn {
+    font-size: medium;
+    font-weight: bold;
+}
+
+.sbtnSelected {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    font-weight: bold;
+    width: 26pt;
+    height: 18pt;
+    border: 1px ridge white;
+    text-align: center;
+    padding: 0
+}
+
+.sbtnBlue {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    width: 26pt;
+    height: 18pt;
+    text-align: center;
+    padding: 0
+}
+
+.sbtnWhite {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    width: 26pt;
+    height: 18pt;
+    text-align: center;
+    padding: 0
+}
+
+.sbtnBig {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    width: 26pt;
+    height: 18pt;
+    text-align: center;
+    padding: 0
+}
+
+.xsbtnBlue {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    width: 18pt;
+    height: 18pt;
+    text-align: center;
+    padding: 0
+}
+
+.xsbtnWhite {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    width: 18pt;
+    height: 18pt;
+    text-align: center;
+    padding: 0
+}
+
+.xsbtnBig {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    width: 18pt;
+    height: 18pt;
+    text-align: center;
+    padding: 0
+}
+
+.tdtitel {
+    font-family: Arial, Sans-Serif;
+    font-size: large;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+}
+
+.redlink {
+    color: red;
+    font-weight: bold;
+}
+
+.redbiglink {
+    font-family: Arial, Sans-Serif;
+    font-size: x-large;
+    font-weight: bold;
+    color: red;
+}
+
+:hover.redbiglink {
+    text-decoration: none;
+}
+
+.p1b {
+    margin-top: 1ex;
+    font-weight: bold;
+}
+
+.p2b {
+    margin-top: 2ex;
+    font-weight: bold;
+}
+
+.p0a {
+    margin-top: 1ex;
+    margin-bottom: 0ex;
+    font-weight: bold;
+}
+
+.p0 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.clsMenuTitle {
+    cursor: context-menu;
+    font-family: Arial, Sans-Serif;
+    font-size: small;
+}
+
+.clsMenu {
+    font-family: Arial, Sans-Serif;
+    font-size: x-small;
+    position: absolute;
+    visibility: hidden;
+    width: 98%;
+    z-index: 2;
+    padding-left: 4px;
+    padding-right: 1px;
+    padding-top: 1px;
+    padding-bottom: 2px;
+}
+
+    .clsMenu A:hover {
+        cursor: default;
+    }
+
+.redteam {
+    background-color: Red;
+    color: White;
+}
+
+.yellowteam {
+    background-color: Yellow;
+    color: Black;
+}
+
+img.flagicon, img.flagiconHideSS {
+    width: 1.2em;
+    height: 1.2em;
+    vertical-align: text-bottom;
+}
+
+.bIcon, .bIconHideSS, img.bIcon, img.bIconHideSS, svg.bIcon, svg.bIconHideSS, input.bIcon, input.bIconHideSS, .bigIcon {
+    width: 1em;
+    height: 1em;
+    vertical-align: text-bottom;
+    fill: var(--fav_color);
+    stroke: var(--text_color);
+}
+
+    .bIcon.text, .bIconHideSS.text, .bIcon.path, .bIconHideSS.path, img.bIcon.text, img.bIconHideSS.text, input.bIcon.text, input.bIconHideSS.text, .bigIcon {
+        fill: var(--text_color);
+    }
+
+.bigIcon, input.bigIcon {
+    width: 18pt;
+    height: 18pt;
+    vertical-align: middle;
+    background-color: var(--fav_color);
+    fill: var(--text_color);
+}
+
+    .bigIcon:hover, input.bigIcon:hover {
+        fill: red;
+    }
+
+svg {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    text-anchor: middle;
+    text-align: center;
+    fill: white;
+}
+
+    svg.text {
+        fill: black;
+    }
+
+    svg.path {
+        stroke: black;
+        fill: transparent;
+    }
+
+.svgxs {
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.svgr {
+    font-size: 24px;
+    text-align: right;
+    text-anchor: end;
+}
+
+.svgbgDarker {
+    fill: #f2f2f2;
+}
+
+.imgPicto {
+    height: 100px;
+    vertical-align: top;
+}
+
+.imgWCFCURLIT {
+    height: 40px;
+}
+
+.imgLogo {
+    height: 300px;
+    padding: 50px;
+}
+
+.imgLogoSmall, .imgLogoXSmall {
+    margin-top: 4%;
+}
+
+.imgLogoXSmall {
+    height: 40px;
+}
+
+.imgSponsorLeft {
+    height: 40px;
+    text-align: left;
+}
+
+.imgSponsorRight {
+    height: 40px;
+    text-align: right;
+}
+
+.svg-container {
+    display: inline-block; /* or inline */
+    vertical-align: middle; /* or top, middle, etc. as needed */
+}
+
+.svg-icon {
+    height: 1.2em; /* This will be relative to the font size */
+    width: auto;
+}
+
+#ContentMain_divMobile {
+    display: flex;
+}
+
+img.mod-logo {
+}
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;400;500&display=swap');
+
+
+.mod-leftCol {
+    width: 50%;
+    order: 1;
+    overflow: visible;
+}
+
+.mod-rightCol {
+    width: 25%;
+    order: 2;
+}
+
+.mod-section {
+    margin-left: 1%;
+}
+
+    .mod-section:first-child {
+        margin-top: 4%;
+    }
+
+    .mod-section:last-child {
+        margin-bottom: 4%;
+    }
+
+.mod-section-sep {
+    height: 1px;
+    width: 135%;
+    margin: 14px 0;
+}
+
+    .mod-section-sep.sep--inset {
+        width: 100%;
+    }
+
+.mod-section a {
+    background-color: #003FAF;
+    border-radius: 6px;
+    padding: 4px 6px 4px 6px;
+    border: 1px solid silver;
+    color: white !important;
+}
+
+    .mod-section a.live {
+        background-color: #05C3DE;
+        display: inline-block;
+        color: black;
+    }
+
+        .mod-section a.live + span {
+            flex-basis: 100%;
+            height: 0;
+            margin: 0;
+            display: block; /* Forces it to be a line-breaker */
+        }
+
+    .mod-section a.gamecenter {
+        width: 30px;
+        text-align: center;
+    }
+
+.mod-section .sl {
+    flex-wrap: wrap;
+    display: flex;
+    row-gap: 3px;
+    column-gap: 7px;
+}
+
+    .mod-section .sl span::before {
+        content: "";
+        width: 1.75rem;
+        height: 1.75rem;
+        margin-right: .5rem;
+        flex-shrink: 0;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100%;
+        position: relative;
+        top: -4px;
+    }
+
+.mod-section span {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 16px;
+    flex-wrap: nowrap !important;
+    width: 100%;
+}
+
+    .mod-section span::after {
+        content: "";
+        flex: 1;
+        height: 2px;
+        margin-left: 0.6rem;
+        margin-top: 0.7em;
+    }
+
+
+    .mod-section span.sl.mod-results::before {
+        background-image: url("../general/pictos/stone.png");
+    }
+
+    .mod-section span.sl.mod-standings::before {
+        background-image: url("../general/pictos/standings.png");
+    }
+
+    .mod-section span.sl.mod-teams::before {
+        background-image: url("../general/pictos/teams.png");
+    }
+
+    .mod-section span.sl.mod-schedule::before {
+        background-image: url("../general/pictos/schedule.png");
+    }
