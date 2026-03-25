@@ -1,4 +1,4 @@
-/* Version 1.6rc10 from 2.2.26  */
+/* Version 1.9rc1 from 20.3.26  */
 /* body {
   max-width: 1200px;
   position: absolute;
@@ -783,5 +783,12 @@
 
     .matchup-tile span.team-name .long {
         display: block !important;
+    }
+}
+
+
+@media screen and (min-width: 480px) and (max-width: 1024px), screen and (min-width: 1440px) {
+    #ContentMain_SessionComment {
+        padding-right: 7%;
     }
 }

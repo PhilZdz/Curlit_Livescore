@@ -34,11 +34,10 @@ a {
     a:visited {
         text-decoration: underline;
     }
-
-Menu2, Menu {
-    z-index: 90;
+Menu2, Menu
+{
+    z-index:90;
 }
-
 .HighPriorityCol {
     width: 70%;
 }
@@ -796,18 +795,25 @@ svg {
 }
 
 #ContentMain_divMobile {
-    display: flex;
+    display:flex;
 }
 
-img.mod-logo {
+#ContentMain_SessionComment {
+    
 }
 
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;400;500&display=swap');
 
 
+img.mod-logo {
+    position: absolute;
+    top: 1%;
+    right: 1%;
+}
+
 .mod-leftCol {
-    width: 50%;
+    width: 75%;
     order: 1;
     overflow: visible;
 }
@@ -815,19 +821,20 @@ img.mod-logo {
 .mod-rightCol {
     width: 25%;
     order: 2;
+    position:relative;
 }
 
 .mod-section {
-    margin-left: 1%;
+    margin-left:1%;
 }
 
-    .mod-section:first-child {
-        margin-top: 4%;
-    }
+.mod-section:first-child {
+    margin-top:4%;
+}
 
-    .mod-section:last-child {
-        margin-bottom: 4%;
-    }
+.mod-section:last-child {
+    margin-bottom:4%;
+}
 
 .mod-section-sep {
     height: 1px;
@@ -835,9 +842,9 @@ img.mod-logo {
     margin: 14px 0;
 }
 
-    .mod-section-sep.sep--inset {
-        width: 100%;
-    }
+.mod-section-sep.sep--inset {
+    width:100%;
+}
 
 .mod-section a {
     background-color: #003FAF;
@@ -847,23 +854,23 @@ img.mod-logo {
     color: white !important;
 }
 
-    .mod-section a.live {
-        background-color: #05C3DE;
-        display: inline-block;
-        color: black;
-    }
+.mod-section a.live {
+    background-color: #05C3DE;
+    display: inline-block;
+    color: black;
+}
 
-        .mod-section a.live + span {
-            flex-basis: 100%;
-            height: 0;
-            margin: 0;
-            display: block; /* Forces it to be a line-breaker */
-        }
+.mod-section a.live + span {
+    flex-basis: 100%;
+    height: 0;
+    margin: 0;
+    display: block; /* Forces it to be a line-breaker */
+}
 
-    .mod-section a.gamecenter {
-        width: 30px;
-        text-align: center;
-    }
+.mod-section a.gamecenter {
+    width:30px;
+    text-align: center;
+}
 
 .mod-section .sl {
     flex-wrap: wrap;
@@ -872,18 +879,18 @@ img.mod-logo {
     column-gap: 7px;
 }
 
-    .mod-section .sl span::before {
-        content: "";
-        width: 1.75rem;
-        height: 1.75rem;
-        margin-right: .5rem;
-        flex-shrink: 0;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 100%;
-        position: relative;
-        top: -4px;
-    }
+.mod-section .sl span::before{
+      content: "";
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-right: .5rem;
+    flex-shrink: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    position: relative;
+    top: -4px;
+}
 
 .mod-section span {
     font-family: 'Inter', system-ui, sans-serif;
@@ -894,27 +901,27 @@ img.mod-logo {
     width: 100%;
 }
 
-    .mod-section span::after {
-        content: "";
-        flex: 1;
-        height: 2px;
-        margin-left: 0.6rem;
-        margin-top: 0.7em;
-    }
+.mod-section span::after {
+    content: "";
+    flex: 1;
+    height: 2px;
+    margin-left: 0.6rem;
+    margin-top: 0.7em;
+}
 
 
-    .mod-section span.sl.mod-results::before {
-        background-image: url("../general/pictos/stone.png");
-    }
+.mod-section span.sl.mod-results::before {
+  background-image: url("../general/pictos/stone.png");
+}
 
-    .mod-section span.sl.mod-standings::before {
-        background-image: url("../general/pictos/standings.png");
-    }
+.mod-section span.sl.mod-standings::before {
+    background-image: url("../general/pictos/standings.png");
+}
 
-    .mod-section span.sl.mod-teams::before {
-        background-image: url("../general/pictos/teams.png");
-    }
+.mod-section span.sl.mod-teams::before {
+    background-image: url("../general/pictos/teams.png");
+}
 
-    .mod-section span.sl.mod-schedule::before {
-        background-image: url("../general/pictos/schedule.png");
-    }
+.mod-section span.sl.mod-schedule::before {
+    background-image: url("../general/pictos/schedule.png");
+}
