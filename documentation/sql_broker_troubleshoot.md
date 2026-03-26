@@ -158,7 +158,7 @@ As soon as they are up and running, SQL Brokers perform a `WAITFOR(RECEIVE...)` 
 The following indicators are more relevant: 
 
 
-| Column              | Metric              | Meaning                  | Reasonable value |
+| Column              | Metric              | Meaning                  | Expected value |
 |---------------------|---------------------|--------------------------|------------------|
 |PendingMessages| `sys.transmission_queue`      | Messages that have been sent but not delivered yet.            | • Ideally `0` <br>• `1`-`10` is a normal transient <br>• `10`-`100` shows slownesses<br>• `100`+ is definitely wrong      
 |Subscriptions| `sys.dm_qn_subscriptions` | # of open Service Broker conversations. <p>  There should be 1 per SqlDependency, so 1 per QueryContext.<br>As a reminder, we can either have params defined or equal 0 (e.g. SessionID), which would create 2 separate Query Contexts.   | • If 1 Competition is running, we expect less than `10` (QueryContext can be set down to the `GameID` or `Sheet`) <br>• `10`-`20` would signal that some haven't been closed properly <br>• More than `20` is definitely wrong and signal SqlDependency objects not unsubscribed or disposed             |
