@@ -1,4 +1,4 @@
-// Version 1.8rc1 from 8.3.26
+// Version 1.10rc1 from 26.3.26
 
 $(document).ready(function () {
     const apiUrl = "https://livescores.worldcurling.org/curlitsse";
@@ -33,6 +33,7 @@ $(document).ready(function () {
 
 
     var nbGames = 0;
+    var isLive = true;
 
     function startConnection() {
         const connection = new signalR.HubConnectionBuilder()
@@ -47,11 +48,23 @@ $(document).ready(function () {
             refreshContainer(resultList);
         });
 
+        connection.on("LiveEnded", () => {
+            isLive = false;
+
+            $("#RefreshButton").src = "../general/Refresh_D.svg";
+
+            connection.off("ReceiveMessage");
+            connection.stop();
+        });
+
         connection.onclose(function () {
-            // Handle connection closed event
-            setOnlineHeader(false);
-            console.error("Connection closed. Retrying in 5 seconds");
-            setTimeout(startConnection, 5000);
+
+            if (isLive) {
+                // Handle connection closed event
+                setOnlineHeader(false);
+                console.error("Connection closed. Retrying in 5 seconds");
+                setTimeout(startConnection, 5000);
+            }
 
         });
 
@@ -370,8 +383,118 @@ $(document).ready(function () {
         }
     }
 
-    startConnection();
+    async function getGameStatus() {
+        try {
+            const urlParams = {}
+            if (season != null) {
+                urlParams["season"] = season;
+            }
+            if (competition != null) {
+                urlParams["competition"] = competition;
+            }
+            if (eventId != null) {
+                urlParams["eventId"] = eventId;
+            }
+            if (sessionId != null) {
+                urlParams["sessionId"] = sessionId;
+            }
+            if (isTestMode != null) {
+                urlParams["testMode"] = isTestMode == 1;
+            }
 
+
+            var callUrl = `${apiUrl}/Status/Game`
+
+            if (Object.keys(urlParams).length > 0) {
+                const keys = Object.keys(urlParams);
+
+                for (let i = 0; i < keys.length; i++) {
+                    const key = keys[i];
+                    callUrl = callUrl + `${i == 0 ? "?" : "&"}${key}=${urlParams[key]}`
+                }
+            }
+
+            const response = await fetch(callUrl);
+            if (!response.ok) {
+                debugger;
+                throw new Error(`Error: ${response.statusText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+
+    async function fetchResultsAsync() {
+        try {
+            const urlParams = {}
+            if (season != null) {
+                urlParams["season"] = season;
+            }
+            if (competition != null) {
+                urlParams["competition"] = competition;
+            }
+            if (eventId != null) {
+                urlParams["eventId"] = eventId;
+            }
+            if (sessionId != null) {
+                urlParams["sessionId"] = sessionId;
+            }
+            if (isTestMode != null) {
+                urlParams["testMode"] = isTestMode == 1;
+            }
+
+            var callUrl = `${apiUrl}/Result/Results`
+
+            if (Object.keys(urlParams).length > 0) {
+                const keys = Object.keys(urlParams);
+
+                for (let i = 0; i < keys.length; i++) {
+                    const key = keys[i];
+                    callUrl = callUrl + `${i == 0 ? "?" : "&"}${key}=${urlParams[key]}`
+                }
+            }
+
+            const response = await fetch(callUrl);
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching results:', error);
+        }
+    }
+
+
+    // Get the game status before opening signalR connections
+    getGameStatus().then(gameStatus => {
+        var useSignalR = true;
+
+        if (gameStatus.competitionFinished ||
+            (eventId != 0 && gameStatus.eventFinished) ||
+            (sessionId != 0 && gameStatus.sessionFinished)) {
+            useSignalR = false;
+        }
+
+        // Live mode
+        if (useSignalR) {
+            startConnection();
+        }
+        // Session is finished -- history mode
+        else {
+
+            $("#RefreshButton").hide();
+
+            fetchResultsAsync().then(resultList => {
+                $("#loader").hide();
+                $("#game-tile").show();
+
+                renderTileData(resultList);
+                refreshContainer(resultList);
+            });
+        }
+    });
 
 
     // ------------------ //
@@ -383,7 +506,7 @@ $(document).ready(function () {
         if (!$(e.target).closest('.btnStats, .btnGraphics').length) {
             if (dataId) {
                 var sheet = $(this).find('.sheet').first().text();
-                
+
                 const [dataEvent, dataSession] = dataId.split("-");
 
                 if (dataEvent && dataSession && sheet) {

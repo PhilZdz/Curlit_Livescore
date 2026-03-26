@@ -1,4 +1,4 @@
-// Version 1.7rc2 from 2.3.26
+// Version 1.10rc1 from 26.3.26
 
 $(document).ready(function () {
 
@@ -91,11 +91,23 @@ $(document).ready(function () {
             refreshContainer(resultList);
         });
 
+        resultConnection.on("LiveEnded", () => {
+            isResultLive = false;
+
+            $("#RefreshButton").src = "../general/Refresh_D.svg";
+
+            connection.off("ReceiveMessage");
+            connection.stop();
+        });
+
         resultConnection.onclose(function () {
-            // Handle connection closed event
-            setOnlineHeader(false);
-            console.error("Connection closed. Retrying in 5 seconds");
-            setTimeout(startConnectionResults, 5000);
+
+            if (isResultLive) {
+                // Handle connection closed event
+                setOnlineHeader(false);
+                console.error("Connection closed. Retrying in 5 seconds");
+                setTimeout(startConnectionResults, 5000);
+            }
 
         });
 
@@ -455,6 +467,8 @@ $(document).ready(function () {
     // End 3D assets initialization
 
 
+    var isStoneLive = true;
+    var isResultLive = true;
 
 
     function startConnectionStones() {
@@ -493,11 +507,22 @@ $(document).ready(function () {
             }
         });
 
+        stoneConnection.on("LiveEnded", () => {
+            isStoneLive = false;
+
+            $("#RefreshButton").src = "../general/Refresh_D.svg";
+
+            connection.off("StoneUpdated");
+            connection.stop();
+        });
+
         stoneConnection.onclose(function () {
-            // Handle connection closed event
-            setOnlineHeader(false);
-            console.error("Live connection closed. Retrying in 5 seconds");
-            setTimeout(startConnectionStones, 5000);
+            if (isStoneLive) {
+                // Handle connection closed event
+                setOnlineHeader(false);
+                console.error("Live connection closed. Retrying in 5 seconds");
+                setTimeout(startConnectionStones, 5000);
+            }
         });
 
         stoneConnection.start().then(function () {
@@ -614,6 +639,52 @@ $(document).ready(function () {
         $("#game-tile .matchup-tile .summary .away .team-clock").html("");
     }
 
+    async function fetchResultsAsync() {
+        try {
+            const urlParams = {}
+            if (season != null) {
+                urlParams["season"] = season;
+            }
+            if (competition != null) {
+                urlParams["competition"] = competition;
+            }
+            if (eventId != null) {
+                urlParams["eventId"] = eventId;
+            }
+            if (sessionId != null) {
+                urlParams["sessionId"] = sessionId;
+            }
+            if (gameId != null) {
+                urlParams["gameId"] = gameId;
+            }
+            if (sheet != null) {
+                urlParams["sheet"] = sheet;
+            }
+            if (isTestMode != null) {
+                urlParams["testMode"] = isTestMode == 1;
+            }
+
+            var callUrl = `${apiUrl}/Result/Results`
+
+            if (Object.keys(urlParams).length > 0) {
+                const keys = Object.keys(urlParams);
+
+                for (let i = 0; i < keys.length; i++) {
+                    const key = keys[i];
+                    callUrl = callUrl + `${i == 0 ? "?" : "&"}${key}=${urlParams[key]}`
+                }
+            }
+
+            const response = await fetch(callUrl);
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching results:', error);
+        }
+    }
+
     async function fetchStonesAsync(endId) {
         try {
             const urlParams = {}
@@ -658,7 +729,7 @@ $(document).ready(function () {
             }
             return await response.json();
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching stones:', error);
         }
     }
 
@@ -2021,9 +2092,91 @@ $(document).ready(function () {
     });
 
 
+    async function getGameStatus() {
+        try {
+            const urlParams = {}
+            if (season != null) {
+                urlParams["season"] = season;
+            }
+            if (competition != null) {
+                urlParams["competition"] = competition;
+            }
+            if (eventId != null) {
+                urlParams["eventId"] = eventId;
+            }
+            if (sessionId != null) {
+                urlParams["sessionId"] = sessionId;
+            }
+            if (gameId != null) {
+                urlParams["gameId"] = gameId;
+            }
+            if (sheet != null) {
+                urlParams["sheet"] = sheet;
+            }
+            if (isTestMode != null) {
+                urlParams["testMode"] = isTestMode == 1;
+            }
 
-    startConnectionResults();
-    startConnectionStones();
+
+            var callUrl = `${apiUrl}/Status/Game`
+
+            if (Object.keys(urlParams).length > 0) {
+                const keys = Object.keys(urlParams);
+
+                for (let i = 0; i < keys.length; i++) {
+                    const key = keys[i];
+                    callUrl = callUrl + `${i == 0 ? "?" : "&"}${key}=${urlParams[key]}`
+                }
+            }
+
+            const response = await fetch(callUrl);
+            if (!response.ok) {
+                debugger;
+                throw new Error(`Error: ${response.statusText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+
+    // Get the game status before opening signalR connections
+    getGameStatus().then(gameStatus => {
+        var useSignalR = true;
+
+        if (gameStatus.competitionFinished ||
+            (eventId != 0 && gameStatus.eventFinished) ||
+            (sessionId != 0 && gameStatus.sessionFinished)) {
+            useSignalR = false;
+        }
+
+        // Live mode
+        if (useSignalR) {
+            startConnectionResults();
+            startConnectionStones();
+        }
+        // Session is finished -- history mode
+        else {
+            fetchResultsAsync().then(resultList => {
+                $("#loader").hide();
+                $("#game-tile").show();
+
+                // Build the header
+                renderTileData(resultList);
+            });
+
+            fetchStonesAsync(0).then(data => {
+                // Build the scoreboard
+                latestLiveData = data;
+                latestStatsData = data.stats;
+
+                updateLiveData(data);
+
+                adjustGameCenterDisplay(data.gameInfo);
+            });
+        }
+    });
 
 
 
