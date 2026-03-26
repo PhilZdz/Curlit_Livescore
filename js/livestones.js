@@ -94,7 +94,9 @@ $(document).ready(function () {
         resultConnection.on("LiveEnded", () => {
             isResultLive = false;
 
-            $("#RefreshButton").src = "../general/Refresh_D.svg";
+            if (!isResultLive && !isStoneLive) {
+                $("#RefreshButton").attr("src", "../general/Refresh_D.svg");
+            }
 
             connection.off("ReceiveMessage");
             connection.stop();
@@ -510,7 +512,9 @@ $(document).ready(function () {
         stoneConnection.on("LiveEnded", () => {
             isStoneLive = false;
 
-            $("#RefreshButton").src = "../general/Refresh_D.svg";
+            if (!isResultLive && !isStoneLive) {
+                $("#RefreshButton").attr("src", "../general/Refresh_D.svg");
+            }
 
             connection.off("StoneUpdated");
             connection.stop();
@@ -2092,7 +2096,7 @@ $(document).ready(function () {
     });
 
 
-    async function getGameStatus() {
+    async function getGameStatus(retry = true) {
         try {
             const urlParams = {}
             if (season != null) {
@@ -2136,7 +2140,13 @@ $(document).ready(function () {
             }
             return await response.json();
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching game status:', error);
+
+            if (retry) {
+                console.log("Retrying in 5 seconds...");
+                await new Promise(res => setTimeout(res, 5000));
+                return getGameStatus(true);
+            }
         }
     }
 

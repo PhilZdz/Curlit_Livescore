@@ -51,7 +51,7 @@ $(document).ready(function () {
         connection.on("LiveEnded", () => {
             isLive = false;
 
-            $("#RefreshButton").src = "../general/Refresh_D.svg";
+            $("#RefreshButton").attr("src", "../general/Refresh_D.svg");
 
             connection.off("ReceiveMessage");
             connection.stop();
@@ -383,7 +383,7 @@ $(document).ready(function () {
         }
     }
 
-    async function getGameStatus() {
+    async function getGameStatus(retry = true) {
         try {
             const urlParams = {}
             if (season != null) {
@@ -421,7 +421,13 @@ $(document).ready(function () {
             }
             return await response.json();
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching game status:', error);
+
+            if (retry) {
+                console.log("Retrying in 5 seconds...");
+                await new Promise(res => setTimeout(res, 5000));
+                return getGameStatus(true);
+            }
         }
     }
 
