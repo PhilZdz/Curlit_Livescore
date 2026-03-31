@@ -1,4 +1,4 @@
-// Version 1.10rc1 from 26.3.26
+// Version 1.10rc3 from 30.3.26
 
 $(document).ready(function () {
     const apiUrl = "https://livescores.worldcurling.org/curlitsse";
@@ -234,9 +234,13 @@ $(document).ready(function () {
             $rightComment.addClass("longTextRight");
         }
 
-        var statsPage = result.status == "official" ? "sessionstats" : "currentstats";
+        if (result.status == "official") {
+            tile.find('.right-area .btnStats').attr("href", `/${competitionCode}/aspnet/sessionstats.aspx?EventID=${result.eventID}&GameID=${result.gameID}&SessionID=${result.sessionID}`);
+        }
+        else {
+            tile.find('.right-area .btnStats').attr("href", `/${competitionCode}/aspnet/currentstats.aspx?EventID=${result.eventID}&Sheet=${result.sheet}&SessionID=${result.sessionID}`);
+        }
 
-        tile.find('.right-area .btnStats').attr("href", `/${competitionCode}/aspnet/${statsPage}.aspx?EventID=${result.eventID}&Sheet=${result.sheet}&SessionID=${result.sessionID}`);
         tile.find('.right-area .btnGraphics').attr("href", `/${competitionCode}/aspnet/GameCenter.aspx?EventID=${result.eventID}&Sheet=${result.sheet}&SessionID=${result.sessionID}`);
 
         if (result.doStats == true) {

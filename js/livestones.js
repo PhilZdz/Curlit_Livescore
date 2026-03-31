@@ -1,4 +1,4 @@
-// Version 1.10rc1 from 26.3.26
+// Version 1.10rc3 from 31.3.26
 
 $(document).ready(function () {
 
@@ -502,6 +502,9 @@ $(document).ready(function () {
             if ($("#is_live").is(":checked")) {
                 updateLiveData(data);
             }
+            else {
+                addToShotSelect(data);
+            }
 
             // TODO if we change the status, maybe switch the stat that we're on to the status related one
             if ($("#is_stats").is(":checked")) {
@@ -796,6 +799,8 @@ $(document).ready(function () {
 
     function goTo(index, isManual = false) {
         var stoneCount = 16;
+        var isCurrentEnd = (latestLiveData.stones.length > 0 && currentEnd == latestLiveData.stones[0].endID);
+        var data = isCurrentEnd ? latestLiveData : shotData;
 
         // PZ Temp workaround, we want to have the # of stones in SSE
         var lineupNames = statsData.find(stat => stat.statName === "Line-ups");
@@ -819,8 +824,8 @@ $(document).ready(function () {
         }
 
         currentIndex = Math.max(0, Math.min(index, totalItems - 1));
-        if (shotData.stones.length == currentIndex + 1 && isManual) {
-            if (currentEnd == latestLiveData.stones[0].endID) {
+        if (data.stones.length == currentIndex + 1 && isManual) {
+            if (isCurrentEnd) {
                 $("#is_live").prop('checked', true);
                 updateLiveData(latestLiveData);
                 return;
@@ -839,7 +844,7 @@ $(document).ready(function () {
         });
 
         // Update shot info
-        const shotInfo = shotData.stones[currentIndex];
+        const shotInfo = data.stones[currentIndex];
         if (shotInfo === undefined) {
             return;
         }
@@ -849,7 +854,7 @@ $(document).ready(function () {
         makeSVGResponsive($(".svg-container").eq(index).find("svg"));
 
         // add the next svg for a smarted swipe
-        if (shotData.stones.length >= currentIndex) {
+        if (data.stones.length >= currentIndex) {
             // $(".svg-container").eq(index+1).html(shotData[currentIndex].svg + `<div class="svg-touch-overlay"></div>`);
             makeSVGResponsive($(".svg-container").eq(index - 1).find("svg"));
             makeSVGResponsive($(".svg-container").eq(index + 1).find("svg"));
@@ -1369,6 +1374,40 @@ $(document).ready(function () {
 
         // $headerTile.find(".home .team-clock").html(shotData.gameInfo);
         // $headerTile.find(".home .team-clock").html("");
+    }
+
+    function addToShotSelect(shotList) {
+        if (shotList.stones.length == 0) {
+            return;
+        }
+
+        currentEnd = shotList.stones[0].endID;
+
+        for (let i = 0; i < currentEnd; i++) {
+            var exists = $(".endstone select.current-end option[value='" + i + "']").length > 0;
+
+            if (!exists) {
+                $(".endstone select.current-end").append(`<option value="${i}">End ${i + 1}</option>`);
+            }
+        }
+
+        if (shotList.stones[0].endID == currentEnd) {
+
+            shotList.stones.forEach((shot, idx) => {
+                var exists = $(".endstone select.current-stone option[value='" + idx + "']").length > 0;
+
+                if (!exists) {
+                    $(".endstone select.current-stone").append(`<option value="${idx}">Stone ${idx + 1}</option>`);
+
+                    $slider.append(`<div class="item">
+                    <div class="svg-container">${shot.svg}</div>
+                    </div>`);
+
+                }
+            });
+        }
+
+        totalItems = $(".endstone select.current-stone").children().length;
     }
 
     function refreshShotList() {
