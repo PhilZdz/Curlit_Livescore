@@ -1,4 +1,4 @@
-// Version 1.10rc3 from 31.3.26
+// Version 1.10rc4 from 2.4.26
 
 $(document).ready(function () {
 
@@ -799,7 +799,8 @@ $(document).ready(function () {
 
     function goTo(index, isManual = false) {
         var stoneCount = 16;
-        var isCurrentEnd = (latestLiveData.stones.length > 0 && currentEnd == latestLiveData.stones[0].endID);
+        var selectedEnd = parseInt($(".endstone select.current-end").val(), 10) + 1;
+        var isCurrentEnd = (latestLiveData.stones.length > 0 && selectedEnd == latestLiveData.stones[0].endID);
         var data = isCurrentEnd ? latestLiveData : shotData;
 
         // PZ Temp workaround, we want to have the # of stones in SSE

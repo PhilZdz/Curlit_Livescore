@@ -423,6 +423,32 @@ GO
 
 ```
 
+
+## Conversations
+
+### Select all conversations
+
+```sql
+SELECT 
+    ce.conversation_handle,
+    qn.database_id,
+ DB_NAME(qn.database_id) AS DatabaseName,
+ ce.state,
+ ce.state_desc,
+    qn.timeout,
+ ce.far_service,
+ ce.far_broker_instance,
+    qn.created,
+ DATEADD(SECOND, qn.timeout, qn.created) AS expires_at
+FROM sys.conversation_endpoints ce
+JOIN sys.services s ON s.service_id = ce.service_id
+JOIN sys.dm_qn_subscriptions qn ON qn.database_id = DB_ID()
+WHERE s.name LIKE '%SqlQueryNotification%'
+   OR ce.far_service LIKE '%SqlQueryNotification%'
+   ORDER BY DatabaseName, state, state_desc
+```
+
+
 ---
 
 ## Notes

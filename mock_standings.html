@@ -1,0 +1,798 @@
+<html>
+
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<script src="mock/signalr.807.min.js"></script>
+<script src="mock/three.min.js"></script>
+<script src="mock/fflate.min.js"></script>
+<script src="mock/FBXLoader.js"></script>
+<script src="mock/OrbitControls.js"></script>
+
+<script src="mock/jquery-3.7.1.min.js"></script>
+<!-- <script src="js/livestones.js?v=1.10rc3"></script> -->
+<link href="mock/bootstrap.min.css" rel="stylesheet">
+<link href="css/livescores.css" rel="stylesheet" type="text/css">
+<link href="css/livestones.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+    .svg-container {
+        display: inline-block;
+        /* or inline */
+        vertical-align: middle;
+        /* or top, middle, etc. as needed */
+    }
+
+    .svg-icon {
+        height: 1.2em;
+        /* This will be relative to the font size */
+        width: auto;
+    }
+</style>
+<link id="Stylesheet" rel="stylesheet" type="text/css" href="CurlitEvent/curlit.css">
+<link id="Stylesheet2" rel="stylesheet" type="text/css" href="CurlitEvent/blue.css">
+<link rel="shortcut icon" href="../WCF_CURLIT.ico">
+<link rel="icon" href="../WCF_CURLIT_32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="../WCF_CURLIT_128.png" sizes="128x128" type="image/png">
+<link rel="icon" href="../WCF_CURLIT_180.png" sizes="180x180" type="image/png">
+<link rel="icon" href="../WCF_CURLIT_192.png" sizes="192x192" type="image/png">
+<title>
+    Mock Event - Game Center
+</title>
+
+<div id="scoreboard" class="container-wide tile-l">
+    <div id="session-header" class="online"></div>
+    <!-- Running -->
+    <div id="game-tile" class="row" style="display: block;">
+        <!-- Matchup Tile -->
+        <div class="col-12">
+            <div class="matchup-tile official">
+                <header>
+                    <div class="header-content">
+                        <div class="select-wrapper" style="margin-left: 2px;">
+                          <select title="sheet" name="sheet" class="sheet"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>
+                        </div>
+
+                        <span class="left-text longText">Round Robin Session 16</span>
+
+                        <!-- Middle Text: "SCHEDULED" -->
+                        <span class="middle-text">official</span>
+
+                        <!-- Right Text: "Gold Medal Game" and Buttons -->
+                        <div class="d-flex justify-content-end align-items-center right-area">
+                            <span class="me-1">Info SUI, KOR</span>
+                        </div>
+                    </div>
+                </header>
+                <div class="dynamic-content">
+                    <!-- For small screens -->
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between">
+                            <div class="summary">
+                                <div class="home">
+                                    <img class="flag" src="https://livescores.worldcurling.org/flags/SUI.svg">
+                                    <span class="team-name"><span class="short">Switzerland</span><span class="long">Switzerland</span></span>
+                                    <span class="score">9</span>
+                                    <span class="team-history" title="wins - losses">8-2</span>
+                                    <span class="team-clock timeout">16:16</span>
+                                </div>
+                                <span class="separator">-</span>
+                                <div class="away">
+                                    <span class="score">2</span>
+                                    <span class="team-name"><span class="short">Korea</span><span class="long">Korea</span></span>
+                                    <img class="flag" src="https://livescores.worldcurling.org/flags/KOR.svg">
+                                    <span class="team-history" title="wins - losses">3-7</span>
+                                    <span class="team-clock timeout">14:12</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <table class="scoreboard game-center" style="display: none;">
+                            <thead><th class="noc"></th><th class="lsfe"></th><th class="lsd-lsfe" colspan="3">LSD/LSFE</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th></th><th class="score"></th></thead>
+                            <tbody>
+                                <tr>
+                                <td class="noc">SUI</td><td class="lsfe"></td><td class="lsd-lsfe" colspan="2"><span>187.7cm</span></td><td class="lsd-lsfe"></td><td><span>1</span></td><td><span>1</span></td><td><span>0</span></td><td><span>2</span></td><td><span>5</span></td><td><span>0</span></td><td><span>X</span></td><td><span>X</span></td><td><span>X</span></td><td><span>X</span></td><td class=" no-border"><span></span></td><td class="score">9</td></tr>
+                                <tr>
+                                <td class="noc">KOR</td><td class="lsfe">✱</td><td class="lsd-lsfe" colspan="2"><span>71.1cm</span></td><td class="lsd-lsfe">✱</td><td><span>0</span></td><td><span>0</span></td><td><span>1</span></td><td><span>0</span></td><td><span>0</span></td><td><span>1</span></td><td><span>X</span></td><td><span>X</span></td><td><span>X</span></td><td><span>X</span></td><td class=" no-border"><span></span></td><td class="score">2</td></tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Details (LSD, Stats) -->
+                        <span class="details">Last Stone Draw</span>
+                        <table class="details-content">
+                            <tbody>
+                                <tr>
+                                    <td class="noc">SUI</td>
+                                    <td class="lsfe"></td>
+                                    <td class="lsd-detail">8.4</td>
+                                    <td class="lsd-detail">179.3</td>
+                                    <td class="lsd">187.7cm</td>
+                                    <td class="spacer"></td>
+                                    <td class="score"><span>9</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="noc">KOR</td>
+                                    <td class="lsfe">✱</td>
+                                    <td class="lsd-detail">41.5</td>
+                                    <td class="lsd-detail">29.6</td>
+                                    <td class="lsd">71.1cm</td>
+                                    <td class="spacer"></td>
+                                    <td class="score"><span>2</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+
+
+                        <!-- Game center -->
+                        <div id="game-center">
+                          <div id="top-stats">
+                            <div id="head-to-head" style="display: flex;">
+                              <div class="headers">
+                                <div class="headers-slider" style="transition: transform 0.3s; transform: translateX(0%);"><span class="header-item active">Line-ups</span><span class="header-item">Last Stone Draw</span><span class="header-item">Game</span><span class="header-item">Draws</span><span class="header-item">Take-outs</span><span class="header-item">Clockwise</span><span class="header-item">Counter-clockwise</span><span class="header-item">Tournament</span></div>
+                              </div>
+                              <button type="button" class="header-arrow header-prev">&lt;</button>
+                              <button type="button" class="header-arrow header-next">&gt;</button>
+
+                              <div class="team-left" style="background-image: url(&quot;https://livescores.worldcurling.org/flags/SUI.svg&quot;);"></div>
+                              <div class="team-right" style="background-image: url(&quot;https://livescores.worldcurling.org/flags/KOR.svg&quot;);"></div>
+
+                              <div class="stats-container">
+
+
+<div class="stat-row" data-left="0" data-right="0">
+    <div class="label">
+    <div class="text-line" style="">
+        <div class="info-left">1</div>
+        <div class="text-left">
+            <span class="shortName">SUI</span>
+            <span class="longName">Switzerland</span>
+        </div>
+        <div class="text-right">
+            <span class="shortName"></span>
+            <span class="longName"></span>
+        </div>
+        <div class="info-right">Q</div>
+    </div>
+    <div class="bar-line" style="display: none;">
+        <div class="value-left"><span class="unit"></span>
+        </div>
+        <div class="count-left">
+        <div class="mirror-bar fromCenter">
+            <div class="label-left">
+            <div class="bar-left" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="bar-right" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="label-right">
+        </div>
+        <div class="count-right">
+        <div class="value-right"><span class="unit"></span>
+        </div>
+    </div>
+</div>
+
+<div class="stat-row" data-left="0" data-right="0">
+    <div class="label">
+    <div class="text-line" style="">
+        <div class="info-left">2</div>
+        <div class="text-left">
+            <span class="shortName">SUI</span>
+            <span class="longName">Switzerland</span>
+        </div>
+        <div class="text-right">
+            <span class="shortName"></span>
+            <span class="longName"></span>
+        </div>
+        <div class="info-right">Q</div>
+    </div>
+    <div class="bar-line" style="display: none;">
+        <div class="value-left"><span class="unit"></span>
+        </div>
+        <div class="count-left">
+        <div class="mirror-bar fromCenter">
+            <div class="label-left">
+            <div class="bar-left" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="bar-right" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="label-right">
+        </div>
+        <div class="count-right">
+        <div class="value-right"><span class="unit"></span>
+        </div>
+    </div>
+</div>
+
+<div class="stat-row" data-left="0" data-right="0">
+    <div class="label">
+    <div class="text-line" style="">
+        <div class="info-left">3</div>
+        <div class="text-left">
+            <span class="shortName">SUI</span>
+            <span class="longName">Switzerland</span>
+        </div>
+        <div class="text-right">
+            <span class="shortName"></span>
+            <span class="longName"></span>
+        </div>
+        <div class="info-right">Q</div>
+    </div>
+    <div class="bar-line" style="display: none;">
+        <div class="value-left"><span class="unit"></span>
+        </div>
+        <div class="count-left">
+        <div class="mirror-bar fromCenter">
+            <div class="label-left">
+            <div class="bar-left" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="bar-right" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="label-right">
+        </div>
+        <div class="count-right">
+        <div class="value-right"><span class="unit"></span>
+        </div>
+    </div>
+</div>
+
+<div class="stat-row" data-left="0" data-right="0">
+    <div class="label">
+    <div class="text-line" style="">
+        <div class="info-left">4</div>
+        <div class="text-left">
+            <span class="shortName">SUI</span>
+            <span class="longName">Switzerland</span>
+        </div>
+        <div class="text-right">
+            <span class="shortName"></span>
+            <span class="longName"></span>
+        </div>
+        <div class="info-right">Q</div>
+    </div>
+    <div class="bar-line" style="display: none;">
+        <div class="value-left"><span class="unit"></span>
+        </div>
+        <div class="count-left">
+        <div class="mirror-bar fromCenter">
+            <div class="label-left">
+            <div class="bar-left" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="bar-right" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="label-right">
+        </div>
+        <div class="count-right">
+        <div class="value-right"><span class="unit"></span>
+        </div>
+    </div>
+</div>
+
+<div class="stat-row" data-left="0" data-right="0">
+    <div class="label">
+    <div class="text-line" style="">
+        <div class="info-left">5</div>
+        <div class="text-left">
+            <span class="shortName">SUI</span>
+            <span class="longName">Switzerland</span>
+        </div>
+        <div class="text-right">
+            <span class="shortName"></span>
+            <span class="longName"></span>
+        </div>
+        <div class="info-right">Q</div>
+    </div>
+    <div class="bar-line" style="display: none;">
+        <div class="value-left"><span class="unit"></span>
+        </div>
+        <div class="count-left">
+        <div class="mirror-bar fromCenter">
+            <div class="label-left">
+            <div class="bar-left" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="bar-right" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="label-right">
+        </div>
+        <div class="count-right">
+        <div class="value-right"><span class="unit"></span>
+        </div>
+    </div>
+</div>
+
+<div class="stat-row" data-left="0" data-right="0">
+    <div class="label">
+    <div class="text-line" style="">
+        <div class="info-left">6</div>
+        <div class="text-left">
+            <span class="shortName">SUI</span>
+            <span class="longName">Switzerland</span>
+        </div>
+        <div class="text-right">
+            <span class="shortName"></span>
+            <span class="longName"></span>
+        </div>
+        <div class="info-right">Q</div>
+    </div>
+    <div class="bar-line" style="display: none;">
+        <div class="value-left"><span class="unit"></span>
+        </div>
+        <div class="count-left">
+        <div class="mirror-bar fromCenter">
+            <div class="label-left">
+            <div class="bar-left" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="bar-right" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="label-right">
+        </div>
+        <div class="count-right">
+        <div class="value-right"><span class="unit"></span>
+        </div>
+    </div>
+</div>
+
+<div class="stat-row" data-left="0" data-right="0">
+    <div class="label">
+    <div class="text-line" style="">
+        <div class="info-left">7</div>
+        <div class="text-left">
+            <span class="shortName">SUI</span>
+            <span class="longName">Switzerland</span>
+        </div>
+        <div class="text-right">
+            <span class="shortName"></span>
+            <span class="longName"></span>
+        </div>
+        <div class="info-right">Q</div>
+    </div>
+    <div class="bar-line" style="display: none;">
+        <div class="value-left"><span class="unit"></span>
+        </div>
+        <div class="count-left">
+        <div class="mirror-bar fromCenter">
+            <div class="label-left">
+            <div class="bar-left" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="bar-right" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="label-right">
+        </div>
+        <div class="count-right">
+        <div class="value-right"><span class="unit"></span>
+        </div>
+    </div>
+</div>
+
+<div class="stat-row" data-left="0" data-right="0">
+    <div class="label">
+    <div class="text-line" style="">
+        <div class="info-left">8</div>
+        <div class="text-left">
+            <span class="shortName">SUI</span>
+            <span class="longName">Switzerland</span>
+        </div>
+        <div class="text-right">
+            <span class="shortName"></span>
+            <span class="longName"></span>
+        </div>
+        <div class="info-right">Q</div>
+    </div>
+    <div class="bar-line" style="display: none;">
+        <div class="value-left"><span class="unit"></span>
+        </div>
+        <div class="count-left">
+        <div class="mirror-bar fromCenter">
+            <div class="label-left">
+            <div class="bar-left" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="bar-right" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="label-right">
+        </div>
+        <div class="count-right">
+        <div class="value-right"><span class="unit"></span>
+        </div>
+    </div>
+</div>
+
+<div class="stat-row" data-left="0" data-right="0">
+    <div class="label">
+    <div class="text-line" style="">
+        <div class="info-left">9</div>
+        <div class="text-left">
+            <span class="shortName">SUI</span>
+            <span class="longName">Switzerland</span>
+        </div>
+        <div class="text-right">
+            <span class="shortName"></span>
+            <span class="longName"></span>
+        </div>
+        <div class="info-right">Q</div>
+    </div>
+    <div class="bar-line" style="display: none;">
+        <div class="value-left"><span class="unit"></span>
+        </div>
+        <div class="count-left">
+        <div class="mirror-bar fromCenter">
+            <div class="label-left">
+            <div class="bar-left" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="bar-right" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="label-right">
+        </div>
+        <div class="count-right">
+        <div class="value-right"><span class="unit"></span>
+        </div>
+    </div>
+</div>
+
+<div class="stat-row" data-left="0" data-right="0">
+    <div class="label">
+    <div class="text-line" style="">
+        <div class="info-left">10</div>
+        <div class="text-left">
+            <span class="shortName">SUI</span>
+            <span class="longName">Switzerland</span>
+        </div>
+        <div class="text-right">
+            <span class="shortName"></span>
+            <span class="longName"></span>
+        </div>
+        <div class="info-right">Q</div>
+    </div>
+    <div class="bar-line" style="display: none;">
+        <div class="value-left"><span class="unit"></span>
+        </div>
+        <div class="count-left">
+        <div class="mirror-bar fromCenter">
+            <div class="label-left">
+            <div class="bar-left" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="bar-right" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="label-right">
+        </div>
+        <div class="count-right">
+        <div class="value-right"><span class="unit"></span>
+        </div>
+    </div>
+</div>
+
+<div class="stat-row" data-left="0" data-right="0">
+    <div class="label">
+    <div class="text-line" style="">
+        <div class="info-left">11</div>
+        <div class="text-left">
+            <span class="shortName">SUI</span>
+            <span class="longName">Switzerland</span>
+        </div>
+        <div class="text-right">
+            <span class="shortName"></span>
+            <span class="longName"></span>
+        </div>
+        <div class="info-right">Q</div>
+    </div>
+    <div class="bar-line" style="display: none;">
+        <div class="value-left"><span class="unit"></span>
+        </div>
+        <div class="count-left">
+        <div class="mirror-bar fromCenter">
+            <div class="label-left">
+            <div class="bar-left" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="bar-right" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="label-right">
+        </div>
+        <div class="count-right">
+        <div class="value-right"><span class="unit"></span>
+        </div>
+    </div>
+</div>
+
+<div class="stat-row" data-left="0" data-right="0">
+    <div class="label">
+    <div class="text-line" style="">
+        <div class="info-left">12</div>
+        <div class="text-left">
+            <span class="shortName">SUI</span>
+            <span class="longName">Switzerland</span>
+        </div>
+        <div class="text-right">
+            <span class="shortName"></span>
+            <span class="longName"></span>
+        </div>
+        <div class="info-right">Q</div>
+    </div>
+    <div class="bar-line" style="display: none;">
+        <div class="value-left"><span class="unit"></span>
+        </div>
+        <div class="count-left">
+        <div class="mirror-bar fromCenter">
+            <div class="label-left">
+            <div class="bar-left" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="bar-right" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="label-right">
+        </div>
+        <div class="count-right">
+        <div class="value-right"><span class="unit"></span>
+        </div>
+    </div>
+</div>
+
+<div class="stat-row" data-left="0" data-right="0">
+    <div class="label">
+    <div class="text-line" style="">
+        <div class="info-left">13</div>
+        <div class="text-left">
+            <span class="shortName">SUI</span>
+            <span class="longName">Switzerland</span>
+        </div>
+        <div class="text-right">
+            <span class="shortName"></span>
+            <span class="longName"></span>
+        </div>
+        <div class="info-right">Q</div>
+    </div>
+    <div class="bar-line" style="display: none;">
+        <div class="value-left"><span class="unit"></span>
+        </div>
+        <div class="count-left">
+        <div class="mirror-bar fromCenter">
+            <div class="label-left">
+            <div class="bar-left" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="bar-right" style="width: 0px;">
+                <span class="shortName"></span>
+                <span class="longName"></span>
+            </div>
+            <div class="label-right">
+        </div>
+        <div class="count-right">
+        <div class="value-right"><span class="unit"></span>
+        </div>
+    </div>
+</div>
+
+
+
+</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
+                              <div class="swipe-feedback left"></div>
+                              <div class="swipe-feedback right"></div>
+                            
+                              <div class="index-buttons" id="indexButtonsStats"><button class="active"></button><button></button><button></button><button class="ellipsis"></button></div>
+                            </div>
+                          </div>
+
+
+
+                            <!-- Game content -->
+                            <div id="game-content">
+                                <div class="slider-wrapper even">
+                                     <!-- 3D viewport -->
+                                     <div id="viewport3d" style=""></div>
+
+                                    <!-- 2D SVG -->
+                                    <div class="slider connected" id="slider" style="transition: none; transform: translateX(-1500%);"><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="169.4" cy="127.2" r="8.65" class="CUR_cs"></circle><circle cx="169.4" cy="127.2" r="1.44" stroke-width="3"></circle><circle cx="35.0" cy="594.4" r="4.06"></circle><circle cx="25.0" cy="585.6" r="4.06"></circle><circle cx="25.0" cy="594.4" r="4.06"></circle><circle cx="15.0" cy="585.6" r="4.06"></circle><circle cx="15.0" cy="594.4" r="4.06"></circle><circle cx="5.0" cy="585.6" r="4.06"></circle><circle cx="5.0" cy="594.4" r="4.06"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="265.0" cy="585.6" r="4.06"></circle><circle cx="265.0" cy="594.4" r="4.06"></circle><circle cx="275.0" cy="585.6" r="4.06"></circle><circle cx="275.0" cy="594.4" r="4.06"></circle><circle cx="285.0" cy="585.6" r="4.06"></circle><circle cx="285.0" cy="594.4" r="4.06"></circle><circle cx="295.0" cy="585.6" r="4.06"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#33302e" stroke="#33302e" stroke-width="0.7" stroke-opacity=".8" fill-opacity="0" class="CUR_os"><circle cx="166.2" cy="127.6" r="8.65"></circle></g><g fill="#ff0000" stroke="#ff0000" stroke-width="0.6" stroke-opacity=".6" fill-opacity="0" class="CUR_osr"><circle cx="166.2" cy="127.6" r="7.96"></circle></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="35.0" cy="594.4" r="4.06"></circle><circle cx="25.0" cy="585.6" r="4.06"></circle><circle cx="25.0" cy="594.4" r="4.06"></circle><circle cx="15.0" cy="585.6" r="4.06"></circle><circle cx="15.0" cy="594.4" r="4.06"></circle><circle cx="5.0" cy="585.6" r="4.06"></circle><circle cx="5.0" cy="594.4" r="4.06"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="290.0" cy="8.0" r="1.24" stroke-width="3"></circle><circle cx="265.0" cy="594.4" r="4.06"></circle><circle cx="275.0" cy="585.6" r="4.06"></circle><circle cx="275.0" cy="594.4" r="4.06"></circle><circle cx="285.0" cy="585.6" r="4.06"></circle><circle cx="285.0" cy="594.4" r="4.06"></circle><circle cx="295.0" cy="585.6" r="4.06"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="163.2" cy="130.6" r="8.65" class="CUR_cs"></circle><circle cx="163.2" cy="130.6" r="1.44" stroke-width="3"></circle><circle cx="25.0" cy="585.6" r="4.06"></circle><circle cx="25.0" cy="594.4" r="4.06"></circle><circle cx="15.0" cy="585.6" r="4.06"></circle><circle cx="15.0" cy="594.4" r="4.06"></circle><circle cx="5.0" cy="585.6" r="4.06"></circle><circle cx="5.0" cy="594.4" r="4.06"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="265.0" cy="594.4" r="4.06"></circle><circle cx="275.0" cy="585.6" r="4.06"></circle><circle cx="275.0" cy="594.4" r="4.06"></circle><circle cx="285.0" cy="585.6" r="4.06"></circle><circle cx="285.0" cy="594.4" r="4.06"></circle><circle cx="295.0" cy="585.6" r="4.06"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#33302e" stroke="#33302e" stroke-width="0.7" stroke-opacity=".8" fill-opacity="0" class="CUR_os"><circle cx="164.0" cy="131.0" r="8.65"></circle></g><g fill="#ff0000" stroke="#ff0000" stroke-width="0.6" stroke-opacity=".6" fill-opacity="0" class="CUR_osr"><circle cx="164.0" cy="131.0" r="7.96"></circle></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="24.0" cy="8.0" r="6.05"></circle><circle cx="25.0" cy="585.6" r="4.06"></circle><circle cx="25.0" cy="594.4" r="4.06"></circle><circle cx="15.0" cy="585.6" r="4.06"></circle><circle cx="15.0" cy="594.4" r="4.06"></circle><circle cx="5.0" cy="585.6" r="4.06"></circle><circle cx="5.0" cy="594.4" r="4.06"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="276.0" cy="8.0" r="6.05"></circle><circle cx="276.0" cy="8.0" r="1.24" stroke-width="3"></circle><circle cx="275.0" cy="585.6" r="4.06"></circle><circle cx="275.0" cy="594.4" r="4.06"></circle><circle cx="285.0" cy="585.6" r="4.06"></circle><circle cx="285.0" cy="594.4" r="4.06"></circle><circle cx="295.0" cy="585.6" r="4.06"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="24.0" cy="8.0" r="6.05"></circle><circle cx="160.0" cy="116.6" r="8.65" class="CUR_cs"></circle><circle cx="160.0" cy="116.6" r="1.44" stroke-width="3"></circle><circle cx="25.0" cy="594.4" r="4.06"></circle><circle cx="15.0" cy="585.6" r="4.06"></circle><circle cx="15.0" cy="594.4" r="4.06"></circle><circle cx="5.0" cy="585.6" r="4.06"></circle><circle cx="5.0" cy="594.4" r="4.06"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="276.0" cy="8.0" r="6.05"></circle><circle cx="275.0" cy="585.6" r="4.06"></circle><circle cx="275.0" cy="594.4" r="4.06"></circle><circle cx="285.0" cy="585.6" r="4.06"></circle><circle cx="285.0" cy="594.4" r="4.06"></circle><circle cx="295.0" cy="585.6" r="4.06"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#33302e" stroke="#33302e" stroke-width="0.7" stroke-opacity=".8" fill-opacity="0" class="CUR_os"><circle cx="160.0" cy="116.6" r="8.65"></circle></g><g fill="#ff0000" stroke="#ff0000" stroke-width="0.6" stroke-opacity=".6" fill-opacity="0" class="CUR_osr"><circle cx="160.0" cy="116.6" r="7.96"></circle></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="24.0" cy="8.0" r="6.05"></circle><circle cx="38.0" cy="8.0" r="6.05"></circle><circle cx="25.0" cy="594.4" r="4.06"></circle><circle cx="15.0" cy="585.6" r="4.06"></circle><circle cx="15.0" cy="594.4" r="4.06"></circle><circle cx="5.0" cy="585.6" r="4.06"></circle><circle cx="5.0" cy="594.4" r="4.06"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="276.0" cy="8.0" r="6.05"></circle><circle cx="157.2" cy="132.4" r="8.65" class="CUR_cs"></circle><circle cx="157.2" cy="132.4" r="1.44" stroke-width="3"></circle><circle cx="275.0" cy="594.4" r="4.06"></circle><circle cx="285.0" cy="585.6" r="4.06"></circle><circle cx="285.0" cy="594.4" r="4.06"></circle><circle cx="295.0" cy="585.6" r="4.06"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#33302e" stroke="#33302e" stroke-width="0.7" stroke-opacity=".8" fill-opacity="0" class="CUR_os"><circle cx="157.2" cy="132.4" r="8.65"></circle></g><g fill="#808080" stroke="#ffc832" stroke-width="0.6" fill-opacity="0" class="CUR_osy"><circle cx="157.2" cy="132.4" r="7.96"></circle></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="24.0" cy="8.0" r="6.05"></circle><circle cx="38.0" cy="8.0" r="6.05"></circle><circle cx="237.0" cy="78.6" r="8.65" class="CUR_cs"></circle><circle cx="237.0" cy="78.6" r="1.44" stroke-width="3"></circle><circle cx="15.0" cy="585.6" r="4.06"></circle><circle cx="15.0" cy="594.4" r="4.06"></circle><circle cx="5.0" cy="585.6" r="4.06"></circle><circle cx="5.0" cy="594.4" r="4.06"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="276.0" cy="8.0" r="6.05"></circle><circle cx="262.0" cy="8.0" r="6.05"></circle><circle cx="275.0" cy="594.4" r="4.06"></circle><circle cx="285.0" cy="585.6" r="4.06"></circle><circle cx="285.0" cy="594.4" r="4.06"></circle><circle cx="295.0" cy="585.6" r="4.06"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#33302e" stroke="#33302e" stroke-width="0.7" stroke-opacity=".8" fill-opacity="0" class="CUR_os"><circle cx="237.0" cy="78.6" r="8.65"></circle></g><g fill="#ff0000" stroke="#ff0000" stroke-width="0.6" stroke-opacity=".6" fill-opacity="0" class="CUR_osr"><circle cx="237.0" cy="78.6" r="7.96"></circle></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="24.0" cy="8.0" r="6.05"></circle><circle cx="38.0" cy="8.0" r="6.05"></circle><circle cx="52.0" cy="8.0" r="6.05"></circle><circle cx="15.0" cy="585.6" r="4.06"></circle><circle cx="15.0" cy="594.4" r="4.06"></circle><circle cx="5.0" cy="585.6" r="4.06"></circle><circle cx="5.0" cy="594.4" r="4.06"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="276.0" cy="8.0" r="6.05"></circle><circle cx="262.0" cy="8.0" r="6.05"></circle><circle cx="226.0" cy="93.0" r="8.65" class="CUR_cs"></circle><circle cx="226.0" cy="93.0" r="1.44" stroke-width="3"></circle><circle cx="285.0" cy="585.6" r="4.06"></circle><circle cx="285.0" cy="594.4" r="4.06"></circle><circle cx="295.0" cy="585.6" r="4.06"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#33302e" stroke="#33302e" stroke-width="0.7" stroke-opacity=".8" fill-opacity="0" class="CUR_os"><circle cx="226.0" cy="93.0" r="8.65"></circle></g><g fill="#808080" stroke="#ffc832" stroke-width="0.6" fill-opacity="0" class="CUR_osy"><circle cx="226.0" cy="93.0" r="7.96"></circle></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="24.0" cy="8.0" r="6.05"></circle><circle cx="38.0" cy="8.0" r="6.05"></circle><circle cx="52.0" cy="8.0" r="6.05"></circle><circle cx="164.8" cy="80.0" r="8.65" class="CUR_cs"></circle><circle cx="164.8" cy="80.0" r="1.44" stroke-width="3"></circle><circle cx="15.0" cy="594.4" r="4.06"></circle><circle cx="5.0" cy="585.6" r="4.06"></circle><circle cx="5.0" cy="594.4" r="4.06"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="276.0" cy="8.0" r="6.05"></circle><circle cx="262.0" cy="8.0" r="6.05"></circle><circle cx="248.0" cy="8.0" r="6.05"></circle><circle cx="285.0" cy="585.6" r="4.06"></circle><circle cx="285.0" cy="594.4" r="4.06"></circle><circle cx="295.0" cy="585.6" r="4.06"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#33302e" stroke="#33302e" stroke-width="0.7" stroke-opacity=".8" fill-opacity="0" class="CUR_os"><circle cx="164.8" cy="80.0" r="8.65"></circle></g><g fill="#ff0000" stroke="#ff0000" stroke-width="0.6" stroke-opacity=".6" fill-opacity="0" class="CUR_osr"><circle cx="164.8" cy="80.0" r="7.96"></circle></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="24.0" cy="8.0" r="6.05"></circle><circle cx="38.0" cy="8.0" r="6.05"></circle><circle cx="52.0" cy="8.0" r="6.05"></circle><circle cx="10.0" cy="22.0" r="6.05"></circle><circle cx="15.0" cy="594.4" r="4.06"></circle><circle cx="5.0" cy="585.6" r="4.06"></circle><circle cx="5.0" cy="594.4" r="4.06"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="276.0" cy="8.0" r="6.05"></circle><circle cx="262.0" cy="8.0" r="6.05"></circle><circle cx="248.0" cy="8.0" r="6.05"></circle><circle cx="152.8" cy="91.8" r="8.65" class="CUR_cs"></circle><circle cx="152.8" cy="91.8" r="1.44" stroke-width="3"></circle><circle cx="285.0" cy="594.4" r="4.06"></circle><circle cx="295.0" cy="585.6" r="4.06"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#33302e" stroke="#33302e" stroke-width="0.7" stroke-opacity=".8" fill-opacity="0" class="CUR_os"><circle cx="152.8" cy="91.8" r="8.65"></circle></g><g fill="#808080" stroke="#ffc832" stroke-width="0.6" fill-opacity="0" class="CUR_osy"><circle cx="152.8" cy="91.8" r="7.96"></circle></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="24.0" cy="8.0" r="6.05"></circle><circle cx="38.0" cy="8.0" r="6.05"></circle><circle cx="52.0" cy="8.0" r="6.05"></circle><circle cx="10.0" cy="22.0" r="6.05"></circle><circle cx="133.8" cy="96.6" r="8.65" class="CUR_cs"></circle><circle cx="133.8" cy="96.6" r="1.44" stroke-width="3"></circle><circle cx="5.0" cy="585.6" r="4.06"></circle><circle cx="5.0" cy="594.4" r="4.06"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="276.0" cy="8.0" r="6.05"></circle><circle cx="262.0" cy="8.0" r="6.05"></circle><circle cx="248.0" cy="8.0" r="6.05"></circle><circle cx="290.0" cy="22.0" r="6.05"></circle><circle cx="285.0" cy="594.4" r="4.06"></circle><circle cx="295.0" cy="585.6" r="4.06"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#33302e" stroke="#33302e" stroke-width="0.7" stroke-opacity=".8" fill-opacity="0" class="CUR_os"><circle cx="133.8" cy="96.6" r="8.65"></circle></g><g fill="#ff0000" stroke="#ff0000" stroke-width="0.6" stroke-opacity=".6" fill-opacity="0" class="CUR_osr"><circle cx="133.8" cy="96.6" r="7.96"></circle></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="24.0" cy="8.0" r="6.05"></circle><circle cx="38.0" cy="8.0" r="6.05"></circle><circle cx="52.0" cy="8.0" r="6.05"></circle><circle cx="10.0" cy="22.0" r="6.05"></circle><circle cx="24.0" cy="22.0" r="6.05"></circle><circle cx="5.0" cy="585.6" r="4.06"></circle><circle cx="5.0" cy="594.4" r="4.06"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="276.0" cy="8.0" r="6.05"></circle><circle cx="262.0" cy="8.0" r="6.05"></circle><circle cx="248.0" cy="8.0" r="6.05"></circle><circle cx="290.0" cy="22.0" r="6.05"></circle><circle cx="133.0" cy="113.0" r="8.65" class="CUR_cs"></circle><circle cx="133.0" cy="113.0" r="1.44" stroke-width="3"></circle><circle cx="295.0" cy="585.6" r="4.06"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#33302e" stroke="#33302e" stroke-width="0.7" stroke-opacity=".8" fill-opacity="0" class="CUR_os"><circle cx="133.0" cy="113.0" r="8.65"></circle></g><g fill="#808080" stroke="#ffc832" stroke-width="0.6" fill-opacity="0" class="CUR_osy"><circle cx="133.0" cy="113.0" r="7.96"></circle></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="24.0" cy="8.0" r="6.05"></circle><circle cx="38.0" cy="8.0" r="6.05"></circle><circle cx="52.0" cy="8.0" r="6.05"></circle><circle cx="10.0" cy="22.0" r="6.05"></circle><circle cx="24.0" cy="22.0" r="6.05"></circle><circle cx="136.4" cy="129.6" r="8.65" class="CUR_cs"></circle><circle cx="136.4" cy="129.6" r="1.44" stroke-width="3"></circle><circle cx="5.0" cy="594.4" r="4.06"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="276.0" cy="8.0" r="6.05"></circle><circle cx="262.0" cy="8.0" r="6.05"></circle><circle cx="248.0" cy="8.0" r="6.05"></circle><circle cx="290.0" cy="22.0" r="6.05"></circle><circle cx="276.0" cy="22.0" r="6.05"></circle><circle cx="295.0" cy="585.6" r="4.06"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="600"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#33302e" stroke="#33302e" stroke-width="0.7" stroke-opacity=".8" fill-opacity="0" class="CUR_os"><circle cx="136.4" cy="129.6" r="8.65"></circle></g><g fill="#ff0000" stroke="#ff0000" stroke-width="0.6" stroke-opacity=".6" fill-opacity="0" class="CUR_osr"><circle cx="136.4" cy="129.6" r="7.96"></circle></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="24.0" cy="8.0" r="6.05"></circle><circle cx="38.0" cy="8.0" r="6.05"></circle><circle cx="52.0" cy="8.0" r="6.05"></circle><circle cx="10.0" cy="22.0" r="6.05"></circle><circle cx="24.0" cy="22.0" r="6.05"></circle><circle cx="38.0" cy="22.0" r="6.05"></circle><circle cx="5.0" cy="594.4" r="4.06"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="276.0" cy="8.0" r="6.05"></circle><circle cx="262.0" cy="8.0" r="6.05"></circle><circle cx="248.0" cy="8.0" r="6.05"></circle><circle cx="290.0" cy="22.0" r="6.05"></circle><circle cx="276.0" cy="22.0" r="6.05"></circle><circle cx="262.0" cy="22.0" r="6.05"></circle><circle cx="262.0" cy="22.0" r="1.24" stroke-width="3"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 600" preserveAspectRatio="xMidYMid meet"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="24.0" cy="8.0" r="6.05"></circle><circle cx="38.0" cy="8.0" r="6.05"></circle><circle cx="52.0" cy="8.0" r="6.05"></circle><circle cx="10.0" cy="22.0" r="6.05"></circle><circle cx="24.0" cy="22.0" r="6.05"></circle><circle cx="38.0" cy="22.0" r="6.05"></circle><circle cx="160.0" cy="122.8" r="8.65" class="CUR_cs"></circle><circle cx="160.0" cy="122.8" r="1.44" stroke-width="3"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="276.0" cy="8.0" r="6.05"></circle><circle cx="262.0" cy="8.0" r="6.05"></circle><circle cx="248.0" cy="8.0" r="6.05"></circle><circle cx="290.0" cy="22.0" r="6.05"></circle><circle cx="276.0" cy="22.0" r="6.05"></circle><circle cx="262.0" cy="22.0" r="6.05"></circle><circle cx="295.0" cy="594.4" r="4.06"></circle></g></svg></div>
+  </div><div class="item">
+  <div class="svg-container"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 600" preserveAspectRatio="xMidYMid meet"><rect x="0" y="0" width="300" height="600" fill="#ffffff" stroke="silver" stroke-width="0.5"></rect><g stroke="#646464" stroke-width="1"><circle cx="150.0" cy="160.0" r="120.0" fill="#c8c8ff"></circle><circle cx="150.0" cy="160.0" r="80.0" fill="#ffffff"></circle><circle cx="150.0" cy="160.0" r="40.0" fill="#ffffa0"></circle><circle cx="150.0" cy="160.0" r="16.0" fill="#ffffff"></circle><line x1="0" y1="40.0" x2="300.0" y2="40.0"></line><line x1="0" y1="160.0" x2="300.0" y2="160.0"></line><line x1="0" y1="580.0" x2="300.0" y2="580.0"></line><line x1="150.0" y1="40.0" x2="150.0" y2="580.0"></line></g><g fill="#33302e" stroke="#33302e" stroke-width="0.7" stroke-opacity=".8" fill-opacity="0" class="CUR_os"><circle cx="160.0" cy="122.8" r="8.65"></circle></g><g fill="#ff0000" stroke="#ff0000" stroke-width="0.6" stroke-opacity=".6" fill-opacity="0" class="CUR_osr"><circle cx="160.0" cy="122.8" r="7.96"></circle></g><g fill="#ff0000" stroke="black" stroke-width="1"><circle cx="10.0" cy="8.0" r="6.05"></circle><circle cx="24.0" cy="8.0" r="6.05"></circle><circle cx="38.0" cy="8.0" r="6.05"></circle><circle cx="52.0" cy="8.0" r="6.05"></circle><circle cx="10.0" cy="22.0" r="6.05"></circle><circle cx="24.0" cy="22.0" r="6.05"></circle><circle cx="38.0" cy="22.0" r="6.05"></circle><circle cx="52.0" cy="22.0" r="6.05"></circle></g><g fill="#ffc832" stroke="black" stroke-width="1"><circle cx="290.0" cy="8.0" r="6.05"></circle><circle cx="276.0" cy="8.0" r="6.05"></circle><circle cx="262.0" cy="8.0" r="6.05"></circle><circle cx="248.0" cy="8.0" r="6.05"></circle><circle cx="290.0" cy="22.0" r="6.05"></circle><circle cx="276.0" cy="22.0" r="6.05"></circle><circle cx="262.0" cy="22.0" r="6.05"></circle><circle cx="153.0" cy="140.6" r="8.65" class="CUR_cs"></circle><circle cx="153.0" cy="140.6" r="1.44" stroke-width="3"></circle></g></svg><div class="svg-touch-overlay"></div></div>
+  </div></div>
+
+                                    <!-- arrows -->
+                                    <button onclick="return false;" id="arrowPrev" class="nav-arrow left">
+                                        ❮</button>
+                                    <button onclick="return false;" id="arrowNext" class="nav-arrow right">
+                                        ❯</button>
+
+                                    <div class="index-buttons" id="indexButtons"><button class="ellipsis"></button><button></button><button></button><button class="active"></button></div>
+                                </div>
+
+                                <div id="currentShot">
+
+                                    <div class="shotInfo">
+                                        <!-- End/Stone -->
+                                        <table class="endstone">
+                                            <tbody><tr>
+                                                <td>
+                                                    <div class="select-wrapper">
+                                                        <select title="ends" name="ends" class="current-end"><option value="0">End 1</option><option value="1">End 2</option><option value="2">End 3</option><option value="3">End 4</option><option value="4">End 5</option><option value="5">End 6</option></select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="select-wrapper" style="margin-left: 2px;">
+                                                        <select title="stones" name="stones" class="current-stone"><option value="0">Stone 1</option><option value="1">Stone 2</option><option value="2">Stone 3</option><option value="3">Stone 4</option><option value="4">Stone 5</option><option value="5">Stone 6</option><option value="6">Stone 7</option><option value="7">Stone 8</option><option value="8">Stone 9</option><option value="9">Stone 10</option><option value="10">Stone 11</option><option value="11">Stone 12</option><option value="12">Stone 13</option><option value="13">Stone 14</option><option value="14">Stone 15</option><option value="15">Stone 16</option></select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody></table>
+
+                                        <!-- Competitor -->
+                                        <table class="competitor">
+                                            <tbody><tr>
+                                                <td class="flag" rowspan="2">
+                                                    <img alt="Korea" class="flag" src="https://livescores.worldcurling.org/flags/KOR.svg">
+                                                </td>
+                                                <td>
+                                                    <span class="lastname" style="white-space: normal; font-size: 12px;">Kim</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span class="firstname" style="white-space: normal; font-size: 12px;">Changmin</span>
+                                                </td>
+                                            </tr>
+                                        </tbody></table>
+
+                                        <!-- Shot details -->
+                                        <table class="shot-details">
+                                            <tbody><tr>
+                                                <td>
+                                                    <span class="type">Take-out</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span class="handle ccw"></span>
+                                                    <span class="accuracy">100 %</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span class="comment"></span>
+                                                </td>
+                                            </tr>
+                                        </tbody></table>
+
+
+
+                                    </div>
+
+
+                                    <!-- Action Buttons -->
+                                    <div class="commands">
+                                        <div class="command">
+                                            <div class="col">Scoreboard</div>
+                                            <div class="col">
+                                                <label class="switch">
+                                                    <input type="checkbox" id="is_scb">
+                                                    <span class="btn-slider round" data-target="scoreboard"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="command">
+                                          <div class="col">Stats</div>
+                                          <div class="col">
+                                            <label class="switch">
+                                              <input type="checkbox" id="is_stats" data-gtm-form-interact-field-id="0">
+                                              <span class="btn-slider round" data-target="stats"></span>
+                                            </label>
+                                          </div>
+                                        </div>
+                                        <div class="command" id="command3d">
+                                          <div class="col">3D View</div>
+                                          <div class="col">
+                                            <label class="switch">
+                                              <input type="checkbox" id="is_3d">
+                                              <span class="btn-slider round" data-target="3d"></span>
+                                            </label>
+                                          </div>
+                                        </div>
+                                        <div class="command expand">
+                                            <div class="col">Follow Live</div>
+                                            <div class="col">
+                                                <label class="switch">
+                                                    <input type="checkbox" checked="" id="is_live">
+                                                    <span class="btn-slider round" data-target="live"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="xxsl">
+        Click on sheet letter to select sheet. Swipe left and right to select different information. 
+    </p>
+
+            &nbsp;
+        </div>
+
+
+        
+
+</html>
