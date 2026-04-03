@@ -1,4 +1,4 @@
-// Version 1.10rc4 from 2.4.26
+// Version 1.10rc5 from 2.4.26
 
 $(document).ready(function () {
 
@@ -503,6 +503,11 @@ $(document).ready(function () {
                 updateLiveData(data);
             }
             else {
+                // If the new data received is in the current end, update shotData
+                if (currentEnd == data.stones[0].endID) {
+                    shotData = data;
+                }
+
                 addToShotSelect(data);
             }
 
@@ -797,10 +802,9 @@ $(document).ready(function () {
         return `<span class="leftName">${leftName}</span><span class="rightName">${rightName}</span>`;
     }
 
-    function goTo(index, isManual = false) {
+    async function goTo(index, isManual = false) {
         var stoneCount = 16;
-        var selectedEnd = parseInt($(".endstone select.current-end").val(), 10) + 1;
-        var isCurrentEnd = (latestLiveData.stones.length > 0 && selectedEnd == latestLiveData.stones[0].endID);
+        var isCurrentEnd = (latestLiveData.stones.length > 0 && currentEnd == latestLiveData.stones[0].endID);
         var data = isCurrentEnd ? latestLiveData : shotData;
 
         // PZ Temp workaround, we want to have the # of stones in SSE
@@ -813,13 +817,13 @@ $(document).ready(function () {
         // If index=-1, navigate to the previous end
         if (index == -1) {
             if (currentEnd > 1) {
-                goToHistory(currentEnd - 1, stoneCount);
+                await goToHistory(currentEnd - 1, stoneCount);
             }
             return;
         }
         if (index > stoneCount - 1) {
             if (currentEnd < latestLiveData.stones[0].endID) {
-                goToHistory(currentEnd + 1);
+                await goToHistory(currentEnd + 1);
             }
             return;
         }
@@ -1382,9 +1386,8 @@ $(document).ready(function () {
             return;
         }
 
-        currentEnd = shotList.stones[0].endID;
 
-        for (let i = 0; i < currentEnd; i++) {
+        for (let i = 0; i < shotList.stones[0].endID; i++) {
             var exists = $(".endstone select.current-end option[value='" + i + "']").length > 0;
 
             if (!exists) {
@@ -1392,7 +1395,7 @@ $(document).ready(function () {
             }
         }
 
-        if (shotList.stones[0].endID == currentEnd) {
+        if (shotList.stones[0].endID == shotList.stones[0].endID) {
 
             shotList.stones.forEach((shot, idx) => {
                 var exists = $(".endstone select.current-stone option[value='" + idx + "']").length > 0;
@@ -1862,10 +1865,24 @@ $(document).ready(function () {
     $indexButtonsStatsContainer = $("#indexButtonsStats");
     $arrowPrev = $("#arrowPrev");
     $arrowNext = $("#arrowNext");
+    var isTransitioning = false;
 
+    async function handleArrowClick(direction) {
+        if (isTransitioning) return;
+        isTransitioning = true;
 
-    $arrowPrev.on("click", () => goTo(currentIndex - 1, true));
-    $arrowNext.on("click", () => goTo(currentIndex + 1, true));
+        $arrowPrev.prop("disabled", true);
+        $arrowNext.prop("disabled", true);
+
+        await goTo(currentIndex + direction, true);
+
+        $arrowPrev.prop("disabled", false);
+        $arrowNext.prop("disabled", false);
+        isTransitioning = false;
+    }
+
+    $arrowPrev.on("click", function () { handleArrowClick(-1); });
+    $arrowNext.on("click", function () { handleArrowClick(1); });
 
     $("#bfbblue").on("click", () => switchTheme("blue"));
     $("#bfbwhite").on("click", () => switchTheme("white"));
