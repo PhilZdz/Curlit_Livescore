@@ -5,7 +5,10 @@
 <asp:Content ID="ContentStyle" ContentPlaceHolderID="HeaderStyleTop" runat="Server">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
     <script src="../Scripts/jquery-3.7.1.min.js"></script>
-    <script src="../Scripts/livestones.js?v=1.4rc10"></script>
+    <script src="../js/live-common.js"></script>
+    <script src="../js/livestones.helpers.js"></script>
+    <script src="../js/livestones.renderer.js"></script>
+    <script src="../js/livestones.js"></script>
     <link href="../CSS/bootstrap.min.css" rel="stylesheet">
     <link href="../CSS/livescores.css?v=1.3alpha3c" rel="stylesheet" type="text/css" />
     <link href="../CSS/livestones.css?v=1.3alpha3c" rel="stylesheet" type="text/css" />

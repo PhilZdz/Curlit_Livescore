@@ -3,7 +3,9 @@
 <asp:Content ID="ContentStyle" ContentPlaceHolderID="HeaderStyleTop" Runat="Server">  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
     <script src="../Scripts/jquery-3.7.1.min.js"></script>
-    <script src="../Scripts/livescores.js"></script>
+    <script src="../js/live-common.js"></script>
+    <script src="../js/livescores.renderer.js"></script>
+    <script src="../js/livescores.js"></script>
     <link href="../CSS/bootstrap.min.css" rel="stylesheet">
     <link href="../CSS/livescores.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
