@@ -1,4 +1,4 @@
-// Version 2.0rc1 from 12.10.26
+// Version 2.0rc3 from 25.10.26
 
 $(document).ready(function () {
     const { getLetterFromIndex, renderBestFit, displayRowTitle, makeSVGResponsive, fitText, parseSVGData } = window.CurlitLiveStonesHelpers;
@@ -890,6 +890,23 @@ $(document).ready(function () {
             $(".team-left, .team-right").removeClass("shift");
         }
 
+        if (currentStats.statName === "GAME_FACTS") {
+            $(".stats-container").find(".bar-line").hide();
+            $(".stats-container").find(".text-line").hide();
+
+            $rows.each(function (idx) {
+                const $row = $(this);
+                const factTitle = currentStats.rows[idx] != null ? currentStats.rows[idx].rowTitle : "";
+
+                $row.find(".label").html(factTitle).css("line-height", "1.5em");
+                $row.find(".label-left, .label-right, .value-left, .value-right").html("");
+                $row.find(".bar-left, .bar-right").css("width", "0");
+                $row.find(".text-left, .text-right, .info-left, .info-right").empty();
+            });
+
+            return;
+        }
+
         if (currentStats.isStat) { // Stat slide
 
             $(".stats-container").find(".text-line").hide();
@@ -1048,7 +1065,7 @@ $(document).ready(function () {
     }
 
     function refreshStatList() {
-        var newStatList = statsData.map(stat => stat.statName);
+        var newStatList = statsData.map(stat => stat.statName === "GAME_FACTS" ? "Game Information" : stat.statName);
 
         if (statList == newStatList) {
             return;
@@ -1057,16 +1074,28 @@ $(document).ready(function () {
 
             var LSD = "Last Stone Draw";
 
-            // Special case : the old Stat List did not contain LSD and the new one does, set it as Current
+            // Special case : the old Stat List did not contain LSD or Game Information and the new one does, set it as Current
             if (statList != null && !statList.includes(LSD) && newStatList.includes(LSD)) {
                 current = newStatList.indexOf(LSD);
+            }
+            else if (statList != null && !statList.includes("Game Information") && newStatList.includes("Game Information")) {
+                current = newStatList.indexOf("Game Information");
+            }
+
+            if (pendingStatSlide) {
+                const pendingIdx = getStatSlideIndex(pendingStatSlide);
+                if (pendingIdx !== -1) {
+                    current = pendingIdx;
+                }
+                pendingStatSlide = null;
             }
 
             statList = newStatList;
             $statSlider.empty();
 
             statsData.forEach(stat => {
-                $statSlider.append(`<span class="header-item">${stat.statName}</span>`);
+                const statLabel = stat.statName === "GAME_FACTS" ? "Game Information" : stat.statName;
+                $statSlider.append(`<span class="header-item">${statLabel}</span>`);
             });
         }
 
@@ -1174,7 +1203,11 @@ $(document).ready(function () {
     }
 
     function scrollToGameCenter() {
-        var targetOffset = $('.menu1').offset().top;
+        var $target = $('.menu1').length ? $('.menu1') : ($('#game-center').length ? $('#game-center') : $('#game-tile'));
+        if (!$target.length || !$target.offset()) {
+            return;
+        }
+        var targetOffset = $target.offset().top;
 
         // Animate the scroll to that position
         $('html, body').animate({
@@ -1493,9 +1526,11 @@ $(document).ready(function () {
         const width = $container.width();
         const height = $container.height();
 
-        renderer.setSize(width, height);
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
+        if (renderer && camera) {
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        }
     }
 
 
@@ -1691,6 +1726,86 @@ $(document).ready(function () {
     const $statSlider = $("#head-to-head .headers-slider");
     let expanded = false;
     let swiped = false;
+    let pendingStatSlide = null;
+
+    function openStatsPanel() {
+        var $h2h = $('#head-to-head');
+        if (!$h2h.is(':visible')) {
+            $h2h.slideDown(500, function () {
+                $h2h.css('display', 'flex');
+            });
+            $h2h.css('display', 'flex');
+            $('#is_stats').prop('checked', true);
+        }
+    }
+
+    function getStatSlideIndex(slideName) {
+        if (!statsData && latestStatsData) {
+            statsData = latestStatsData;
+        }
+        if ((!statList || statList.length === 0) && statsData) {
+            refreshStatList();
+        }
+
+        const normalize = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        const targetNorm = normalize(slideName);
+
+        // 1. Check statList
+        if (statList && statList.length > 0) {
+            const idx = statList.findIndex(name => {
+                const norm = normalize(name);
+                if (norm === targetNorm) return true;
+                if (targetNorm === 'gameinformation' && (norm === 'gamefacts' || norm === 'gameinfo')) return true;
+                if (targetNorm === 'lineups' && norm.startsWith('lineup')) return true;
+                return false;
+            });
+            if (idx !== -1) return idx;
+        }
+
+        // 2. Check statsData / latestStatsData
+        const list = statsData || latestStatsData;
+        if (list && list.length > 0) {
+            const idx = list.findIndex(stat => {
+                const norm = normalize(stat.statName);
+                if (norm === targetNorm) return true;
+                if (targetNorm === 'gameinformation' && (norm === 'gamefacts' || norm === 'gameinfo')) return true;
+                if (targetNorm === 'lineups' && norm.startsWith('lineup')) return true;
+                return false;
+            });
+            if (idx !== -1) return idx;
+        }
+
+        // 3. Fallback: check header items in DOM
+        const $items = $("#head-to-head .headers-slider .header-item");
+        let foundIdx = -1;
+        $items.each(function (i) {
+            const norm = normalize($(this).text());
+            if (norm === targetNorm || (targetNorm === 'gameinformation' && (norm === 'gamefacts' || norm === 'gameinfo')) || (targetNorm === 'lineups' && norm.startsWith('lineup'))) {
+                foundIdx = i;
+                return false;
+            }
+        });
+
+        return foundIdx;
+    }
+
+    function goToStatSlide(slideName) {
+        openStatsPanel();
+
+        if (expanded) {
+            $headers.removeClass("expanded");
+            expanded = false;
+        }
+
+        const slideIndex = getStatSlideIndex(slideName);
+        if (slideIndex !== -1) {
+            goToStat(slideIndex);
+        } else {
+            pendingStatSlide = slideName;
+        }
+
+        scrollToGameCenter();
+    }
 
 
     function goToStat(index) {
@@ -1719,6 +1834,18 @@ $(document).ready(function () {
     // ------------------ //
     // ----- EVENTS ----- //
     // ------------------ //
+
+    // Navigate to stat slide from matchup comment
+    $(document).on('click', '.right-area .me-1', function () {
+        const text = $(this).text().trim();
+        const upper = text.toUpperCase();
+
+        if (upper.startsWith("LINE UP CHANGE") || upper.startsWith("LINE-UP CHANGE")) {
+            goToStatSlide("Line-Ups");
+        } else if (upper.startsWith("INFO")) {
+            goToStatSlide("Game Information");
+        }
+    });
     $("#head-to-head").on("click", function (e) {
         if (expanded && !$(e.target).closest(".headers").length) {
             $headers.removeClass("expanded");
@@ -2199,7 +2326,10 @@ $(document).ready(function () {
 
     }
 
-
+    window.CurlitLiveStones = window.CurlitLiveStones || {};
+    window.CurlitLiveStones.openStatsPanel = openStatsPanel;
+    window.CurlitLiveStones.goToStatSlide = goToStatSlide;
+    window.CurlitLiveStones.getStatSlideIndex = getStatSlideIndex;
 
 });
 
