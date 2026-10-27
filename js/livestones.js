@@ -1,4 +1,4 @@
-// Version 2.0rc3 from 25.10.26
+// Version 2.0rc4 from 27.10.26
 
 $(document).ready(function () {
     const { getLetterFromIndex, renderBestFit, displayRowTitle, makeSVGResponsive, fitText, parseSVGData } = window.CurlitLiveStonesHelpers;
@@ -898,7 +898,7 @@ $(document).ready(function () {
                 const $row = $(this);
                 const factTitle = currentStats.rows[idx] != null ? currentStats.rows[idx].rowTitle : "";
 
-                $row.find(".label").html(factTitle).css("line-height", "1.5em");
+                $row.find(".label").html(factTitle).css("line-height", "1.5em").css("white-space", "normal");
                 $row.find(".label-left, .label-right, .value-left, .value-right").html("");
                 $row.find(".bar-left, .bar-right").css("width", "0");
                 $row.find(".text-left, .text-right, .info-left, .info-right").empty();
@@ -1840,9 +1840,7 @@ $(document).ready(function () {
         const text = $(this).text().trim();
         const upper = text.toUpperCase();
 
-        if (upper.startsWith("LINE UP CHANGE") || upper.startsWith("LINE-UP CHANGE")) {
-            goToStatSlide("Line-Ups");
-        } else if (upper.startsWith("INFO")) {
+        if (upper.startsWith("LINE UP CHANGE") || upper.startsWith("LINE-UP CHANGE") || upper.startsWith("INFO")) {
             goToStatSlide("Game Information");
         }
     });
