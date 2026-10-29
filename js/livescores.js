@@ -1,4 +1,4 @@
-// Version 2.0rc1 from 12.10.26
+// Version 2.0rc5 from 28.10.26
 
 $(document).ready(function () {
     const apiUrl = "https://livescores.worldcurling.org/curlitsse";
@@ -290,7 +290,7 @@ $(document).ready(function () {
     // ------------------ //
     // ----- EVENTS ----- //
     // ------------------ //
-    $(document).on("click", ".row", function () {
+    $(document).on("click", ".row", function (e) {
         const dataId = $(this).data('id');
 
         if (!$(e.target).closest('.btnStats, .btnGraphics').length) {
@@ -300,7 +300,14 @@ $(document).ready(function () {
                 const [dataEvent, dataSession] = dataId.split("-");
 
                 if (dataEvent && dataSession && sheet) {
-                    window.location.href = `/${competitionCode}/aspnet/GameCenter.aspx?EventID=${dataEvent}&Sheet=${sheet}&SessionID=${dataSession}`;
+                    let url = `/${competitionCode}/aspnet/GameCenter.aspx?EventID=${dataEvent}&Sheet=${sheet}&SessionID=${dataSession}`;
+
+                    // Check if the click is within the specified area and append the parameter
+                    if ($(e.target).closest('.right-area .me-1').length) {
+                        url += '&Stat=info';
+                    }
+
+                    window.location.href = url;
                 }
             }
         }

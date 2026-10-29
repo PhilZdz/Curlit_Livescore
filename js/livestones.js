@@ -1,4 +1,4 @@
-// Version 2.0rc4 from 27.10.26
+// Version 2.0rc5 from 28.10.26
 
 $(document).ready(function () {
     const { getLetterFromIndex, renderBestFit, displayRowTitle, makeSVGResponsive, fitText, parseSVGData } = window.CurlitLiveStonesHelpers;
@@ -48,6 +48,7 @@ $(document).ready(function () {
     var isDebug = getIntParam("Debug");
     var isTestMode = getIntParam("TestMode", 0);
     var show3d = getIntParam("Show3D", 1);
+    var landingStat = params.get("Stat", "");
 
     if (show3d == 0) {
         $("#command3d").hide();
@@ -1100,6 +1101,11 @@ $(document).ready(function () {
         }
 
         renderStatsDots();
+
+        if (landingStat && landingStat.toLowerCase() === "info") {
+            landingStat = null; // Clear it out so future dynamic refreshes don't re-trigger it
+            goToStatSlide("Game Information");
+        }
     }
 
     function refreshHeaderShotData() {
