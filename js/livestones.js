@@ -1,4 +1,4 @@
-// Version 2.0rc5 from 28.10.26
+// Version 2.1rc1 from 05.11.26
 
 $(document).ready(function () {
     const { getLetterFromIndex, renderBestFit, displayRowTitle, makeSVGResponsive, fitText, parseSVGData } = window.CurlitLiveStonesHelpers;
@@ -187,6 +187,7 @@ $(document).ready(function () {
             doStats = result.doStats;
             refreshSheetList($gameTile, result);
             feedTileUI($gameTile, result);
+            adjustGameCenterDisplay(result.gameInfo ?? latestLiveData?.gameInfo ?? null);
         }
     }
 
@@ -402,10 +403,12 @@ $(document).ready(function () {
     }
 
     function adjustGameCenterDisplay(gameInfo) {
-        // If doStats is not defined, try to fetch it from the latest live data
-        if (gameInfo != null && doStats != null && !doStats) {
-            $('#game-content').hide();
+        if (gameInfo == null || doStats == null) {
+            return;
+        }
 
+        if (!doStats) {
+            $('#game-content').hide();
 
             if (!$('table.scoreboard').is(':visible')) {
                 $('table.scoreboard').show().css('display', 'table');
@@ -416,7 +419,17 @@ $(document).ready(function () {
                 goToStat(0);
                 animateAllStats(0);
             }
+            return;
+        }
 
+        $('#game-content').show();
+
+        if ($('table.scoreboard').is(':visible')) {
+            $('table.scoreboard').hide();
+        }
+
+        if ($('#head-to-head').is(':visible')) {
+            $('#head-to-head').hide();
         }
     }
 
